@@ -14,3 +14,4 @@ parameters:
     secret:            ThisTokenIsNotSoSecretChangeIt
 
     flickr_api_key: ~
+    lastfm_api_key: ~

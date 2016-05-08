@@ -1,2 +1,5 @@
 parameters:
-    flickr_host: 'https://api.flickr.com/services/rest/'
+    flickr_api_uri: 'https://api.flickr.com/services/rest/'
+    flickr_photo_uri: 'https://www.flickr.com/photos/'
+
+    lastfm_api_uri: 'http://ws.audioscrobbler.com/2.0/'

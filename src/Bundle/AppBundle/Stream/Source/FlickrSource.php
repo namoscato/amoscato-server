@@ -2,10 +2,6 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
-use Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider;
-use Amoscato\Bundle\IntegrationBundle\Client\FlickrClient;
-use PDO;
-
 class FlickrSource extends Source
 {
     /**
@@ -14,14 +10,9 @@ class FlickrSource extends Source
     protected $type = 'flickr';
 
     /**
-     * @var PhotoStatementProvider
+     * @var \Amoscato\Bundle\IntegrationBundle\Client\FlickrClient
      */
-    private $statementProvider;
-
-    /**
-     * @var FlickrClient
-     */
-    private $client;
+    protected $client;
 
     /**
      * @var string
@@ -31,47 +22,39 @@ class FlickrSource extends Source
     /**
      * @var string
      */
-    private $photoPath;
+    private $photoUri;
 
     /**
-     * @param PDO $database
-     * @param FlickrClient $client
+     * @param int $limit
+     * @param int $page
+     * @return array
      */
-    public function __construct(PDO $database, FlickrClient $client)
+    protected function extract($limit = self::LIMIT, $page = 1)
     {
-        $this->statementProvider = new PhotoStatementProvider($database);
-        $this->client = $client;
-    }
-
-    public function load()
-    {
-        $photos = $this->client->getPublicPhotos(
+        return $this->client->getPublicPhotos(
             $this->userId,
             [
-                'extras' => 'url_m,path_alias'
+                'extras' => 'url_m,path_alias',
+                'page' => $page,
+                'per_page' => $limit
             ]
         );
+    }
 
-        $count = 0;
-        $values = [];
-
-        foreach ($photos as $photo) {
-            array_push(
-                $values,
-                $this->type,
-                $photo->id,
-                $photo->url_m,
-                $photo->width_m,
-                $photo->height_m,
-                $photo->title,
-                "{$this->photoPath}{$photo->pathalias}/{$photo->id}"
-            );
-            $count++;
-        }
-
-        $statement = $this->statementProvider->insertRows($count);
-
-        $statement->execute($values);
+    /**
+     * @param object $item
+     * @return array
+     */
+    protected function transform($item)
+    {
+        return [
+            $item->id,
+            $item->url_m,
+            $item->width_m,
+            $item->height_m,
+            $item->title,
+            "{$this->photoUri}{$item->pathalias}/{$item->id}"
+        ];
     }
 
     /**
@@ -82,8 +65,11 @@ class FlickrSource extends Source
         $this->userId = $userId;
     }
 
-    public function setPhotoPath($photoPath)
+    /**
+     * @param string $photoUri
+     */
+    public function setPhotoUri($photoUri)
     {
-        $this->photoPath = $photoPath;
+        $this->photoUri = $photoUri;
     }
 }

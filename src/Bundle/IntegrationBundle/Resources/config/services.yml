@@ -15,7 +15,11 @@ services:
     integration.client.flickr:
         parent: integration.client
         arguments:
-            - base_uri: %flickr_host%
+            - base_uri: %flickr_api_uri%
+    integration.client.lastfm:
+        parent: integration.client
+        arguments:
+            - base_uri: %lastfm_api_uri%
 
     # Integration Clients
     integration.flickr_client:
@@ -23,3 +27,8 @@ services:
         arguments:
             - '@integration.client.flickr'
             - %flickr_api_key%
+    integration.lastfm_client:
+        class: Amoscato\Bundle\IntegrationBundle\Client\LastfmClient
+        arguments:
+            - '@integration.client.lastfm'
+            - %lastfm_api_key%

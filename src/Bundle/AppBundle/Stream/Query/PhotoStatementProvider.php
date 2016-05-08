@@ -11,6 +11,9 @@ class PhotoStatementProvider
      */
     private $database;
 
+    /**
+     * @var string
+     */
     private static $insertionSql = <<<SQL
 INSERT INTO photo (
   type,
@@ -20,7 +23,13 @@ INSERT INTO photo (
   height,
   title,
   reference_url
-) VALUES %s;
+) VALUES %s
+ON CONFLICT ON CONSTRAINT photo_type_source_id DO UPDATE SET
+  url = EXCLUDED.url,
+  width = EXCLUDED.width,
+  height = EXCLUDED.height,
+  title = EXCLUDED.title,
+  reference_url = EXCLUDED.reference_url;
 SQL;
 
     /**

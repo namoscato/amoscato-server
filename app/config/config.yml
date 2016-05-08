@@ -4,8 +4,8 @@ imports:
 
 parameters:
     locale: en
-    flickr_photo_path: 'https://www.flickr.com/photos/'
     flickr_user_id: 91374488@N07
+    lastfm_user: namoscato
 
 framework:
     #esi:             ~

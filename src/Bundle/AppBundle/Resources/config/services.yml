@@ -2,8 +2,10 @@ services:
     # Commands
     amoscato.command.load_stream_items:
         class: Amoscato\Bundle\AppBundle\Command\LoadStreamItemsCommand
-        calls:
-            - [pushSource, ['@amoscato.stream_source.flickr']]
+        arguments:
+            -
+                - '@amoscato.stream_source.flickr'
+                - '@amoscato.stream_source.lastfm'
         tags:
             - { name: console.command }
 
@@ -27,4 +29,11 @@ services:
             - '@integration.flickr_client'
         calls:
             - [setUserId, [%flickr_user_id%]]
-            - [setPhotoPath, [%flickr_photo_path%]]
+            - [setPhotoUri, [%flickr_photo_uri%]]
+    amoscato.stream_source.lastfm:
+        parent: amoscato.stream_source
+        class: Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource
+        arguments:
+            - '@integration.lastfm_client'
+        calls:
+            - [setUser, [%lastfm_user%]]

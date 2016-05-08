@@ -2,31 +2,9 @@
 
 namespace Amoscato\Bundle\IntegrationBundle\Client;
 
-use GuzzleHttp\Client;
-
-class FlickrClient
+class FlickrClient extends Client
 {
     const METHOD_PEOPLE_GET_PUBLIC_PHOTOS = 'flickr.people.getPublicPhotos';
-
-    /**
-     * @var string
-     */
-    private $apiKey;
-
-    /**
-     * @var Client
-     */
-    private $client;
-
-    /**
-     * @param Client $client
-     * @param string $apiKey
-     */
-    public function __construct(Client $client, $apiKey)
-    {
-        $this->client = $client;
-        $this->apiKey = $apiKey;
-    }
 
     /**
      * @param string $userId

@@ -6,7 +6,8 @@ CREATE TABLE photo (
   width SMALLINT NOT NULL,
   height SMALLINT NOT NULL,
   title VARCHAR(255),
-  reference_url TEXT
+  reference_url TEXT,
+  CONSTRAINT photo_type_source_id UNIQUE (type, source_id)
 );
 
 CREATE INDEX photo_type ON photo (type);
