@@ -66,24 +66,40 @@ abstract class Source implements SourceInterface
         /** @var \Amoscato\Console\ConsoleOutput $output */
 
         $count = 0;
-        $items = $this->extract();
+        $limit = self::LIMIT;
+        $page = 1;
+        $previousCount = 0;
         $values = [];
-        
-        foreach ($items as $item) {
-            $values[] = $this->getType();
 
-            $itemValues = $this->transform($item);
+        do {
+            $items = $this->extract($limit, $page++);
 
-            $values = array_merge(
-                $values,
-                $itemValues
-            );
+            foreach ($items as $item) {
+                // TODO: Break if item is already in database
 
-            $output->writeVerbose("Transforming '" . $this->getType() . "' item: {$itemValues[4]}");
-            
-            $count++;
-        }
-        
+                $values[] = $this->getType();
+
+                $itemValues = $this->transform($item);
+
+                $values = array_merge(
+                    $values,
+                    $itemValues
+                );
+
+                $output->writeVerbose("Transforming " . $this->getType() . " item: {$itemValues[4]}");
+
+                $count++;
+            }
+
+            if ($previousCount === $count) {
+                break; // Prevent infinite loop
+            }
+
+            $previousCount = $count;
+        } while ($count < $limit);
+
+        $output->writeln("Loading {$count} " . $this->getType() . " items");
+
         $statement = $this->statementProvider->insertRows($count);
         
         return $statement->execute($values);

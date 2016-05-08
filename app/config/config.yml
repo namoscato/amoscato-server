@@ -5,6 +5,7 @@ imports:
 parameters:
     locale: en
     flickr_user_id: 91374488@N07
+    foodspotting_person_id: namoscato
     lastfm_user: namoscato
 
 framework:

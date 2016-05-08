@@ -78,7 +78,7 @@ class LoadStreamItemsCommand extends Command
     {
         /** @var \Amoscato\Console\ConsoleOutput $output */
 
-        $output->writeln("Loading {$type} source...");
+        $output->writeln("Extracting {$type} source...");
 
         $this->sources[$type]->load($output);
     }

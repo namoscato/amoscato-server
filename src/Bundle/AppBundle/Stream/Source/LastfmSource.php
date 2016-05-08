@@ -131,6 +131,8 @@ class LastfmSource extends Source
             }
         } while ($count < self::LIMIT);
 
+        $output->writeln("Loading {$count} " . $this->getType() . " items");
+
         $statement = $this->statementProvider->insertRows($count);
 
         return $statement->execute($values);
