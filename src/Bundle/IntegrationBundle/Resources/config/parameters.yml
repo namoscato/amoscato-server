@@ -1,0 +1,2 @@
+parameters:
+    flickr_host: 'https://api.flickr.com/services/rest/'

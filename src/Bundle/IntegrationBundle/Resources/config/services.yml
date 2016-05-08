@@ -1,0 +1,25 @@
+services:
+    # Client Factory
+    integration.client.factory:
+        class: Amoscato\Client\ClientFactory
+        arguments:
+            - GuzzleHttp\Client
+
+    # Guzzle Clients
+    integration.client:
+        abstract: true
+        class: Amoscato\Client\Client
+        factory:
+            - '@integration.client.factory'
+            - getClient
+    integration.client.flickr:
+        parent: integration.client
+        arguments:
+            - base_uri: %flickr_host%
+
+    # Integration Clients
+    integration.flickr_client:
+        class: Amoscato\Bundle\IntegrationBundle\Client\FlickrClient
+        arguments:
+            - '@integration.client.flickr'
+            - %flickr_api_key%
