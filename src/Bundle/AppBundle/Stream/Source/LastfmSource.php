@@ -115,16 +115,15 @@ class LastfmSource extends Source
                     continue; // Skip adjacent tracks on the same album
                 }
 
-                $values[] = $this->getType();
-
-                $trackValues = $this->transform($track);
-
                 $values = array_merge(
-                    $values,
-                    $trackValues
+                    [
+                        $this->getType()
+                    ],
+                    $this->transform($track),
+                    $values
                 );
 
-                $output->writeVerbose("Transforming " . $this->getType() . " item: {$trackValues[4]}");
+                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[5]}");
 
                 $previousAlbumId = $albumId;
                 $count++;

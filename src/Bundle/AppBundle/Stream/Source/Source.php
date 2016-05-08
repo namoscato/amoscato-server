@@ -77,16 +77,15 @@ abstract class Source implements SourceInterface
             foreach ($items as $item) {
                 // TODO: Break if item is already in database
 
-                $values[] = $this->getType();
-
-                $itemValues = $this->transform($item);
-
                 $values = array_merge(
-                    $values,
-                    $itemValues
+                    [
+                        $this->getType()
+                    ],
+                    $this->transform($item),
+                    $values
                 );
 
-                $output->writeVerbose("Transforming " . $this->getType() . " item: {$itemValues[4]}");
+                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[5]}");
 
                 $count++;
             }

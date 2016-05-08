@@ -4,6 +4,8 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 class FoodspottingSource extends Source
 {
+    const LIMIT = 20;
+
     /**
      * @var string
      */
