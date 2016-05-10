@@ -79,7 +79,6 @@ class LastfmSource extends Source
         }
 
         return [
-            $this->getAlbumId($item, true),
             $item->image[3]->{'#text'},
             300,
             300,
@@ -100,13 +99,22 @@ class LastfmSource extends Source
         $page = 1;
         $previousAlbumId = null;
         $values = [];
+
+        $latestSourceId = $this->getLatestSourceId();
         
         do {
             $tracks = $this->extract(200, $page++);
 
             foreach ($tracks as $track) {
-                if (!isset($track->date)) {
-                    continue; // Skip currently playing track
+                if (!isset($track->date)) { // Skip currently playing track
+                    continue;
+                }
+
+                $sourceId = $this->getSourceId($track);
+
+                if ($latestSourceId === $sourceId) { // Break if item is already in database
+                    $output->writeDebug("Item {$latestSourceId} is already in the database");
+                    break 2;
                 }
 
                 $albumId = $this->getAlbumId($track);
@@ -117,7 +125,8 @@ class LastfmSource extends Source
 
                 $values = array_merge(
                     [
-                        $this->getType()
+                        $this->getType(),
+                        $sourceId
                     ],
                     $this->transform($track),
                     $values
@@ -131,6 +140,10 @@ class LastfmSource extends Source
         } while ($count < self::LIMIT);
 
         $output->writeln("Loading {$count} " . $this->getType() . " items");
+
+        if ($count === 0) {
+            return true;
+        }
 
         $statement = $this->statementProvider->insertRows($count);
 
@@ -155,6 +168,15 @@ class LastfmSource extends Source
         }
 
         return hash('md5', $albumId);
+    }
+
+    /**
+     * @param object $item
+     * @return string
+     */
+    protected function getSourceId($item)
+    {
+        return $this->getAlbumId($item, true);
     }
 
     /**

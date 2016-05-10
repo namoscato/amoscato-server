@@ -35,6 +35,17 @@ SQL;
     /**
      * @var string
      */
+    private static $selectLatestSourceIdSql = <<<SQL
+SELECT source_id
+FROM photo
+WHERE type = :type
+ORDER BY id DESC
+LIMIT 1;
+SQL;
+
+    /**
+     * @var string
+     */
     private static $insertionRowSql;
 
     /**
@@ -59,5 +70,13 @@ SQL;
                 implode(', ', array_fill(0, $rowCount, self::$insertionRowSql))
             )
         );
+    }
+
+    /**
+     * @return \PDOStatement
+     */
+    public function selectLatestSourceId()
+    {
+        return $this->database->prepare(self::$selectLatestSourceIdSql);
     }
 }

@@ -48,7 +48,6 @@ class FlickrSource extends Source
     protected function transform($item)
     {
         return [
-            $item->id,
             $item->url_m,
             $item->width_m,
             $item->height_m,

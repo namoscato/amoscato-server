@@ -50,7 +50,6 @@ class FoodspottingSource extends Source
     protected function transform($item)
     {
         return [
-            $item->id,
             $item->thumb_280,
             280,
             280,

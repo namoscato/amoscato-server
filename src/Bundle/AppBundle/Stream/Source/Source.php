@@ -71,15 +71,23 @@ abstract class Source implements SourceInterface
         $previousCount = 0;
         $values = [];
 
+        $latestSourceId = $this->getLatestSourceId();
+
         do {
             $items = $this->extract($limit, $page++);
 
             foreach ($items as $item) {
-                // TODO: Break if item is already in database
+                $sourceId = $this->getSourceId($item);
+
+                if ($latestSourceId === $sourceId) { // Break if item is already in database
+                    $output->writeDebug("Item {$latestSourceId} is already in the database");
+                    break 2;
+                }
 
                 $values = array_merge(
                     [
-                        $this->getType()
+                        $this->getType(),
+                        $sourceId
                     ],
                     $this->transform($item),
                     $values
@@ -90,8 +98,8 @@ abstract class Source implements SourceInterface
                 $count++;
             }
 
-            if ($previousCount === $count) {
-                break; // Prevent infinite loop
+            if ($previousCount === $count) { // Prevent infinite loop
+                break;
             }
 
             $previousCount = $count;
@@ -99,8 +107,44 @@ abstract class Source implements SourceInterface
 
         $output->writeln("Loading {$count} " . $this->getType() . " items");
 
+        if ($count === 0) {
+            return true;
+        }
+
         $statement = $this->statementProvider->insertRows($count);
         
         return $statement->execute($values);
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getLatestSourceId()
+    {
+        $statement = $this->statementProvider->selectLatestSourceId();
+
+        $statement->bindValue(
+            ':type',
+            $this->getType()
+        );
+
+        $statement->execute();
+
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+
+        if (!$result) {
+            return null;
+        }
+
+        return $result['source_id'];
+    }
+
+    /**
+     * @param object $item
+     * @return string
+     */
+    protected function getSourceId($item)
+    {
+        return (string) $item->id;
     }
 }
