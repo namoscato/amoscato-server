@@ -93,6 +93,7 @@ class LastfmSource extends Source
         $count = 0;
         $page = 1;
         $previousAlbumId = null;
+        $previousCount = 0;
         $values = [];
 
         $latestSourceId = $this->getLatestSourceId();
@@ -132,6 +133,12 @@ class LastfmSource extends Source
                 $previousAlbumId = $albumId;
                 $count++;
             }
+
+            if ($previousCount === $count) { // Prevent infinite loop
+                break;
+            }
+
+            $previousCount = $count;
         } while ($count < self::LIMIT);
 
         $output->writeln("Loading {$count} " . $this->getType() . " items");
@@ -140,7 +147,9 @@ class LastfmSource extends Source
             return true;
         }
 
-        $statement = $this->getPhotoStatementProvider()->insertRows($count);
+        $statement = $this
+            ->getPhotoStatementProvider()
+            ->insertRows($count);
 
         return $statement->execute($values);
     }

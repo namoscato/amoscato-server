@@ -3,7 +3,6 @@
 namespace Tests\Bundle\AppBundle\Stream\Stream;
 
 use Mockery as m;
-use Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource;
 
 class SourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -13,7 +12,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var MockSource */
+    /** @var \Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource */
     private $source;
 
     /** @var m\Mock */
@@ -158,24 +157,28 @@ class SourceTest extends \PHPUnit_Framework_TestCase
                             'value-5-2',
                             'value-5-3',
                             'value-5-4',
+
                             'mockType',
                             '4',
                             'value-4-1',
                             'value-4-2',
                             'value-4-3',
                             'value-4-4',
+
                             'mockType',
                             '3',
                             'value-3-1',
                             'value-3-2',
                             'value-3-3',
                             'value-3-4',
+
                             'mockType',
                             '2',
                             'value-2-1',
                             'value-2-2',
                             'value-2-3',
                             'value-2-4',
+
                             'mockType',
                             '1',
                             'value-1-1',
