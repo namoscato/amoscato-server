@@ -11,19 +11,16 @@ abstract class Source implements SourceInterface
 {
     const LIMIT = 100;
 
-    /**
-     * @var PhotoStatementProvider
-     */
+    /** @var PDO */
+    private $database;
+
+    /** @var PhotoStatementProvider */
     protected $statementProvider;
 
-    /**
-     * @var Client
-     */
+    /** @var Client */
     protected $client;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $type;
 
     /**
@@ -32,7 +29,6 @@ abstract class Source implements SourceInterface
      */
     public function __construct(PDO $database, Client $client)
     {
-        $this->statementProvider = new PhotoStatementProvider($database);
         $this->client = $client;
     }
 
@@ -111,7 +107,9 @@ abstract class Source implements SourceInterface
             return true;
         }
 
-        $statement = $this->statementProvider->insertRows($count);
+        $statement = $this
+            ->getPhotoStatementProvider()
+            ->insertRows($count);
         
         return $statement->execute($values);
     }
@@ -121,7 +119,9 @@ abstract class Source implements SourceInterface
      */
     protected function getLatestSourceId()
     {
-        $statement = $this->statementProvider->selectLatestSourceId();
+        $statement = $this
+            ->getPhotoStatementProvider()
+            ->selectLatestSourceId();
 
         $statement->bindValue(
             ':type',
@@ -146,5 +146,17 @@ abstract class Source implements SourceInterface
     protected function getSourceId($item)
     {
         return (string) $item->id;
+    }
+
+    /**
+     * @return PhotoStatementProvider
+     */
+    public function getPhotoStatementProvider()
+    {
+        if (isset($this->statementProvider)) {
+            return $this->statementProvider;
+        }
+
+        return new PhotoStatementProvider($this->database);
     }
 }

@@ -6,14 +6,10 @@ use PDO;
 
 class PhotoStatementProvider
 {
-    /**
-     * @var PDO
-     */
+    /** @var PDO */
     private $database;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private static $insertionSql = <<<SQL
 INSERT INTO photo (
   type,
@@ -32,9 +28,7 @@ ON CONFLICT ON CONSTRAINT photo_type_source_id DO UPDATE SET
   reference_url = EXCLUDED.reference_url;
 SQL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private static $selectLatestSourceIdSql = <<<SQL
 SELECT source_id
 FROM photo
@@ -43,9 +37,7 @@ ORDER BY id DESC
 LIMIT 1;
 SQL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private static $insertionRowSql;
 
     /**
