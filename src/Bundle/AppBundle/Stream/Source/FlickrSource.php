@@ -4,39 +4,31 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 class FlickrSource extends Source
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $type = 'flickr';
 
-    /**
-     * @var \Amoscato\Bundle\IntegrationBundle\Client\FlickrClient
-     */
+    /** @var \Amoscato\Bundle\IntegrationBundle\Client\FlickrClient */
     protected $client;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $userId;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $photoUri;
 
     /**
-     * @param int $limit
-     * @param int $page
+     * @param int $perPage
+     * @param int $page optional
      * @return array
      */
-    protected function extract($limit = self::LIMIT, $page = 1)
+    protected function extract($perPage, $page = 1)
     {
         return $this->client->getPublicPhotos(
             $this->userId,
             [
                 'extras' => 'url_m,path_alias',
                 'page' => $page,
-                'per_page' => $limit
+                'per_page' => $perPage
             ]
         );
     }

@@ -4,40 +4,33 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 class FoodspottingSource extends Source
 {
-    const LIMIT = 20;
+    /** @var int */
+    protected $perPage = 20;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $type = 'foodspotting';
 
-    /**
-     * @var \Amoscato\Bundle\IntegrationBundle\Client\FoodspottingClient
-     */
+    /** @var \Amoscato\Bundle\IntegrationBundle\Client\FoodspottingClient */
     protected $client;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $personId;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $reviewUri;
 
     /**
-     * @param int $limit
-     * @param int $page
+     * @param int $perPage
+     * @param int $page optional
      * @return array
      */
-    protected function extract($limit = self::LIMIT, $page = 1)
+    protected function extract($perPage, $page = 1)
     {
         return $this->client->getReviews(
             $this->personId,
             [
                 'page' => $page,
-                'per_page' => $limit,
+                'per_page' => $perPage,
                 'sort' => 'latest'
             ]
         );

@@ -12,6 +12,9 @@ abstract class Source implements SourceInterface
 {
     const LIMIT = 100;
 
+    /** @var int */
+    protected $perPage = self::LIMIT;
+
     /** @var PDOFactory */
     private $databaseFactory;
 
@@ -43,11 +46,11 @@ abstract class Source implements SourceInterface
     }
 
     /**
-     * @param int $limit
-     * @param int $page
+     * @param int $perPage
+     * @param int $page optional
      * @return array
      */
-    abstract protected function extract($limit = self::LIMIT, $page = 1);
+    abstract protected function extract($perPage, $page = 1);
 
     /**
      * @param object $item
@@ -64,7 +67,6 @@ abstract class Source implements SourceInterface
         /** @var \Amoscato\Console\ConsoleOutput $output */
 
         $count = 0;
-        $limit = self::LIMIT;
         $page = 1;
         $previousCount = 0;
         $values = [];
@@ -72,7 +74,7 @@ abstract class Source implements SourceInterface
         $latestSourceId = $this->getLatestSourceId();
 
         do {
-            $items = $this->extract($limit, $page++);
+            $items = $this->extract($this->perPage, $page++);
 
             foreach ($items as $item) {
                 $sourceId = $this->getSourceId($item);
@@ -101,7 +103,7 @@ abstract class Source implements SourceInterface
             }
 
             $previousCount = $count;
-        } while ($count < $limit);
+        } while ($count < self::LIMIT);
 
         $output->writeln("Loading {$count} " . $this->getType() . " items");
 

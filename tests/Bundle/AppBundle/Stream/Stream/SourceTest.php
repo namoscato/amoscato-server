@@ -7,24 +7,16 @@ use Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource;
 
 class SourceTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var m\Mock
-     */
+    /** @var m\Mock */
     private $client;
 
-    /**
-     * @var m\Mock
-     */
+    /** @var m\Mock */
     private $statementProvider;
 
-    /**
-     * @var MockSource
-     */
+    /** @var MockSource */
     private $source;
 
-    /**
-     * @var m\Mock
-     */
+    /** @var m\Mock */
     private $output;
     
     protected function setUp()

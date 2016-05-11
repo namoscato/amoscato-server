@@ -8,24 +8,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LastfmSource extends Source
 {
-    /**
-     * @var string
-     */
+    /** @var int */
+    protected $perPage = 200;
+
+    /** @var string */
     protected $type = 'lastfm';
 
-    /**
-     * @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient
-     */
+    /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
     protected $client;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $albumInfo;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $user;
 
     /**
@@ -40,16 +35,16 @@ class LastfmSource extends Source
     }
 
     /**
-     * @param int $limit
-     * @param int $page
+     * @param int $perPage
+     * @param int $page optional
      * @return array
      */
-    protected function extract($limit = self::LIMIT, $page = 1)
+    protected function extract($perPage, $page = 1)
     {
         return $this->client->getRecentTracks(
             $this->user,
             [
-                'limit' => $limit,
+                'limit' => $perPage,
                 'page' => $page
             ]
         );
@@ -103,7 +98,7 @@ class LastfmSource extends Source
         $latestSourceId = $this->getLatestSourceId();
         
         do {
-            $tracks = $this->extract(200, $page++);
+            $tracks = $this->extract($this->perPage, $page++);
 
             foreach ($tracks as $track) {
                 if (!isset($track->date)) { // Skip currently playing track

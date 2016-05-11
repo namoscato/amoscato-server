@@ -8,9 +8,9 @@ class MockSource extends Source
 {
     protected $type = 'mockType';
 
-    protected function extract($limit = self::LIMIT, $page = 1)
+    protected function extract($perPage = self::LIMIT, $page = 1)
     {
-        return $this->mockExtract($limit, $page);
+        return $this->mockExtract($perPage, $page);
     }
 
     protected function transform($item)
