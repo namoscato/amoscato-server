@@ -12,7 +12,7 @@ services:
 
     # Database Connections
     amoscato.database:
-        class: PDO
+        class: Amoscato\Database\PDOFactory
         arguments:
             - 'pgsql:host=%database_host%;port=%database_port%;dbname=%database_name%'
             - %database_user%

@@ -34,7 +34,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
         $this->source = m::mock(
             'Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource[getPhotoStatementProvider,mockTransform,mockExtract]',
             [
-                m::mock('PDO'),
+                m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
             ]
         );

@@ -3,7 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
-use PDO;
+use Amoscato\Database\PDOFactory;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class LastfmSource extends Source
@@ -29,14 +29,14 @@ class LastfmSource extends Source
     private $user;
 
     /**
-     * @param PDO $database
+     * @param PDOFactory $databaseFactory
      * @param Client $client
      */
-    public function __construct(PDO $database, Client $client)
+    public function __construct(PDOFactory $databaseFactory, Client $client)
     {
         $this->albumInfo = [];
 
-        parent::__construct($database, $client);
+        parent::__construct($databaseFactory, $client);
     }
 
     /**
@@ -145,7 +145,7 @@ class LastfmSource extends Source
             return true;
         }
 
-        $statement = $this->statementProvider->insertRows($count);
+        $statement = $this->getPhotoStatementProvider()->insertRows($count);
 
         return $statement->execute($values);
     }

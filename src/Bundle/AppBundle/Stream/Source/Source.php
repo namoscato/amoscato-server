@@ -4,6 +4,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Database\PDOFactory;
 use PDO;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -11,8 +12,8 @@ abstract class Source implements SourceInterface
 {
     const LIMIT = 100;
 
-    /** @var PDO */
-    private $database;
+    /** @var PDOFactory */
+    private $databaseFactory;
 
     /** @var PhotoStatementProvider */
     protected $statementProvider;
@@ -24,11 +25,12 @@ abstract class Source implements SourceInterface
     protected $type;
 
     /**
-     * @param PDO $database
+     * @param PDOFactory $databaseFactory
      * @param Client $client
      */
-    public function __construct(PDO $database, Client $client)
+    public function __construct(PDOFactory $databaseFactory, Client $client)
     {
+        $this->databaseFactory = $databaseFactory;
         $this->client = $client;
     }
 
@@ -157,6 +159,8 @@ abstract class Source implements SourceInterface
             return $this->statementProvider;
         }
 
-        return new PhotoStatementProvider($this->database);
+        return new PhotoStatementProvider(
+            $this->databaseFactory->getInstance()
+        );
     }
 }
