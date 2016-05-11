@@ -2,17 +2,4 @@ language: php
 php:
     - '5.6'
 before_install:
-    - export SYMFONY__DATABASE_HOST=localhost
-    - export SYMFONY__DATABASE_PORT=5432
-    - export SYMFONY__DATABASE_NAME=postgres
-    - export SYMFONY__DATABASE_USER=root
-    - export SYMFONY__DATABASE_PASSWORD=root
-    - export SYMFONY__MAILER_TRANSPORT=smtp
-    - export SYMFONY__MAILER_HOST=localhost
-    - export SYMFONY__MAILER_USER=root
-    - export SYMFONY__MAILER_PASSWORD=root
-    - export SYMFONY__SECRET=changeme
-    - export SYMFONY__FLICKR_API_KEY=key
-    - export SYMFONY__LASTFM_API_KEY=key
-    - export SYMFONY__FOODSPOTTING_API_KEY=key
     - composer install -o --no-interaction
