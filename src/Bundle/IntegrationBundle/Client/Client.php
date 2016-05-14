@@ -6,14 +6,10 @@ use GuzzleHttp\Client as GuzzleClient;
 
 abstract class Client
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $apiKey;
 
-    /**
-     * @var Client
-     */
+    /** @var Client */
     protected $client;
 
     /**
