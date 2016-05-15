@@ -28,6 +28,10 @@ services:
         parent: integration.client
         arguments:
             - base_uri: %lastfm_api_uri%
+    integration.client.vimeo:
+        parent: integration.client
+        arguments:
+            - base_uri: %vimeo_api_uri%
     integration.client.youtube:
         parent: integration.client
         arguments:
@@ -54,6 +58,11 @@ services:
         arguments:
             - '@integration.client.lastfm'
             - %lastfm_api_key%
+    integration.vimeo_client:
+        class: Amoscato\Bundle\IntegrationBundle\Client\VimeoClient
+        arguments:
+            - '@integration.client.vimeo'
+            - %vimeo_access_token%
     integration.youtube_client:
         class: Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient
         arguments:

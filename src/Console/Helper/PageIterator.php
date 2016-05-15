@@ -126,4 +126,14 @@ class PageIterator implements Iterator
     {
         $this->pageValues[$this->pageIndex + 1] = $value;
     }
+
+    /**
+     * Sets the valid property
+     * 
+     * @param bool $isValid
+     */
+    public function setIsValid($isValid)
+    {
+        $this->isValid = $isValid;
+    }
 }

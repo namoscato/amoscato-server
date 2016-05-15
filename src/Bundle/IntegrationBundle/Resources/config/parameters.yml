@@ -5,5 +5,6 @@ parameters:
     foodspotting_review_uri: 'http://www.foodspotting.com/reviews/'
     goodreads_api_uri: 'https://www.goodreads.com/'
     lastfm_api_uri: 'http://ws.audioscrobbler.com/2.0/'
+    vimeo_api_uri: 'https://api.vimeo.com/'
     youtube_api_uri: 'https://www.googleapis.com/youtube/v3/'
     youtube_video_uri: 'https://youtu.be/'
