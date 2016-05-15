@@ -3,6 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Console\Helper\PageIterator;
+use Carbon\Carbon;
 use Symfony\Component\DomCrawler\Crawler;
 
 class GoodreadsSource extends Source
@@ -38,28 +39,41 @@ class GoodreadsSource extends Source
      */
     protected function transform($item)
     {
-        $crawler = $this->createCrawler($item);
+        $review = $this->createCrawler($item);
+        $book = $review->filter('book');
 
-        $imageUrl = $crawler->filter('image_url')->text();
+        $imageUrl = $book->filter('image_url')->text();
+        $imageWidth = null;
+        $imageHeight = null;
 
-        if (strpos($imageUrl, '/nophoto/')) { // Skip books with no photo
-            return false;
+        if (strpos($imageUrl, '/nophoto/')) {
+            $imageUrl = null;
+        } else {
+            $imageUrl = preg_replace( // Get reference to large image
+                '/(^.+)(m)(\/\d+\.jpg)$/',
+                '$1l$3',
+                $imageUrl
+            );
+
+            $imageSize = $this->getImageSize($imageUrl);
+
+            $imageWidth = $imageSize[0];
+            $imageHeight = $imageSize[1];
         }
 
-        $imageUrl = preg_replace( // Get reference to large image
-            '/(^.+)(m)(\/\d+\.jpg)$/',
-            '$1l$3',
-            $imageUrl
-        );
+        $readAt = $review->filter('read_at')->text();
 
-        $imageSize = $this->getImageSize($imageUrl);
+        if (empty($readAt)) {
+            $readAt = $review->filter('date_added')->text();
+        }
 
         return [
+            $book->filter('title')->text(),
+            $book->filter('link')->text(),
+            Carbon::parse($readAt)->setTimezone('UTC')->toDateTimeString(),
             $imageUrl,
-            $imageSize[0],
-            $imageSize[1],
-            $crawler->filter('title')->text(),
-            $crawler->filter('link')->text()
+            $imageWidth,
+            $imageHeight
         ];
     }
 

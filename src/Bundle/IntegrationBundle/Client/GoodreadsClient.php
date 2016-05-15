@@ -7,6 +7,7 @@ use Symfony\Component\DomCrawler\Crawler;
 class GoodreadsClient extends Client
 {
     /**
+     * @see https://www.goodreads.com/api/index#reviews.list
      * @param integer $userId
      * @param array $args optional
      * @return Crawler
@@ -30,7 +31,7 @@ class GoodreadsClient extends Client
 
         $crawler = $this->createCrawler((string) $response->getBody());
 
-        return $crawler->filter('GoodreadsResponse reviews review book');
+        return $crawler->filter('GoodreadsResponse reviews review');
     }
 
     /**

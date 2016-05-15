@@ -5,6 +5,7 @@ namespace Amoscato\Bundle\IntegrationBundle\Client;
 class YouTubeClient extends Client
 {
     /**
+     * @see https://developers.google.com/youtube/v3/docs/playlistItems/list
      * @param string $playlistId
      * @param array $args optional
      * @return object

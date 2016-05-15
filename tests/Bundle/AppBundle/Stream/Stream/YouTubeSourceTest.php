@@ -4,6 +4,10 @@ namespace Tests\Bundle\AppBundle\Stream\Stream;
 
 use Mockery as m;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
 class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
@@ -20,6 +24,13 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
+        m::mock(
+            'alias:Carbon\Carbon',
+            [
+                'now->toDateTimeString' => 'date'
+            ]
+        );
+
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
@@ -149,11 +160,12 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                         ->with(m::mustBe([
                             'youtube',
                             123,
+                            'video title',
+                            'youtube.com/123',
+                            'date',
                             'img.jpg',
                             100,
                             300,
-                            'video title',
-                            'youtube.com/123',
                         ]));
                 })
             );

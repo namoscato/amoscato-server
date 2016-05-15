@@ -61,7 +61,7 @@ class GoodreadsClientTest extends \PHPUnit_Framework_TestCase
 
                         $mock
                             ->shouldReceive('filter')
-                            ->with('GoodreadsResponse reviews review book')
+                            ->with('GoodreadsResponse reviews review')
                             ->andReturn('books');
                     }
                 )

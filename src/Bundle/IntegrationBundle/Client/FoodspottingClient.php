@@ -5,6 +5,7 @@ namespace Amoscato\Bundle\IntegrationBundle\Client;
 class FoodspottingClient extends Client
 {
     /**
+     * @see http://www.foodspotting.com/api#people-reviews
      * @param string $personId
      * @param array $args optional
      * @return array

@@ -102,7 +102,8 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
                         ],
                         'place' => (object) [
                             'name' => 'place name'
-                        ]
+                        ],
+                        'created_at' => '2016-05-15 19:37:06'
                     ]
                 ]
             )
@@ -121,11 +122,12 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
                         ->with(m::mustBe([
                             'foodspotting',
                             '1',
+                            'item name at place name',
+                            'foodspotting.com/1',
+                            '2016-05-15 19:37:06',
                             'img.jpg',
                             280,
                             280,
-                            'item name at place name',
-                            'foodspotting.com/1',
                         ]));
                 })
             );

@@ -5,6 +5,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class LastfmSource extends Source
@@ -74,12 +75,23 @@ class LastfmSource extends Source
             $this->albumInfo[$albumId] = $album; // Cache album info
         }
 
+        $imageUrl = null;
+        $imageWidth = null;
+        $imageHeight = null;
+
+        if (!empty($item->image[3]->{'#text'})) {
+            $imageUrl = $item->image[3]->{'#text'};
+            $imageWidth = 300;
+            $imageHeight = 300;
+        }
+
         return [
-            $item->image[3]->{'#text'},
-            300,
-            300,
             "\"{$albumName}\" by {$artistName}",
-            empty($album->url) ? null : $album->url
+            empty($album->url) ? null : $album->url,
+            Carbon::createFromTimestampUTC($item->date->uts)->toDateTimeString(),
+            $imageUrl,
+            $imageWidth,
+            $imageHeight
         ];
     }
 
@@ -101,7 +113,7 @@ class LastfmSource extends Source
             $tracks = $this->extract($this->perPage, $iterator);
 
             foreach ($tracks as $track) {
-                if (!isset($track->date) || empty($track->image[3]->{'#text'})) { // Skip currently playing track and tracks without an image
+                if (!isset($track->date)) { // Skip currently playing track
                     continue;
                 }
 
@@ -127,7 +139,7 @@ class LastfmSource extends Source
                     $values
                 );
 
-                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[5]}");
+                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
 
                 $previousAlbumId = $albumId;
                 $iterator->incrementCount();

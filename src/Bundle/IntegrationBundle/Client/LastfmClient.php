@@ -8,6 +8,7 @@ class LastfmClient extends Client
     const METHOD_USER_GET_RECENT_TRACKS = 'user.getRecentTracks';
 
     /**
+     * @see http://www.last.fm/api/show/album.getInfo
      * @param string $id
      * @param array $args optional
      * @return object
@@ -27,6 +28,7 @@ class LastfmClient extends Client
     }
 
     /**
+     * @see http://www.last.fm/api/show/album.getInfo
      * @param string $artistName
      * @param string $albumName
      * @param array $args optional
@@ -67,6 +69,7 @@ class LastfmClient extends Client
     }
 
     /**
+     * @see http://www.last.fm/api/show/user.getRecentTracks
      * @param string $method
      * @param array $args optional
      * @return \Psr\Http\Message\ResponseInterface

@@ -3,6 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Console\Helper\PageIterator;
+use Carbon\Carbon;
 
 class FlickrSource extends Source
 {
@@ -28,7 +29,7 @@ class FlickrSource extends Source
         return $this->client->getPublicPhotos(
             $this->userId,
             [
-                'extras' => 'url_m,path_alias',
+                'extras' => 'url_m,path_alias,date_upload',
                 'page' => $iterator->current(),
                 'per_page' => $perPage
             ]
@@ -42,11 +43,12 @@ class FlickrSource extends Source
     protected function transform($item)
     {
         return [
+            $item->title,
+            "{$this->photoUri}{$item->pathalias}/{$item->id}",
+            Carbon::createFromTimestampUTC($item->dateupload)->toDateTimeString(),
             $item->url_m,
             $item->width_m,
-            $item->height_m,
-            $item->title,
-            "{$this->photoUri}{$item->pathalias}/{$item->id}"
+            $item->height_m
         ];
     }
 

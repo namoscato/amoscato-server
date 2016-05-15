@@ -7,6 +7,7 @@ class FlickrClient extends Client
     const METHOD_PEOPLE_GET_PUBLIC_PHOTOS = 'flickr.people.getPublicPhotos';
 
     /**
+     * @see https://www.flickr.com/services/api/flickr.people.getPublicPhotos.html
      * @param string $userId
      * @param array $args optional
      * @return array

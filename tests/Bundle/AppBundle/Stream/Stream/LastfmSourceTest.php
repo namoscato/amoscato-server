@@ -67,7 +67,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '23c3351c292bc77a4d39dadb42988410' // mbid_2-tB
+                                'source_id' => '3e1c011ebbbde3ecaaa7704b0e543fb5' // mbid_2-tB
                             ]
                         );
                 })
@@ -120,22 +120,9 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                             'mbid' => 1
                         ]
                     ],
-                    (object) [ // Album with no image
-                        'date' => (object) [
-                            'uts' => 'tA'
-                        ],
-                        'image' => [
-                            0,
-                            1,
-                            2,
-                            (object) [
-                                '#text' => ''
-                            ]
-                        ]
-                    ],
                     (object) [
                         'date' => (object) [
-                            'uts' => 'tA'
+                            'uts' => '1463341026'
                         ],
                         'album' => (object) [
                             'mbid' => 2,
@@ -153,9 +140,9 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                             ]
                         ]
                     ],
-                    (object) [
+                    (object) [ // Album with no image
                         'date' => (object) [
-                            'uts' => 'tB'
+                            'uts' => '1463341016'
                         ],
                         'album' => (object) [
                             'mbid' => '',
@@ -169,7 +156,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                             1,
                             2,
                             (object) [
-                                '#text' => 'image3.jpg'
+                                '#text' => ''
                             ]
                         ]
                     ],
@@ -187,7 +174,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                 [
                     (object) [ // Adjacent track on the same album
                         'date' => (object) [
-                            'uts' => 'tC'
+                            'uts' => '1463341006'
                         ],
                         'album' => (object) [
                             'mbid' => '',
@@ -199,7 +186,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                     ],
                     (object) [
                         'date' => (object) [
-                            'uts' => 'tD'
+                            'uts' => '1463340996'
                         ],
                         'album' => (object) [
                             'mbid' => 2,
@@ -254,28 +241,31 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->with(m::mustBe([
                             'lastfm',
-                            '4b36111269579316ae736e6ccf2174d4',
+                            '34d824497a7cb05b84eedfee004ed7ad',
+                            '"album two" by artist two',
+                            'lastfm.com/album2',
+                            '2016-05-15 19:36:36',
                             'image2.jpg',
                             300,
                             300,
-                            '"album two" by artist two',
-                            'lastfm.com/album2',
 
                             'lastfm',
-                            '5f4c75e2a86bffbec2c31d1446f80f86',
-                            'image3.jpg',
-                            300,
-                            300,
+                            '74e8f4f589902bfac377ae294b9169f6',
                             '"album three" by artist three',
+                            null,
+                            '2016-05-15 19:36:56',
+                            null,
+                            null,
                             null,
 
                             'lastfm',
-                            '4bee2ffffcc6b58157640362b813666d',
+                            '298fb0003e79d1270b741ebb1703316b',
+                            '"album two" by artist two',
+                            'lastfm.com/album2',
+                            '2016-05-15 19:37:06',
                             'image2.jpg',
                             300,
                             300,
-                            '"album two" by artist two',
-                            'lastfm.com/album2',
                         ]))
                         ->andReturn(true);
 
@@ -296,7 +286,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                 [
                     (object) [
                         'date' => (object) [
-                            'uts' => 'tA'
+                            'uts' => '1363341030'
                         ],
                         'album' => (object) [
                             'mbid' => 'mbid_1',
@@ -316,7 +306,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                     ],
                     (object) [
                         'date' => (object) [
-                            'uts' => 'tB'
+                            'uts' => '1363341020'
                         ],
                         'album' => (object) [
                             'mbid' => 'mbid_2',
@@ -336,7 +326,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                     ],
                     (object) [
                         'date' => (object) [
-                            'uts' => 'tC'
+                            'uts' => '1363341010'
                         ],
                         'album' => (object) [
                             'mbid' => 'mbid_3',
@@ -374,12 +364,13 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->with(m::mustBe([
                             'lastfm',
-                            '8a0a5260c6c72ff26ce243f632e92ab6',
+                            'a7c6d84df1967ae10e71402404b7df31',
+                            '"album one" by artist one',
+                            null,
+                            '2013-03-15 09:50:30',
                             'image1.jpg',
                             300,
                             300,
-                            '"album one" by artist one',
-                            null
                         ]));
                 })
             );

@@ -11,29 +11,31 @@ class PhotoStatementProvider
 
     /** @var string */
     private static $insertionSql = <<<SQL
-INSERT INTO photo (
+INSERT INTO stream (
   type,
   source_id,
-  url,
-  width,
-  height,
   title,
-  reference_url
+  url,
+  created_at,
+  photo_url,
+  photo_width,
+  photo_height
 ) VALUES %s
-ON CONFLICT ON CONSTRAINT photo_type_source_id DO UPDATE SET
-  url = EXCLUDED.url,
-  width = EXCLUDED.width,
-  height = EXCLUDED.height,
+ON CONFLICT ON CONSTRAINT stream_type_source_id DO UPDATE SET
   title = EXCLUDED.title,
-  reference_url = EXCLUDED.reference_url;
+  url = EXCLUDED.url,
+  created_at = EXCLUDED.created_at,
+  photo_url = EXCLUDED.photo_url,
+  photo_width = EXCLUDED.photo_width,
+  photo_height = EXCLUDED.photo_height;
 SQL;
 
     /** @var string */
     private static $selectLatestSourceIdSql = <<<SQL
 SELECT source_id
-FROM photo
+FROM stream
 WHERE type = :type
-ORDER BY id DESC
+ORDER BY created_at DESC, id DESC
 LIMIT 1;
 SQL;
 
@@ -47,7 +49,7 @@ SQL;
     {
         $this->database = $database;
 
-        self::$insertionRowSql = '(' . implode(', ', array_fill(0, 7, '?')) . ')';
+        self::$insertionRowSql = '(' . implode(', ', array_fill(0, 8, '?')) . ')';
     }
 
     /**

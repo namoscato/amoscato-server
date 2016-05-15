@@ -3,6 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Console\Helper\PageIterator;
+use Carbon\Carbon;
 
 class FoodspottingSource extends Source
 {
@@ -45,11 +46,12 @@ class FoodspottingSource extends Source
     protected function transform($item)
     {
         return [
+            "{$item->item->name} at {$item->place->name}",
+            "{$this->reviewUri}{$item->id}",
+            Carbon::parse($item->created_at)->toDateTimeString(),
             $item->thumb_280,
             280,
-            280,
-            "{$item->item->name} at {$item->place->name}",
-            "{$this->reviewUri}{$item->id}"
+            280
         ];
     }
 

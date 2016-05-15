@@ -87,7 +87,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
             ->with(
                 10,
                 [
-                    'extras' => 'url_m,path_alias',
+                    'extras' => 'url_m,path_alias,date_upload',
                     'page' => 1,
                     'per_page' => 100
                 ]
@@ -101,6 +101,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
                         'height_m' => 'h',
                         'title' => 'photo',
                         'pathalias' => 'user',
+                        'dateupload' => '1463341026'
                     ]
                 ]
             )
@@ -119,11 +120,12 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
                         ->with(m::mustBe([
                             'flickr',
                             '1',
+                            'photo',
+                            'flickr.com/user/1',
+                            '2016-05-15 19:37:06',
                             'img.jpg',
                             'w',
                             'h',
-                            'photo',
-                            'flickr.com/user/1',
                         ]));
                 })
             );

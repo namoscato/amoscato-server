@@ -120,33 +120,54 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
                         $mock
                             ->shouldReceive('filter')
-                            ->with('image_url')
+                            ->with('book')
                             ->andReturn(
                                 m::mock(
-                                    [
-                                        'text' => 'goodreads.com/123m/456.jpg'
-                                    ]
+                                    'Symfony\Component\DomCrawler\Crawler',
+                                    function($mock) {
+                                        $mock
+                                            ->shouldReceive('filter')
+                                            ->with('image_url')
+                                            ->andReturn(
+                                                m::mock(
+                                                    [
+                                                        'text' => 'goodreads.com/123m/456.jpg'
+                                                    ]
+                                                )
+                                            );
+
+                                        $mock
+                                            ->shouldReceive('filter')
+                                            ->with('title')
+                                            ->andReturn(
+                                                m::mock(
+                                                    [
+                                                        'text' => 'title1'
+                                                    ]
+                                                )
+                                            );
+
+                                        $mock
+                                            ->shouldReceive('filter')
+                                            ->with('link')
+                                            ->andReturn(
+                                                m::mock(
+                                                    [
+                                                        'text' => 'link1'
+                                                    ]
+                                                )
+                                            );
+                                    }
                                 )
                             );
 
                         $mock
                             ->shouldReceive('filter')
-                            ->with('title')
+                            ->with('read_at')
                             ->andReturn(
                                 m::mock(
                                     [
-                                        'text' => 'title1'
-                                    ]
-                                )
-                            );
-
-                        $mock
-                            ->shouldReceive('filter')
-                            ->with('link')
-                            ->andReturn(
-                                m::mock(
-                                    [
-                                        'text' => 'link1'
+                                        'text' => '2016-05-15 19:37:06 EST'
                                     ]
                                 )
                             );
@@ -186,11 +207,54 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
                         $mock
                             ->shouldReceive('filter')
-                            ->with('image_url')
+                            ->with('book')
+                            ->andReturn(
+                                m::mock(
+                                    'Symfony\Component\DomCrawler\Crawler',
+                                    function($mock) {
+                                        $mock
+                                            ->shouldReceive('filter')
+                                            ->with('image_url')
+                                            ->andReturn(
+                                                m::mock(
+                                                    [
+                                                        'text' => 'goodreads.com/nophoto/123.jpg'
+                                                    ]
+                                                )
+                                            );
+
+                                        $mock
+                                            ->shouldReceive('filter')
+                                            ->with('title')
+                                            ->andReturn(
+                                                m::mock(
+                                                    [
+                                                        'text' => 'title2'
+                                                    ]
+                                                )
+                                            );
+
+                                        $mock
+                                            ->shouldReceive('filter')
+                                            ->with('link')
+                                            ->andReturn(
+                                                m::mock(
+                                                    [
+                                                        'text' => 'link2'
+                                                    ]
+                                                )
+                                            );
+                                    }
+                                )
+                            );
+
+                        $mock
+                            ->shouldReceive('filter')
+                            ->with('read_at')
                             ->andReturn(
                                 m::mock(
                                     [
-                                        'text' => 'goodreads.com/nophoto/123.jpg'
+                                        'text' => '2016-05-15 19:37:06 EST'
                                     ]
                                 )
                             );
@@ -200,7 +264,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
-            ->with(1)
+            ->with(2)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
@@ -209,12 +273,22 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->with(m::mustBe([
                             'goodreads',
+                            2,
+                            'title2',
+                            'link2',
+                            '2016-05-16 00:37:06',
+                            null,
+                            null,
+                            null,
+
+                            'goodreads',
                             1,
+                            'title1',
+                            'link1',
+                            '2016-05-16 00:37:06',
                             'goodreads.com/123l/456.jpg',
                             100,
                             300,
-                            'title1',
-                            'link1',
                         ]));
                 })
             );

@@ -2,7 +2,10 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
+use Carbon\Carbon;
 
 class YouTubeSource extends Source
 {
@@ -20,6 +23,20 @@ class YouTubeSource extends Source
 
     /** @var string */
     private $videoUri;
+
+    /** @var string */
+    private $nowDateTimeString;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param Client $client
+     */
+    public function __construct(PDOFactory $databaseFactory, Client $client)
+    {
+        $this->nowDateTimeString = Carbon::now()->toDateTimeString();
+
+        parent::__construct($databaseFactory, $client);
+    }
 
     /**
      * @param int $perPage
@@ -60,11 +77,12 @@ class YouTubeSource extends Source
         $image = $item->snippet->thumbnails->medium;
 
         return [
+            $item->snippet->title,
+            "{$this->videoUri}{$item->snippet->resourceId->videoId}",
+            $this->nowDateTimeString,
             $image->url,
             $image->width,
             $image->height,
-            $item->snippet->title,
-            "{$this->videoUri}{$item->snippet->resourceId->videoId}"
         ];
     }
 

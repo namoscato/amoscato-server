@@ -98,7 +98,7 @@ abstract class Source implements SourceInterface
                     $values
                 );
 
-                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[5]}");
+                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
 
                 $iterator->incrementCount();
             }
