@@ -120,6 +120,19 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                             'mbid' => 1
                         ]
                     ],
+                    (object) [ // Album with no image
+                        'date' => (object) [
+                            'uts' => 'tA'
+                        ],
+                        'image' => [
+                            0,
+                            1,
+                            2,
+                            (object) [
+                                '#text' => ''
+                            ]
+                        ]
+                    ],
                     (object) [
                         'date' => (object) [
                             'uts' => 'tA'

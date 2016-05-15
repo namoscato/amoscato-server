@@ -124,6 +124,9 @@ class SourceTest extends \PHPUnit_Framework_TestCase
                     (object) [
                         'id' => 5
                     ],
+                    (object) [
+                        'id' => 6
+                    ],
                 ]
             )
             ->shouldReceive('mockExtract')
@@ -133,6 +136,10 @@ class SourceTest extends \PHPUnit_Framework_TestCase
         $this->source
             ->shouldReceive('mockTransform')
             ->andReturnUsing(function($item) {
+                if ($item->id === 6) {
+                    return false;
+                }
+
                 return [
                     "value-{$item->id}-1",
                     "value-{$item->id}-2",
@@ -214,11 +221,14 @@ class SourceTest extends \PHPUnit_Framework_TestCase
 
         $this->source
             ->shouldReceive('mockTransform')
-            ->andReturnUsing(function($item) {
-                return [
-                    1, 2, 3, 4
-                ];
-            });
+            ->andReturn(
+                [
+                    1,
+                    2,
+                    3,
+                    4
+                ]
+            );
 
         $this->statementProvider
             ->shouldReceive('insertRows')

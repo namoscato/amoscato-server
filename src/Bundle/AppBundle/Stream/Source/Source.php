@@ -84,12 +84,18 @@ abstract class Source implements SourceInterface
                     break 2;
                 }
 
+                $transformedItem = $this->transform($item);
+
+                if ($transformedItem === false) { // Skip select items
+                    continue;
+                }
+
                 $values = array_merge(
                     [
                         $this->getType(),
                         $sourceId
                     ],
-                    $this->transform($item),
+                    $transformedItem,
                     $values
                 );
 

@@ -20,6 +20,10 @@ services:
         parent: integration.client
         arguments:
             - base_uri: %foodspotting_api_uri%
+    integration.client.goodreads:
+        parent: integration.client
+        arguments:
+            - base_uri: %goodreads_api_uri%
     integration.client.lastfm:
         parent: integration.client
         arguments:
@@ -36,6 +40,11 @@ services:
         arguments:
             - '@integration.client.foodspotting'
             - %foodspotting_api_key%
+    integration.goodreads_client:
+        class: Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient
+        arguments:
+            - '@integration.client.goodreads'
+            - %goodreads_api_key%
     integration.lastfm_client:
         class: Amoscato\Bundle\IntegrationBundle\Client\LastfmClient
         arguments:
