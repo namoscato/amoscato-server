@@ -102,7 +102,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function test_load_with_less_than_100_values()
+    public function test_load_with_items()
     {
         $this->client
             ->shouldReceive('getRecentTracks')
@@ -286,67 +286,6 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
             true,
             $this->source->load($this->output)
         );
-    }
-
-    public function test_load_with_over_100_values()
-    {
-        $this->client
-            ->shouldReceive('getRecentTracks')
-            ->with(
-                'user',
-                [
-                    'limit' => 200,
-                    'page' => 1
-                ]
-            )
-            ->andReturnUsing(function() {
-                $result = [];
-
-                for ($i = 1; $i <= 100; $i++) {
-                    $result[] = (object) [
-                        'date' => (object) [
-                            'uts' => 'time'
-                        ],
-                        'album' => (object) [
-                            'mbid' => $i,
-                            '#text' => 'album'
-                        ],
-                        'artist' => (object) [
-                            '#text' => 'artist'
-                        ],
-                        'image' => [
-                            0,
-                            1,
-                            2,
-                            (object) [
-                                '#text' => 'image.jpg'
-                            ]
-                        ]
-                    ];
-                }
-
-                return $result;
-            });
-
-        $this->client
-            ->shouldReceive('getAlbumInfoById')
-            ->andReturn(
-                (object) []
-            );
-
-        $this->statementProvider
-            ->shouldReceive('insertRows')
-            ->once()
-            ->with(100)
-            ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
-
-                    $mock->shouldReceive('execute');
-                })
-            );
-
-        $this->source->load($this->output);
     }
 
     public function test_load_with_previous_items()

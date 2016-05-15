@@ -8,6 +8,7 @@ services:
                 - '@amoscato.stream_source.foodspotting'
                 - '@amoscato.stream_source.goodreads'
                 - '@amoscato.stream_source.lastfm'
+                - '@amoscato.stream_source.youtube'
         tags:
             - { name: console.command }
 
@@ -54,3 +55,11 @@ services:
             - '@integration.lastfm_client'
         calls:
             - [setUser, [%lastfm_user%]]
+    amoscato.stream_source.youtube:
+        parent: amoscato.stream_source
+        class: Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource
+        arguments:
+            - '@integration.youtube_client'
+        calls:
+            - [setPlaylistId, [%youtube_playlist_id%]]
+            - [setVideoUri, [%youtube_video_uri%]]

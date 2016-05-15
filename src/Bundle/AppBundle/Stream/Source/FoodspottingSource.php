@@ -2,6 +2,8 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Console\Helper\PageIterator;
+
 class FoodspottingSource extends Source
 {
     /** @var int */
@@ -21,15 +23,15 @@ class FoodspottingSource extends Source
 
     /**
      * @param int $perPage
-     * @param int $page optional
+     * @param PageIterator $iterator
      * @return array
      */
-    protected function extract($perPage, $page = 1)
+    protected function extract($perPage, PageIterator $iterator)
     {
         return $this->client->getReviews(
             $this->personId,
             [
-                'page' => $page,
+                'page' => $iterator->current(),
                 'per_page' => $perPage,
                 'sort' => 'latest'
             ]

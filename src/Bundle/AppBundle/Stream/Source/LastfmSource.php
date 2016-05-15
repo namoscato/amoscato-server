@@ -3,6 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -36,16 +37,16 @@ class LastfmSource extends Source
 
     /**
      * @param int $perPage
-     * @param int $page optional
+     * @param PageIterator $iterator optional
      * @return array
      */
-    protected function extract($perPage, $page = 1)
+    protected function extract($perPage, PageIterator $iterator)
     {
         return $this->client->getRecentTracks(
             $this->user,
             [
                 'limit' => $perPage,
-                'page' => $page
+                'page' => $iterator->current()
             ]
         );
     }
@@ -88,21 +89,19 @@ class LastfmSource extends Source
      */
     public function load(OutputInterface $output)
     {
-        /** @var \Amoscato\Console\ConsoleOutput $output */
+        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
 
-        $count = 0;
-        $page = 1;
+        $iterator = new PageIterator(self::LIMIT);
         $previousAlbumId = null;
-        $previousCount = 0;
         $values = [];
 
         $latestSourceId = $this->getLatestSourceId();
         
-        do {
-            $tracks = $this->extract($this->perPage, $page++);
+        while ($iterator->valid()) {
+            $tracks = $this->extract($this->perPage, $iterator);
 
             foreach ($tracks as $track) {
-                if (!isset($track->date) || empty($track->image[3]->{'#text'})) { // Skip currently playing track and tracks without image
+                if (!isset($track->date) || empty($track->image[3]->{'#text'})) { // Skip currently playing track and tracks without an image
                     continue;
                 }
 
@@ -131,27 +130,13 @@ class LastfmSource extends Source
                 $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[5]}");
 
                 $previousAlbumId = $albumId;
-                $count++;
+                $iterator->incrementCount();
             }
 
-            if ($previousCount === $count) { // Prevent infinite loop
-                break;
-            }
-
-            $previousCount = $count;
-        } while ($count < self::LIMIT);
-
-        $output->writeln("Loading {$count} " . $this->getType() . " items");
-
-        if ($count === 0) {
-            return true;
+            $iterator->next();
         }
 
-        $statement = $this
-            ->getPhotoStatementProvider()
-            ->insertRows($count);
-
-        return $statement->execute($values);
+        return $this->insertValues($output, $iterator->getCount(), $values);
     }
 
     /**

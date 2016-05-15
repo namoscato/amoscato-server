@@ -4,6 +4,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
 use PDO;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -47,10 +48,10 @@ abstract class Source implements SourceInterface
 
     /**
      * @param int $perPage
-     * @param int $page optional
+     * @param PageIterator $iterator
      * @return array
      */
-    abstract protected function extract($perPage, $page = 1);
+    abstract protected function extract($perPage, PageIterator $iterator);
 
     /**
      * @param object $item
@@ -64,17 +65,15 @@ abstract class Source implements SourceInterface
      */
     public function load(OutputInterface $output)
     {
-        /** @var \Amoscato\Console\ConsoleOutput $output */
+        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
 
-        $count = 0;
-        $page = 1;
-        $previousCount = 0;
+        $iterator = new PageIterator(self::LIMIT);
         $values = [];
 
         $latestSourceId = $this->getLatestSourceId();
 
-        do {
-            $items = $this->extract($this->perPage, $page++);
+        while ($iterator->valid()) {
+            $items = $this->extract($this->perPage, $iterator);
 
             foreach ($items as $item) {
                 $sourceId = $this->getSourceId($item);
@@ -101,27 +100,13 @@ abstract class Source implements SourceInterface
 
                 $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[5]}");
 
-                $count++;
+                $iterator->incrementCount();
             }
 
-            if ($previousCount === $count) { // Prevent infinite loop
-                break;
-            }
-
-            $previousCount = $count;
-        } while ($count < self::LIMIT);
-
-        $output->writeln("Loading {$count} " . $this->getType() . " items");
-
-        if ($count === 0) {
-            return true;
+            $iterator->next();
         }
 
-        $statement = $this
-            ->getPhotoStatementProvider()
-            ->insertRows($count);
-        
-        return $statement->execute($values);
+        return $this->insertValues($output, $iterator->getCount(), $values);
     }
 
     /**
@@ -170,5 +155,36 @@ abstract class Source implements SourceInterface
         return new PhotoStatementProvider(
             $this->databaseFactory->getInstance()
         );
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param int $count
+     * @param array $values
+     * @return bool
+     */
+    protected function insertValues(OutputInterface $output, $count, array $values)
+    {
+        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
+
+        $output->writeln("Loading {$count} " . $this->getType() . " items");
+
+        if ($count === 0) {
+            return true;
+        }
+
+        $statement = $this
+            ->getPhotoStatementProvider()
+            ->insertRows($count);
+
+        $result = $statement->execute($values);
+
+        if ($result === false) {
+            $output->writeln("Error loading " . $this->getType() . " items");
+            $output->writeDebug(var_export($statement->errorInfo(), true));
+            return false;
+        }
+
+        return true;
     }
 }

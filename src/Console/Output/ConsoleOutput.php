@@ -1,6 +1,6 @@
 <?php
 
-namespace Amoscato\Console;
+namespace Amoscato\Console\Output;
 
 use Symfony\Component\Console\Output\ConsoleOutput as BaseConsoleOutput;
 

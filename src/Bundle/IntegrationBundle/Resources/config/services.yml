@@ -28,6 +28,10 @@ services:
         parent: integration.client
         arguments:
             - base_uri: %lastfm_api_uri%
+    integration.client.youtube:
+        parent: integration.client
+        arguments:
+            - base_uri: %youtube_api_uri%
 
     # Integration Clients
     integration.flickr_client:
@@ -50,3 +54,8 @@ services:
         arguments:
             - '@integration.client.lastfm'
             - %lastfm_api_key%
+    integration.youtube_client:
+        class: Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient
+        arguments:
+            - '@integration.client.youtube'
+            - %youtube_api_key%

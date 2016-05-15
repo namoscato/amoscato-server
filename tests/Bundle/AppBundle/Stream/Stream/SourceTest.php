@@ -96,7 +96,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function test_load_with_less_than_100_values()
+    public function test_load_with_items()
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -202,46 +202,6 @@ class SourceTest extends \PHPUnit_Framework_TestCase
             true,
             $this->source->load($this->output)
         );
-    }
-
-    public function test_load_with_over_100_values()
-    {
-        $this->source
-            ->shouldReceive('mockExtract')
-            ->with(100, 1)
-            ->andReturnUsing(function() {
-                return array_fill(
-                    0,
-                    100,
-                    (object) [
-                        'id' => 1
-                    ]
-                );
-            });
-
-        $this->source
-            ->shouldReceive('mockTransform')
-            ->andReturn(
-                [
-                    1,
-                    2,
-                    3,
-                    4
-                ]
-            );
-
-        $this->statementProvider
-            ->shouldReceive('insertRows')
-            ->with(100)
-            ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
-
-                    $mock->shouldReceive('execute');
-                })
-            );
-
-        $this->source->load($this->output);
     }
 
     public function test_load_with_previous_items()

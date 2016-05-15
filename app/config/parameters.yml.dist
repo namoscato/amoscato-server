@@ -16,3 +16,4 @@ parameters:
     foodspotting_api_key: ~
     goodreads_api_key: ~
     lastfm_api_key: ~
+    youtube_api_key: ~

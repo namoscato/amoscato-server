@@ -2,6 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Console\Helper\PageIterator;
 use Symfony\Component\DomCrawler\Crawler;
 
 class GoodreadsSource extends Source
@@ -17,15 +18,15 @@ class GoodreadsSource extends Source
 
     /**
      * @param int $perPage
-     * @param int $page optional
+     * @param PageIterator $iterator
      * @return \IteratorAggregate
      */
-    protected function extract($perPage, $page = 1)
+    protected function extract($perPage, PageIterator $iterator)
     {
         return $this->client->getReadBooks(
             $this->userId,
             [
-                'page' => $page,
+                'page' => $iterator->current(),
                 'per_page' => $perPage
             ]
         );

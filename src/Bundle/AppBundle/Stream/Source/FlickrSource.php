@@ -2,6 +2,8 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Console\Helper\PageIterator;
+
 class FlickrSource extends Source
 {
     /** @var string */
@@ -18,16 +20,16 @@ class FlickrSource extends Source
 
     /**
      * @param int $perPage
-     * @param int $page optional
+     * @param PageIterator $iterator
      * @return array
      */
-    protected function extract($perPage, $page = 1)
+    protected function extract($perPage, PageIterator $iterator)
     {
         return $this->client->getPublicPhotos(
             $this->userId,
             [
                 'extras' => 'url_m,path_alias',
-                'page' => $page,
+                'page' => $iterator->current(),
                 'per_page' => $perPage
             ]
         );
