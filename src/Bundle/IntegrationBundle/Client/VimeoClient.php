@@ -2,8 +2,6 @@
 
 namespace Amoscato\Bundle\IntegrationBundle\Client;
 
-use GuzzleHttp\Exception\ClientException;
-
 class VimeoClient extends Client
 {
     /**
@@ -11,7 +9,7 @@ class VimeoClient extends Client
      * @param array $args optional
      * @return object
      */
-    public function getLikes($args = [])
+    public function getLikes(array $args = [])
     {
         $response = $this->client->get(
             'me/likes',

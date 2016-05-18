@@ -264,6 +264,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(2)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
@@ -271,6 +272,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
                     $mock
                         ->shouldReceive('execute')
+                        ->once()
                         ->with(m::mustBe([
                             'goodreads',
                             2,

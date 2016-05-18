@@ -10,7 +10,7 @@ class FoodspottingClient extends Client
      * @param array $args optional
      * @return array
      */
-    public function getReviews($personId, $args = [])
+    public function getReviews($personId, array $args = [])
     {
         $response = $this->client->get(
             "people/{$personId}/reviews.json",

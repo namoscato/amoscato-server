@@ -6,6 +6,7 @@ services:
             -
                 - '@amoscato.stream_source.flickr'
                 - '@amoscato.stream_source.foodspotting'
+                - '@amoscato.stream_source.github'
                 - '@amoscato.stream_source.goodreads'
                 - '@amoscato.stream_source.lastfm'
                 - '@amoscato.stream_source.vimeo'
@@ -42,6 +43,13 @@ services:
         calls:
             - [setPersonId, [%foodspotting_person_id%]]
             - [setReviewUri, [%foodspotting_review_uri%]]
+    amoscato.stream_source.github:
+        parent: amoscato.stream_source
+        class: Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource
+        arguments:
+            - '@integration.github_client'
+        calls:
+            - [setUsername, [%github_username%]]
     amoscato.stream_source.goodreads:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource

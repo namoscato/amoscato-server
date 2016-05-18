@@ -6,6 +6,8 @@ parameters:
     locale: en
     flickr_user_id: 91374488@N07
     foodspotting_person_id: namoscato
+    github_client_id: d3acc90fe9b0b0064b6a
+    github_username: namoscato
     goodreads_user_id: 16453252
     lastfm_user: namoscato
     youtube_playlist_id: FLGxACpnRvOrg3YGcTP0rjTA

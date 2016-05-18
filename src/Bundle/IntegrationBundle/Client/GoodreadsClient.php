@@ -12,7 +12,7 @@ class GoodreadsClient extends Client
      * @param array $args optional
      * @return Crawler
      */
-    public function getReadBooks($userId, $args = [])
+    public function getReadBooks($userId, array $args = [])
     {
         $response = $this->client->get(
             "review/list/{$userId}.xml",

@@ -110,6 +110,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(1)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
@@ -117,6 +118,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
 
                     $mock
                         ->shouldReceive('execute')
+                        ->once()
                         ->with(m::mustBe([
                             'flickr',
                             '1',

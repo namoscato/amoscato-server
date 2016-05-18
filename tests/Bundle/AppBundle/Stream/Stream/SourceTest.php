@@ -150,6 +150,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(5)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
@@ -157,6 +158,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
 
                     $mock
                         ->shouldReceive('execute')
+                        ->once()
                         ->with(m::mustBe([
                             'mockType',
                             '5',
@@ -236,6 +238,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(1)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
@@ -243,6 +246,7 @@ class SourceTest extends \PHPUnit_Framework_TestCase
 
                     $mock
                         ->shouldReceive('execute')
+                        ->once()
                         ->with(m::mustBe([
                             'mockType',
                             '5001',

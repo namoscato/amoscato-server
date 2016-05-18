@@ -13,7 +13,7 @@ class LastfmClient extends Client
      * @param array $args optional
      * @return object
      */
-    public function getAlbumInfoById($id, $args = [])
+    public function getAlbumInfoById($id, array $args = [])
     {
         $args['mbid'] = $id;
 
@@ -34,7 +34,7 @@ class LastfmClient extends Client
      * @param array $args optional
      * @return mixed
      */
-    public function getAlbumInfoByName($artistName, $albumName, $args = [])
+    public function getAlbumInfoByName($artistName, $albumName, array $args = [])
     {
         $args['artist'] = $artistName;
         $args['album'] = $albumName;
@@ -54,7 +54,7 @@ class LastfmClient extends Client
      * @param array $args optional
      * @return array
      */
-    public function getRecentTracks($user, $args = [])
+    public function getRecentTracks($user, array $args = [])
     {
         $args['user'] = $user;
 
@@ -74,7 +74,7 @@ class LastfmClient extends Client
      * @param array $args optional
      * @return \Psr\Http\Message\ResponseInterface
      */
-    private function get($method, $args = [])
+    private function get($method, array $args = [])
     {
         return $this->client->get(
             '',

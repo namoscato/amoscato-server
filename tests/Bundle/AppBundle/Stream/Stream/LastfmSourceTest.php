@@ -17,11 +17,11 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
 
     /** @var m\Mock */
     private $output;
-    
+
     protected function setUp()
     {
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
-        
+
         $this->source = m::mock(
             'Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource[getPhotoStatementProvider]',
             [
@@ -29,7 +29,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                 $this->client
             ]
         );
-        
+
         $this->source->setUser('user');
 
         $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider');
@@ -232,6 +232,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(3)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
@@ -239,6 +240,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
 
                     $mock
                         ->shouldReceive('execute')
+                        ->once()
                         ->with(m::mustBe([
                             'lastfm',
                             '34d824497a7cb05b84eedfee004ed7ad',
@@ -355,6 +357,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(1)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
@@ -362,6 +365,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
 
                     $mock
                         ->shouldReceive('execute')
+                        ->once()
                         ->with(m::mustBe([
                             'lastfm',
                             'a7c6d84df1967ae10e71402404b7df31',

@@ -12,7 +12,7 @@ class FlickrClient extends Client
      * @param array $args optional
      * @return array
      */
-    public function getPublicPhotos($userId, $args = [])
+    public function getPublicPhotos($userId, array $args = [])
     {
         $args['user_id'] = $userId;
 
@@ -31,7 +31,7 @@ class FlickrClient extends Client
      * @param array $args optional
      * @return \Psr\Http\Message\ResponseInterface
      */
-    private function get($method, $args = [])
+    private function get($method, array $args = [])
     {
         return $this->client->get(
             '',

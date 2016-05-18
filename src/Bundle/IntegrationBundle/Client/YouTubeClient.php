@@ -10,7 +10,7 @@ class YouTubeClient extends Client
      * @param array $args optional
      * @return object
      */
-    public function getPlaylistItems($playlistId, $args = [])
+    public function getPlaylistItems($playlistId, array $args = [])
     {
         $response = $this->client->get(
             'playlistItems',
