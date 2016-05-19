@@ -67,7 +67,15 @@
                 "database_port": "AMOSCATO_DATABASE_PORT",
                 "database_name": "AMOSCATO_DATABASE_NAME",
                 "database_user": "AMOSCATO_DATABASE_USER",
-                "database_password": "AMOSCATO_DATABASE_PASSWORD"
+                "database_password": "AMOSCATO_DATABASE_PASSWORD",
+                "secret": "AMOSCATO_SECRET",
+                "flickr_api_key": "AMOSCATO_FLICKR_API_KEY",
+                "foodspotting_api_key": "AMOSCATO_FOODSPOTTING_API_KEY",
+                "lastfm_api_key": "AMOSCATO_LASTFM_API_KEY",
+                "goodreads_api_key": "AMOSCATO_GOODREADS_API_KEY",
+                "youtube_api_key": "AMOSCATO_YOUTUBE_API_KEY",
+                "vimeo_access_token": "AMOSCATO_VIMEO_ACCESS_TOKEN",
+                "github_client_secret": "AMOSCATO_GITHUB_CLIENT_SECRET"
             }
         }
     }
