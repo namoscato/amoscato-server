@@ -61,7 +61,14 @@
         "symfony-tests-dir": "tests",
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
-            "file": "app/config/parameters.yml"
+            "file": "app/config/parameters.yml",
+            "env-map": {
+                "database_host": "AMOSCATO_DATABASE_HOST",
+                "database_port": "AMOSCATO_DATABASE_PORT",
+                "database_name": "AMOSCATO_DATABASE_NAME",
+                "database_user": "AMOSCATO_DATABASE_USER",
+                "database_password": "AMOSCATO_DATABASE_PASSWORD"
+            }
         }
     }
 }
