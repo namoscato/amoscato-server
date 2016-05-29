@@ -50,7 +50,7 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function test_getAlbumInfoByName()
+    public function test_getAlbumInfoByName_success()
     {
         $this->client
             ->shouldReceive('get')
@@ -77,6 +77,26 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             'data',
+            $this->flickrClient->getAlbumInfoByName('foo', 'bar')
+        );
+    }
+
+    public function test_getAlbumInfoByName_error()
+    {
+        $this->client
+            ->shouldReceive('get')
+            ->andReturn(
+                m::mock(
+                    [
+                        'getBody' => '{"error":"data"}'
+                    ]
+                )
+            );
+
+        $this->assertEquals(
+            (object) [
+                'error' => 'data'
+            ],
             $this->flickrClient->getAlbumInfoByName('foo', 'bar')
         );
     }

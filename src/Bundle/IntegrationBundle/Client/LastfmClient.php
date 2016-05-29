@@ -46,7 +46,11 @@ class LastfmClient extends Client
 
         $body = json_decode($response->getBody());
 
-        return $body->album;
+        if (isset($body->album)) {
+            return $body->album;
+        }
+
+        return $body;
     }
 
     /**
