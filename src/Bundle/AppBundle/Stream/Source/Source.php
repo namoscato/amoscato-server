@@ -2,7 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
-use Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
@@ -19,7 +19,7 @@ abstract class Source implements SourceInterface
     /** @var PDOFactory */
     private $databaseFactory;
 
-    /** @var PhotoStatementProvider */
+    /** @var StreamStatementProvider */
     protected $statementProvider;
 
     /** @var Client */
@@ -27,6 +27,9 @@ abstract class Source implements SourceInterface
 
     /** @var string */
     protected $type;
+
+    /** @var int */
+    protected $weight = 1;
 
     /**
      * @param PDOFactory $databaseFactory
@@ -44,6 +47,22 @@ abstract class Source implements SourceInterface
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * @param int $weight
+     */
+    public function setWeight($weight)
+    {
+        $this->weight = $weight;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
     }
 
     /**
@@ -115,13 +134,8 @@ abstract class Source implements SourceInterface
     protected function getLatestSourceId()
     {
         $statement = $this
-            ->getPhotoStatementProvider()
-            ->selectLatestSourceId();
-
-        $statement->bindValue(
-            ':type',
-            $this->getType()
-        );
+            ->getStreamStatementProvider()
+            ->selectLatestSourceId($this->getType());
 
         $statement->execute();
 
@@ -144,17 +158,15 @@ abstract class Source implements SourceInterface
     }
 
     /**
-     * @return PhotoStatementProvider
+     * @return StreamStatementProvider
      */
-    public function getPhotoStatementProvider()
+    public function getStreamStatementProvider()
     {
-        if (isset($this->statementProvider)) {
-            return $this->statementProvider;
+        if (!isset($this->statementProvider)) {
+            $this->statementProvider = new StreamStatementProvider($this->databaseFactory->getInstance());
         }
 
-        return new PhotoStatementProvider(
-            $this->databaseFactory->getInstance()
-        );
+        return $this->statementProvider;
     }
 
     /**
@@ -174,7 +186,7 @@ abstract class Source implements SourceInterface
         }
 
         $statement = $this
-            ->getPhotoStatementProvider()
+            ->getStreamStatementProvider()
             ->insertRows($count);
 
         $result = $statement->execute($values);

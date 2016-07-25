@@ -4,7 +4,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Query;
 
 use PDO;
 
-class PhotoStatementProvider
+class StreamStatementProvider
 {
     /** @var PDO */
     private $database;
@@ -31,12 +31,12 @@ ON CONFLICT ON CONSTRAINT stream_type_source_id DO UPDATE SET
 SQL;
 
     /** @var string */
-    private static $selectLatestSourceIdSql = <<<SQL
-SELECT source_id
+    private static $selectStreamTypeSql = <<<SQL
+SELECT %s
 FROM stream
 WHERE type = :type
 ORDER BY created_at DESC, id DESC
-LIMIT 1;
+LIMIT :limit;
 SQL;
 
     /** @var string */
@@ -67,10 +67,32 @@ SQL;
     }
 
     /**
+     * @param string $type
      * @return \PDOStatement
      */
-    public function selectLatestSourceId()
+    public function selectLatestSourceId($type)
     {
-        return $this->database->prepare(self::$selectLatestSourceIdSql);
+        return $this->selectStreamRows($type, 1, 'source_id');
+    }
+
+    /**
+     * @param string $type
+     * @param int $limit
+     * @param string $select optional
+     * @return \PDOStatement
+     */
+    public function selectStreamRows($type, $limit, $select = '*')
+    {
+        $statement = $this->database->prepare(
+            sprintf(
+                self::$selectStreamTypeSql,
+                $select
+            )
+        );
+
+        $statement->bindValue(':type', $type);
+        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+
+        return $statement;
     }
 }

@@ -23,17 +23,17 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource[getPhotoStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
             ]
         );
 
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider');
+        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
         $this->source
-            ->shouldReceive('getPhotoStatementProvider')
+            ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
@@ -54,17 +54,10 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
+            ->with('vimeo')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
-
-                    $mock
-                        ->shouldReceive('bindValue')
-                        ->once()
-                        ->with(
-                            ':type',
-                            'vimeo'
-                        );
 
                     $mock->shouldReceive('execute');
 

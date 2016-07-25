@@ -2,7 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Command;
 
-use Amoscato\Bundle\AppBundle\Stream\Source\SourceInterface;
+use Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,19 +11,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LoadStreamItemsCommand extends Command
 {
-    /**
-     * @var SourceInterface[]
-     */
+    /** @var SourceCollection */
     private $sources;
 
     /**
-     * @param array $sources
+     * @param SourceCollection $sources
      */
-    public function __construct(array $sources = [])
+    public function __construct(SourceCollection $sources)
     {
-        foreach ($sources as $source) {
-            $this->pushSource($source);
-        }
+        $this->sources = $sources;
 
         parent::__construct();
     }
@@ -76,18 +72,10 @@ class LoadStreamItemsCommand extends Command
      */
     private function loadSource(OutputInterface $output, $type)
     {
-        /** @var \Amoscato\Console\ConsoleOutput $output */
+        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
 
         $output->writeln("Extracting {$type} source...");
 
         $this->sources[$type]->load($output);
-    }
-
-    /**
-     * @param SourceInterface $source
-     */
-    public function pushSource(SourceInterface $source)
-    {
-        $this->sources[$source->getType()] = $source;
     }
 }

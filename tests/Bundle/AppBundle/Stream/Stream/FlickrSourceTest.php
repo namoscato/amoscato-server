@@ -23,7 +23,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource[getPhotoStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
@@ -33,10 +33,10 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
         $this->source->setUserId(10);
         $this->source->setPhotoUri('flickr.com/');
 
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider');
+        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
         $this->source
-            ->shouldReceive('getPhotoStatementProvider')
+            ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
@@ -58,17 +58,10 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
+            ->with('flickr')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
-
-                    $mock
-                        ->shouldReceive('bindValue')
-                        ->once()
-                        ->with(
-                            ':type',
-                            'flickr'
-                        );
 
                     $mock->shouldReceive('execute');
 

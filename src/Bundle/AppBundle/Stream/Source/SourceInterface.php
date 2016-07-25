@@ -12,6 +12,11 @@ interface SourceInterface
     public function getType();
 
     /**
+     * @return int
+     */
+    public function getWeight();
+
+    /**
      * @param OutputInterface $output
      * @return bool
      */

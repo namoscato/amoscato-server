@@ -3,14 +3,7 @@ services:
     amoscato.command.load_stream_items:
         class: Amoscato\Bundle\AppBundle\Command\LoadStreamItemsCommand
         arguments:
-            -
-                - '@amoscato.stream_source.flickr'
-                - '@amoscato.stream_source.foodspotting'
-                - '@amoscato.stream_source.github'
-                - '@amoscato.stream_source.goodreads'
-                - '@amoscato.stream_source.lastfm'
-                - '@amoscato.stream_source.vimeo'
-                - '@amoscato.stream_source.youtube'
+            - '@amoscato.stream_source.collection'
         tags:
             - { name: console.command }
 
@@ -22,7 +15,25 @@ services:
             - %database_user%
             - %database_password%
 
+    # Controllers
+    amoscato.controller.stream:
+        class: Amoscato\Bundle\AppBundle\Controller\StreamController
+        arguments:
+            - '@amoscato.database'
+            - '@amoscato.stream_source.collection'
+
     # Stream Sources
+    amoscato.stream_source.collection:
+        class: Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection
+        arguments:
+            -
+                - '@amoscato.stream_source.flickr'
+                - '@amoscato.stream_source.foodspotting'
+                - '@amoscato.stream_source.github'
+                - '@amoscato.stream_source.goodreads'
+                - '@amoscato.stream_source.lastfm'
+                - '@amoscato.stream_source.vimeo'
+                - '@amoscato.stream_source.youtube'
     amoscato.stream_source:
         abstract: true
         arguments:
@@ -43,6 +54,7 @@ services:
         calls:
             - [setPersonId, [%foodspotting_person_id%]]
             - [setReviewUri, [%foodspotting_review_uri%]]
+            - [setWeight, [2]]
     amoscato.stream_source.github:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource
@@ -50,6 +62,7 @@ services:
             - '@integration.github_client'
         calls:
             - [setUsername, [%github_username%]]
+            - [setWeight, [4]]
     amoscato.stream_source.goodreads:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource
@@ -64,6 +77,7 @@ services:
             - '@integration.lastfm_client'
         calls:
             - [setUser, [%lastfm_user%]]
+            - [setWeight, [8]]
     amoscato.stream_source.vimeo:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource

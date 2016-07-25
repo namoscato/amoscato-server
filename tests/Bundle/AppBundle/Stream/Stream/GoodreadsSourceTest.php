@@ -23,7 +23,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource[getPhotoStatementProvider,createCrawler,getImageSize]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource[getStreamStatementProvider,createCrawler,getImageSize]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
@@ -32,10 +32,10 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->source->setUserId(10);
 
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider');
+        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
         $this->source
-            ->shouldReceive('getPhotoStatementProvider')
+            ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
@@ -56,17 +56,10 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
+            ->with('goodreads')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
-
-                    $mock
-                        ->shouldReceive('bindValue')
-                        ->once()
-                        ->with(
-                            ':type',
-                            'goodreads'
-                        );
 
                     $mock->shouldReceive('execute');
 

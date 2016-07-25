@@ -23,7 +23,7 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource[getPhotoStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
@@ -33,10 +33,10 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
         $this->source->setPersonId(10);
         $this->source->setReviewUri('foodspotting.com/');
 
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\PhotoStatementProvider');
+        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
         $this->source
-            ->shouldReceive('getPhotoStatementProvider')
+            ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
@@ -58,17 +58,10 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
+            ->with('foodspotting')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
-
-                    $mock
-                        ->shouldReceive('bindValue')
-                        ->once()
-                        ->with(
-                            ':type',
-                            'foodspotting'
-                        );
 
                     $mock->shouldReceive('execute');
 
