@@ -105,10 +105,12 @@ class LastfmSource extends Source
 
         $iterator = new PageIterator(self::LIMIT);
         $previousAlbumId = null;
+        $previousTrack = null;
         $values = [];
 
         $latestSourceId = $this->getLatestSourceId();
-        
+        $sourceId = null;
+
         while ($iterator->valid()) {
             $tracks = $this->extract($this->perPage, $iterator);
 
@@ -117,33 +119,35 @@ class LastfmSource extends Source
                     continue;
                 }
 
-                $sourceId = $this->getSourceId($track);
-
-                if ($latestSourceId === $sourceId) { // Break if item is already in database
-                    $output->writeDebug("Item {$latestSourceId} is already in the database");
-                    break 2;
-                }
-
                 $albumId = $this->getAlbumId($track);
 
-                if ($previousAlbumId === $albumId) {
-                    continue; // Skip adjacent tracks on the same album
+                if ($previousAlbumId !== null && $previousAlbumId !== $albumId) { // Skip adjacent tracks on the same album
+                    $sourceId = $this->getSourceId($previousTrack);
+
+                    if ($latestSourceId === $sourceId) { // Break if item is already in database
+                        $output->writeDebug("Item {$latestSourceId} is already in the database");
+                        break 2;
+                    }
+
+                    $values = array_merge(
+                        [
+                            $this->getType(),
+                            $sourceId
+                        ],
+                        $this->transform($previousTrack),
+                        $values
+                    );
+
+                    $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
+
+                    $iterator->incrementCount();
                 }
 
-                $values = array_merge(
-                    [
-                        $this->getType(),
-                        $sourceId
-                    ],
-                    $this->transform($track),
-                    $values
-                );
-
-                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
-
                 $previousAlbumId = $albumId;
-                $iterator->incrementCount();
+                $previousTrack = $track;
             }
+
+            // TODO: $previousTrack should probably be inserted here in some edge context
 
             $iterator->next();
         }

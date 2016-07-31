@@ -133,6 +133,30 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                             ]
                         ]
                     ],
+                    (object) [ // Adjacent track on the same album
+                        'date' => (object) [
+                            'uts' => '1463341006'
+                        ],
+                        'album' => (object) [
+                            'mbid' => '',
+                            '#text' => 'album three'
+                        ],
+                        'artist' => (object) [
+                            '#text' => 'artist three'
+                        ]
+                    ],
+                ]
+            )
+            ->shouldReceive('getRecentTracks')
+            ->with(
+                'user',
+                [
+                    'limit' => 200,
+                    'page' => 2
+                ]
+            )
+            ->andReturn(
+                [
                     (object) [ // Album with no image
                         'date' => (object) [
                             'uts' => '1463341016'
@@ -153,31 +177,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                             ]
                         ]
                     ],
-                ]
-            )
-            ->shouldReceive('getRecentTracks')
-            ->with(
-                'user',
-                [
-                    'limit' => 200,
-                    'page' => 2
-                ]
-            )
-            ->andReturn(
-                [
-                    (object) [ // Adjacent track on the same album
-                        'date' => (object) [
-                            'uts' => '1463341006'
-                        ],
-                        'album' => (object) [
-                            'mbid' => '',
-                            '#text' => 'album three'
-                        ],
-                        'artist' => (object) [
-                            '#text' => 'artist three'
-                        ]
-                    ],
-                    (object) [
+                    (object) [ // Last track (will not get inserted at the moment)
                         'date' => (object) [
                             'uts' => '1463340996'
                         ],
@@ -226,7 +226,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
         $this->statementProvider
             ->shouldReceive('insertRows')
             ->once()
-            ->with(3)
+            ->with(2)
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
@@ -235,15 +235,6 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
-                            'lastfm',
-                            '34d824497a7cb05b84eedfee004ed7ad',
-                            '"album two" by artist two',
-                            'lastfm.com/album2',
-                            '2016-05-15 19:36:36',
-                            'image2.jpg',
-                            300,
-                            300,
-
                             'lastfm',
                             '74e8f4f589902bfac377ae294b9169f6',
                             '"album three" by artist three',
