@@ -89,7 +89,13 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
                             'uri' => '/videos/123',
                             'name' => 'video1',
                             'link' => 'link1',
-                            'created_time' => '2013-03-15 09:50:30',
+                            'metadata' => (object) [
+                                'interactions' => (object) [
+                                    'like' => (object) [
+                                        'added_time' => '2013-03-15 09:50:30'
+                                    ]
+                                ]
+                            ],
                             'pictures' => (object) [
                                 'sizes' => [
                                     0,

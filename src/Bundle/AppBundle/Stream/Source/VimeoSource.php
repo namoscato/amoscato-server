@@ -48,7 +48,7 @@ class VimeoSource extends Source
         return [
             $item->name,
             $item->link,
-            Carbon::parse($item->created_time)->toDateTimeString(),
+            Carbon::parse($item->metadata->interactions->like->added_time)->toDateTimeString(),
             $image->link,
             $image->width,
             $image->height
