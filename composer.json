@@ -28,7 +28,7 @@
         "incenteev/composer-parameter-handler": "^2.0",
         "guzzlehttp/guzzle": "~6.0",
         "nesbot/carbon": "^1.21",
-        "ext-ftp": "^0.0.0"
+        "ext-ftp": "*"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

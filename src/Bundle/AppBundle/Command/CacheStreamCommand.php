@@ -10,6 +10,7 @@ use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CacheStreamCommand extends Command
@@ -47,6 +48,13 @@ class CacheStreamCommand extends Command
         $this
             ->setName('amoscato:stream:cache')
             ->setDescription('Caches the stream data via FTP')
+            ->addOption(
+                'size',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Number of stream items to cache',
+                1000.0
+            )
         ;
     }
 
@@ -76,6 +84,20 @@ class CacheStreamCommand extends Command
             throw new RuntimeException('Unable to connect to FTP server.');
         }
 
+        $output->writeVerbose('Aggregating stream items...');
+
+        $streamData = $this->streamAggregator->aggregate(
+            floatval($input->getOption('size'))
+        );
+
+        $filePath = tempnam(sys_get_temp_dir(), 'stream');
+
+        $output->writeVerbose(sprintf('Writing to cache file %s...', $filePath));
+
+        $handle = fopen($filePath, 'w');
+        fwrite($handle, json_encode($streamData));
+        fclose($handle);
+
         $output->writeVerbose('Enabling passive mode...');
 
         $result = ftp_pasv($connectionId, true);
@@ -84,28 +106,25 @@ class CacheStreamCommand extends Command
             throw new RuntimeException('Unable to enable passive mode.');
         }
 
-        $output->writeVerbose('Aggregating stream items...');
-
-        $streamData = $this->streamAggregator->aggregate();
-
-        $output->writeVerbose('Writing to cache file...');
-
-        $filePath = tempnam(sys_get_temp_dir(), 'stream');
-
-        $handle = fopen($filePath, 'w');
-        fwrite($handle, json_encode($streamData));
-        fclose($handle);
-
         $output->writeVerbose('Uploading cache file...');
 
-        $upload = ftp_put($connectionId, 'stream.json', $filePath, FTP_BINARY);
+        $result = ftp_put($connectionId, 'stream.json', $filePath, FTP_BINARY);
 
-        if (!$upload) {
+        if (!$result) {
             throw new RuntimeException('Error uploading cache file.');
         }
 
-        unlink($filePath);
-        ftp_close($connectionId);
+        $result = unlink($filePath);
+
+        if (!$result) {
+            throw new RuntimeException('Error unlinking file.');
+        }
+
+        $result = ftp_close($connectionId);
+
+        if (!$result) {
+            throw new RuntimeException('Error closing FTP connection.');
+        }
 
         return 0;
     }
