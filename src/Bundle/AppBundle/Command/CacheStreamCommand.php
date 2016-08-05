@@ -70,17 +70,13 @@ class CacheStreamCommand extends Command
 
         $output->writeVerbose('Connecting to FTP server...');
 
-        $connectionId = ftp_connect($this->ftpHost);
-
-        if (!$connectionId) {
+        if (!$connectionId = ftp_connect($this->ftpHost)) {
             throw new RuntimeException('Unable to connect to FTP server.');
         }
 
         $output->writeVerbose('Logging into FTP stream...');
 
-        $result = ftp_login($connectionId, $this->ftpUser, $this->ftpPassword);
-
-        if (!$result) {
+        if (!ftp_login($connectionId, $this->ftpUser, $this->ftpPassword)) {
             throw new RuntimeException('Unable to connect to FTP server.');
         }
 
@@ -90,45 +86,41 @@ class CacheStreamCommand extends Command
             floatval($input->getOption('size'))
         );
 
-        $filePath = tempnam(sys_get_temp_dir(), 'stream');
+        if (!$filePath = tempnam(sys_get_temp_dir(), 'stream')) {
+            throw new RuntimeException('Unable to create temporary file.');
+        }
 
         $output->writeVerbose(sprintf('Writing to cache file %s...', $filePath));
 
-        $handle = fopen($filePath, 'w');
+        if (!$handle = fopen($filePath, 'w')) {
+            throw new RuntimeException('Error opening file.');
+        }
 
-        fwrite($handle, json_encode($streamData));
+        if (!fwrite($handle, json_encode($streamData))) {
+            throw new RuntimeException('Error writing to file.');
+        }
+
+        if (!fclose($handle)) {
+            throw new RuntimeException('Error closing file.');
+        }
 
         $output->writeVerbose('Enabling passive mode...');
 
-        $result = ftp_pasv($connectionId, true);
-
-        if (!$result) {
+        if (!ftp_pasv($connectionId, true)) {
             throw new RuntimeException('Unable to enable passive mode.');
         }
 
         $output->writeVerbose('Uploading cache file...');
 
-        $result = ftp_fput($connectionId, 'stream.json', $handle, FTP_BINARY);
-
-        if (!$result) {
+        if (!ftp_put($connectionId, 'stream.json', $filePath, FTP_BINARY)) {
             throw new RuntimeException('Error uploading cache file.');
         }
 
-        $result = ftp_close($connectionId);
-
-        if (!$result) {
+        if (!ftp_close($connectionId)) {
             throw new RuntimeException('Error closing FTP connection.');
         }
 
-        $result = fclose($handle);
-
-        if (!$result) {
-            throw new RuntimeException('Error closing file.');
-        }
-
-        $result = unlink($filePath);
-
-        if (!$result) {
+        if (!unlink($filePath)) {
             throw new RuntimeException('Error unlinking file.');
         }
 
