@@ -6,6 +6,15 @@ services:
             - '@amoscato.stream_source.collection'
         tags:
             - { name: console.command }
+    amoscato.command.cache_stream:
+        class: Amoscato\Bundle\AppBundle\Command\CacheStreamCommand
+        arguments:
+            - '@amoscato.stream_aggregator'
+            - %ftp_host%
+            - %ftp_user%
+            - %ftp_password%
+        tags:
+            - { name: console.command }
 
     # Database Connections
     amoscato.database:
@@ -18,6 +27,12 @@ services:
     # Controllers
     amoscato.controller.stream:
         class: Amoscato\Bundle\AppBundle\Controller\StreamController
+        arguments:
+            - '@amoscato.stream_aggregator'
+
+    # Stream Aggregator
+    amoscato.stream_aggregator:
+        class: Amoscato\Bundle\AppBundle\Stream\StreamAggregator
         arguments:
             - '@amoscato.database'
             - '@amoscato.stream_source.collection'

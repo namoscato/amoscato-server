@@ -5,6 +5,10 @@ parameters:
     database_user: ~
     database_password: ~
 
+    ftp_host: ~
+    ftp_user: ~
+    ftp_password: ~
+
     mailer_transport: smtp
     mailer_host: 127.0.0.1
     mailer_user: ~
