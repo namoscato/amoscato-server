@@ -95,8 +95,8 @@ class CacheStreamCommand extends Command
         $output->writeVerbose(sprintf('Writing to cache file %s...', $filePath));
 
         $handle = fopen($filePath, 'w');
+
         fwrite($handle, json_encode($streamData));
-        fclose($handle);
 
         $output->writeVerbose('Enabling passive mode...');
 
@@ -108,22 +108,28 @@ class CacheStreamCommand extends Command
 
         $output->writeVerbose('Uploading cache file...');
 
-        $result = ftp_put($connectionId, 'stream.json', $filePath, FTP_BINARY);
+        $result = ftp_fput($connectionId, 'stream.json', $handle, FTP_BINARY);
 
         if (!$result) {
             throw new RuntimeException('Error uploading cache file.');
-        }
-
-        $result = unlink($filePath);
-
-        if (!$result) {
-            throw new RuntimeException('Error unlinking file.');
         }
 
         $result = ftp_close($connectionId);
 
         if (!$result) {
             throw new RuntimeException('Error closing FTP connection.');
+        }
+
+        $result = fclose($handle);
+
+        if (!$result) {
+            throw new RuntimeException('Error closing file.');
+        }
+
+        $result = unlink($filePath);
+
+        if (!$result) {
+            throw new RuntimeException('Error unlinking file.');
         }
 
         return 0;
