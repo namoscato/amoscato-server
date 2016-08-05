@@ -70,10 +70,18 @@ class CacheStreamCommand extends Command
 
         $output->writeVerbose('Logging into FTP stream...');
 
-        $loginResult = ftp_login($connectionId, $this->ftpUser, $this->ftpPassword);
+        $result = ftp_login($connectionId, $this->ftpUser, $this->ftpPassword);
 
-        if (!$loginResult) {
+        if (!$result) {
             throw new RuntimeException('Unable to connect to FTP server.');
+        }
+
+        $output->writeVerbose('Enabling passive mode...');
+
+        $result = ftp_pasv($connectionId, true);
+
+        if (!$result) {
+            throw new RuntimeException('Unable to enable passive mode.');
         }
 
         $output->writeVerbose('Aggregating stream items...');
