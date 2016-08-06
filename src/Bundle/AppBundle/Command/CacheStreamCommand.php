@@ -2,13 +2,10 @@
 
 namespace Amoscato\Bundle\AppBundle\Command;
 
-use Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection;
 use Amoscato\Bundle\AppBundle\Stream\StreamAggregator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
-use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
