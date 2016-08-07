@@ -4,7 +4,11 @@ Server-side processes behind [amoscato.com](http://amoscato.com/) built with [Sy
 
 ## Console Commands
 
-### `amoscato:stream:load`
+### `amoscato:stream:cache [--size=1000]`
+
+Stores the cached result of _size_ stream items to an external server via FTP.
+
+### `amoscato:stream:load [source ...]`
 
 Loads stream data from the specified set of sources. If no sources are specified, data from all sources will be loaded.
 
