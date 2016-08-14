@@ -47,6 +47,7 @@ services:
                 - '@amoscato.stream_source.github'
                 - '@amoscato.stream_source.goodreads'
                 - '@amoscato.stream_source.lastfm'
+                - '@amoscato.stream_source.twitter'
                 - '@amoscato.stream_source.vimeo'
                 - '@amoscato.stream_source.youtube'
     amoscato.stream_source:
@@ -69,7 +70,7 @@ services:
         calls:
             - [setPersonId, [%foodspotting_person_id%]]
             - [setReviewUri, [%foodspotting_review_uri%]]
-            - [setWeight, [2]]
+            - [setWeight, [1]]
     amoscato.stream_source.github:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource
@@ -77,7 +78,7 @@ services:
             - '@integration.github_client'
         calls:
             - [setUsername, [%github_username%]]
-            - [setWeight, [4]]
+            - [setWeight, [3]]
     amoscato.stream_source.goodreads:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource
@@ -93,6 +94,15 @@ services:
         calls:
             - [setUser, [%lastfm_user%]]
             - [setWeight, [8]]
+    amoscato.stream_source.twitter:
+        parent: amoscato.stream_source
+        class: Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource
+        arguments:
+            - '@integration.twitter_client'
+        calls:
+            - [setScreenName, [%twitter_screen_name%]]
+            - [setStatusUri, [%twitter_status_uri%]]
+            - [setWeight, [2]]
     amoscato.stream_source.vimeo:
         parent: amoscato.stream_source
         class: Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource

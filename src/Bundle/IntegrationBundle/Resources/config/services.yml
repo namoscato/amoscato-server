@@ -32,6 +32,10 @@ services:
         parent: integration.client
         arguments:
             - base_uri: %lastfm_api_uri%
+    integration.client.twitter:
+        parent: integration.client
+        arguments:
+            - base_uri: %twitter_api_uri%
     integration.client.vimeo:
         parent: integration.client
         arguments:
@@ -69,6 +73,11 @@ services:
         arguments:
             - '@integration.client.lastfm'
             - %lastfm_api_key%
+    integration.twitter_client:
+        class: Amoscato\Bundle\IntegrationBundle\Client\TwitterClient
+        arguments:
+            - '@integration.client.twitter'
+            - %twitter_bearer_token%
     integration.vimeo_client:
         class: Amoscato\Bundle\IntegrationBundle\Client\VimeoClient
         arguments:
