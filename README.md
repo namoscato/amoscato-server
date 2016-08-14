@@ -19,6 +19,7 @@ Available sources include:
 * `github` - latest public commits from [GitHub](https://github.com/)
 * `goodreads` - latest read books from [Goodreads](https://www.goodreads.com/)
 * `lastfm` - latest scrobbles from [Last.fm](http://www.last.fm/)
+* `twitter` - latest tweets from [Twitter](https://twitter.com/)
 * `vimeo` - latest favorites from [Vimeo](https://vimeo.com/)
 * `youtube` - latest favorites from [YouTube](https://www.youtube.com/)
 
