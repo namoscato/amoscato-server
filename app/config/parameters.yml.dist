@@ -1,26 +1,26 @@
 parameters:
-    database_host: 127.0.0.1
-    database_port: 5432
-    database_name: amoscato
-    database_user: ~
-    database_password: ~
-
-    ftp_host: ~
-    ftp_user: ~
-    ftp_password: ~
-
-    mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: ~
-    mailer_password: ~
-
-    secret: ThisTokenIsNotSoSecretChangeIt
-
-    flickr_api_key: ~
-    foodspotting_api_key: ~
-    github_client_secret: ~
-    goodreads_api_key: ~
-    lastfm_api_key: ~
-    twitter_bearer_token: ~
-    vimeo_access_token: ~
-    youtube_api_key: ~
+  database_host: 127.0.0.1
+  database_port: 5432
+  database_name: amoscato
+  database_user: ~
+  database_password: ~
+  
+  ftp_host: ~
+  ftp_user: ~
+  ftp_password: ~
+  
+  mailer_transport: smtp
+  mailer_host: 127.0.0.1
+  mailer_user: ~
+  mailer_password: ~
+  
+  secret: ThisTokenIsNotSoSecretChangeIt
+  
+  flickr_api_key: ~
+  foodspotting_api_key: ~
+  github_client_secret: ~
+  goodreads_api_key: ~
+  lastfm_api_key: ~
+  twitter_bearer_token: ~
+  vimeo_access_token: ~
+  youtube_api_key: ~

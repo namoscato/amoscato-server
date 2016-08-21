@@ -1,118 +1,129 @@
 services:
-    # Commands
-    amoscato.command.load_stream_items:
-        class: Amoscato\Bundle\AppBundle\Command\LoadStreamItemsCommand
-        arguments:
-            - '@amoscato.stream_source.collection'
-        tags:
-            - { name: console.command }
-    amoscato.command.cache_stream:
-        class: Amoscato\Bundle\AppBundle\Command\CacheStreamCommand
-        arguments:
-            - '@amoscato.stream_aggregator'
-            - %ftp_host%
-            - %ftp_user%
-            - %ftp_password%
-        tags:
-            - { name: console.command }
 
-    # Database Connections
-    amoscato.database:
-        class: Amoscato\Database\PDOFactory
-        arguments:
-            - 'pgsql:host=%database_host%;port=%database_port%;dbname=%database_name%'
-            - %database_user%
-            - %database_password%
+  # Commands
+  amoscato.command.load_stream_items:
+    class: Amoscato\Bundle\AppBundle\Command\LoadStreamItemsCommand
+    arguments:
+    - '@amoscato.stream_source.collection'
+    tags:
+    - { name: console.command }
 
-    # Controllers
-    amoscato.controller.stream:
-        class: Amoscato\Bundle\AppBundle\Controller\StreamController
-        arguments:
-            - '@amoscato.stream_aggregator'
+  amoscato.command.cache_stream:
+    class: Amoscato\Bundle\AppBundle\Command\CacheStreamCommand
+    arguments:
+    - '@amoscato.stream_aggregator'
+    - %ftp_host%
+    - %ftp_user%
+    - %ftp_password%
+    tags:
+    - { name: console.command }
 
-    # Stream Aggregator
-    amoscato.stream_aggregator:
-        class: Amoscato\Bundle\AppBundle\Stream\StreamAggregator
-        arguments:
-            - '@amoscato.database'
-            - '@amoscato.stream_source.collection'
+  # Database Connections
+  amoscato.database:
+    class: Amoscato\Database\PDOFactory
+    arguments:
+    - pgsql:host=%database_host%;port=%database_port%;dbname=%database_name%
+    - %database_user%
+    - %database_password%
 
-    # Stream Sources
-    amoscato.stream_source.collection:
-        class: Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection
-        arguments:
-            -
-                - '@amoscato.stream_source.flickr'
-                - '@amoscato.stream_source.foodspotting'
-                - '@amoscato.stream_source.github'
-                - '@amoscato.stream_source.goodreads'
-                - '@amoscato.stream_source.lastfm'
-                - '@amoscato.stream_source.twitter'
-                - '@amoscato.stream_source.vimeo'
-                - '@amoscato.stream_source.youtube'
-    amoscato.stream_source:
-        abstract: true
-        arguments:
-            - '@amoscato.database'
-    amoscato.stream_source.flickr:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource
-        arguments:
-            - '@integration.flickr_client'
-        calls:
-            - [setUserId, [%flickr_user_id%]]
-            - [setPhotoUri, [%flickr_photo_uri%]]
-    amoscato.stream_source.foodspotting:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource
-        arguments:
-            - '@integration.foodspotting_client'
-        calls:
-            - [setPersonId, [%foodspotting_person_id%]]
-            - [setReviewUri, [%foodspotting_review_uri%]]
-            - [setWeight, [1]]
-    amoscato.stream_source.github:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource
-        arguments:
-            - '@integration.github_client'
-        calls:
-            - [setUsername, [%github_username%]]
-            - [setWeight, [3]]
-    amoscato.stream_source.goodreads:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource
-        arguments:
-            - '@integration.goodreads_client'
-        calls:
-            - [setUserId, [%goodreads_user_id%]]
-    amoscato.stream_source.lastfm:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource
-        arguments:
-            - '@integration.lastfm_client'
-        calls:
-            - [setUser, [%lastfm_user%]]
-            - [setWeight, [8]]
-    amoscato.stream_source.twitter:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource
-        arguments:
-            - '@integration.twitter_client'
-        calls:
-            - [setScreenName, [%twitter_screen_name%]]
-            - [setStatusUri, [%twitter_status_uri%]]
-            - [setWeight, [2]]
-    amoscato.stream_source.vimeo:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource
-        arguments:
-            - '@integration.vimeo_client'
-    amoscato.stream_source.youtube:
-        parent: amoscato.stream_source
-        class: Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource
-        arguments:
-            - '@integration.youtube_client'
-        calls:
-            - [setPlaylistId, [%youtube_playlist_id%]]
-            - [setVideoUri, [%youtube_video_uri%]]
+  # Controllers
+  amoscato.controller.stream:
+    class: Amoscato\Bundle\AppBundle\Controller\StreamController
+    arguments:
+    - '@amoscato.stream_aggregator'
+
+  # Stream Aggregator
+  amoscato.stream_aggregator:
+    class: Amoscato\Bundle\AppBundle\Stream\StreamAggregator
+    arguments:
+    - '@amoscato.database'
+    - '@amoscato.stream_source.collection'
+
+  # Stream Sources
+  amoscato.stream_source.collection:
+    class: Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection
+    arguments:
+    -
+      - '@amoscato.stream_source.flickr'
+      - '@amoscato.stream_source.foodspotting'
+      - '@amoscato.stream_source.github'
+      - '@amoscato.stream_source.goodreads'
+      - '@amoscato.stream_source.lastfm'
+      - '@amoscato.stream_source.twitter'
+      - '@amoscato.stream_source.vimeo'
+      - '@amoscato.stream_source.youtube'
+
+  amoscato.stream_source:
+    abstract: true
+    arguments:
+    - '@amoscato.database'
+
+  amoscato.stream_source.flickr:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource
+    arguments:
+    - '@integration.flickr_client'
+    calls:
+    - [setUserId, [%flickr_user_id%]]
+    - [setPhotoUri, [%flickr_photo_uri%]]
+
+  amoscato.stream_source.foodspotting:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource
+    arguments:
+    - '@integration.foodspotting_client'
+    calls:
+    - [setPersonId, [%foodspotting_person_id%]]
+    - [setReviewUri, [%foodspotting_review_uri%]]
+    - [setWeight, [1]]
+
+  amoscato.stream_source.github:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource
+    arguments:
+    - '@integration.github_client'
+    calls:
+    - [setUsername, [%github_username%]]
+    - [setWeight, [3]]
+
+  amoscato.stream_source.goodreads:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource
+    arguments:
+    - '@integration.goodreads_client'
+    calls:
+    - [setUserId, [%goodreads_user_id%]]
+
+  amoscato.stream_source.lastfm:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource
+    arguments:
+    - '@integration.lastfm_client'
+    calls:
+    - [setUser, [%lastfm_user%]]
+    - [setWeight, [8]]
+
+  amoscato.stream_source.twitter:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource
+    arguments:
+    - '@integration.twitter_client'
+    calls:
+    - [setScreenName, [%twitter_screen_name%]]
+    - [setStatusUri, [%twitter_status_uri%]]
+    - [setWeight, [2]]
+
+  amoscato.stream_source.vimeo:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource
+    arguments:
+    - '@integration.vimeo_client'
+
+  amoscato.stream_source.youtube:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource
+    arguments:
+    - '@integration.youtube_client'
+    calls:
+    - [setPlaylistId, [%youtube_playlist_id%]]
+    - [setVideoUri, [%youtube_video_uri%]]
