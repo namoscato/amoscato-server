@@ -115,8 +115,8 @@ class LastfmSource extends Source
             $tracks = $this->extract($this->perPage, $iterator);
 
             foreach ($tracks as $track) {
-                if (!isset($track->date)) { // Skip currently playing track
-                    continue;
+                if (!isset($track->date) || empty($track->album->mbid) && empty($track->album->{'#text'})) {
+                    continue; // Skip currently playing track and tracks without album
                 }
 
                 $albumId = $this->getAlbumId($track);
