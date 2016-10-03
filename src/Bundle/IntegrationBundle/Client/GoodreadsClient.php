@@ -52,8 +52,7 @@ class GoodreadsClient extends Client
                     [
                         'key' => $this->apiKey,
                         'v' => 2,
-                        'shelf' => $shelf,
-                        'sort' => 'date_read'
+                        'shelf' => $shelf
                     ]
                 )
             ]

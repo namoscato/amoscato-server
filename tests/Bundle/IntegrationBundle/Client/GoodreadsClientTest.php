@@ -38,7 +38,6 @@ class GoodreadsClientTest extends \PHPUnit_Framework_TestCase
                         'key' => 'key',
                         'v' => 2,
                         'shelf' => 'read',
-                        'sort' => 'date_read'
                     ]
                 ]
             )

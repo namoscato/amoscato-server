@@ -79,7 +79,8 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                 10,
                 [
                     'page' => 1,
-                    'per_page' => 100
+                    'per_page' => 100,
+                    'sort' => 'date_read'
                 ]
             )
             ->andReturn(

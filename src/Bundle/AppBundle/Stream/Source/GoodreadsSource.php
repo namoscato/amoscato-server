@@ -28,7 +28,8 @@ class GoodreadsSource extends AbstractSource
             $this->userId,
             [
                 'page' => $iterator->current(),
-                'per_page' => $perPage
+                'per_page' => $perPage,
+                'sort' => 'date_read'
             ]
         );
     }
