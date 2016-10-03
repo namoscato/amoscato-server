@@ -8,11 +8,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class LastfmSource extends AbstractSource
 {
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
-    protected $client;
-
     /** @var string */
     protected $type = 'lastfm';
+
+    /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
+    protected $client;
 
     /** @var string */
     private $user;
@@ -39,11 +39,11 @@ class LastfmSource extends AbstractSource
                 $date = isset($track->date) ? Carbon::createFromTimestampUTC($track->date->uts) : Carbon::now();
 
                 return [
-                    'name' => $track->name,
-                    'artist' => $track->artist->{'#text'},
                     'album' => $track->album->{'#text'},
-                    'url' => $track->url,
-                    'date' => $date->toDateTimeString()
+                    'artist' => $track->artist->{'#text'},
+                    'date' => $date->toDateTimeString(),
+                    'name' => $track->name,
+                    'url' => $track->url
                 ];
             }
         } while (isset($tracks[++$i]));
