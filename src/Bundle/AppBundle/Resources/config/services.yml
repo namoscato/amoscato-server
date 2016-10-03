@@ -12,9 +12,15 @@ services:
     class: Amoscato\Bundle\AppBundle\Command\CacheStreamCommand
     arguments:
     - '@amoscato.stream_aggregator'
-    - %ftp_host%
-    - %ftp_user%
-    - %ftp_password%
+    - '@amoscato.ftp_client'
+    tags:
+    - { name: console.command }
+
+  amoscato.command.load_current_items:
+    class: Amoscato\Bundle\AppBundle\Command\LoadCurrentItemsCommand
+    arguments:
+    - '@amoscato.current_source.collection'
+    - '@amoscato.ftp_client'
     tags:
     - { name: console.command }
 
@@ -26,11 +32,34 @@ services:
     - %database_user%
     - %database_password%
 
+  # FTP Client
+  amoscato.ftp_client:
+    class: Amoscato\Bundle\AppBundle\Ftp\FtpClient
+    arguments:
+    - %ftp_host%
+    - %ftp_user%
+    - %ftp_password%
+
   # Controllers
   amoscato.controller.stream:
     class: Amoscato\Bundle\AppBundle\Controller\StreamController
     arguments:
     - '@amoscato.stream_aggregator'
+
+  # Current Sources
+  amoscato.current_source.collection:
+    class: Amoscato\Bundle\AppBundle\Source\SourceCollection
+    arguments:
+    - Amoscato\Bundle\AppBundle\Source\SourceInterface
+    -
+      - '@amoscato.current_source.lastfm'
+
+  amoscato.current_source.lastfm:
+    class: Amoscato\Bundle\AppBundle\Current\Source\LastfmSource
+    arguments:
+    - '@integration.lastfm_client'
+    calls:
+    - [setUser, [%lastfm_user%]]
 
   # Stream Aggregator
   amoscato.stream_aggregator:
@@ -41,8 +70,9 @@ services:
 
   # Stream Sources
   amoscato.stream_source.collection:
-    class: Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection
+    class: Amoscato\Bundle\AppBundle\Source\SourceCollection
     arguments:
+    - Amoscato\Bundle\AppBundle\Stream\Source\SourceInterface
     -
       - '@amoscato.stream_source.flickr'
       - '@amoscato.stream_source.foodspotting'

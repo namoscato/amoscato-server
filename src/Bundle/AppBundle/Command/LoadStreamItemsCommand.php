@@ -2,7 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Command;
 
-use Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection;
+use Amoscato\Bundle\AppBundle\Source\SourceCollection;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;

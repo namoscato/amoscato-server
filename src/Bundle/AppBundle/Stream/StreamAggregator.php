@@ -3,7 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream;
 
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
-use Amoscato\Bundle\AppBundle\Stream\Source\SourceCollection;
+use Amoscato\Bundle\AppBundle\Source\SourceCollection;
 use Amoscato\Database\PDOFactory;
 use PDO;
 

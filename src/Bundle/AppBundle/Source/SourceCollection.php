@@ -1,19 +1,25 @@
 <?php
 
-namespace Amoscato\Bundle\AppBundle\Stream\Source;
+namespace Amoscato\Bundle\AppBundle\Source;
 
 use ArrayObject;
 use InvalidArgumentException;
 
 class SourceCollection extends ArrayObject
 {
+    /** @var string */
+    private $interfaceName;
+
     /**
+     * @param string $interfaceName
      * @param array $input optional
      * @param int $flags optional
      * @param string $iterator_class optional
      */
-    public function __construct($input = null, $flags = 0, $iterator_class = 'ArrayIterator')
+    public function __construct($interfaceName, $input = null, $flags = 0, $iterator_class = 'ArrayIterator')
     {
+        $this->interfaceName = $interfaceName;
+
         $normalizedInput = $input;
 
         if (is_array($input)) {
@@ -38,13 +44,13 @@ class SourceCollection extends ArrayObject
     }
 
     /**
-     * @param SourceInterface $source
+     * @param object $source
      * @return string
      */
     private function getKey($source)
     {
-        if (!$source instanceof SourceInterface) {
-            throw new InvalidArgumentException('Source must implement Amoscato\Bundle\AppBundle\Stream\Source\SourceInterface');
+        if (!is_subclass_of($source, $this->interfaceName)) {
+            throw new InvalidArgumentException("Source must implement {$this->interfaceName}");
         }
 
         return $source->getType();
