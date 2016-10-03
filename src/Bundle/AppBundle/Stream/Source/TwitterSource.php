@@ -5,7 +5,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
 
-class TwitterSource extends Source
+class TwitterSource extends AbstractSource
 {
     /** @var string */
     protected $type = 'twitter';

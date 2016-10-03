@@ -6,7 +6,7 @@ use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
 use Symfony\Component\DomCrawler\Crawler;
 
-class GoodreadsSource extends Source
+class GoodreadsSource extends AbstractSource
 {
     /** @var string */
     protected $type = 'goodreads';

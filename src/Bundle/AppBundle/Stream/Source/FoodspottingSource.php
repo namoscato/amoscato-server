@@ -5,7 +5,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
 
-class FoodspottingSource extends Source
+class FoodspottingSource extends AbstractSource
 {
     /** @var int */
     protected $perPage = 20;

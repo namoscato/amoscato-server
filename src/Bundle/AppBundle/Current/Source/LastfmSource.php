@@ -2,26 +2,20 @@
 
 namespace Amoscato\Bundle\AppBundle\Current\Source;
 
-use Amoscato\Bundle\AppBundle\Source\SourceInterface;
-use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Bundle\AppBundle\Source\AbstractSource;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LastfmSource implements SourceInterface
+class LastfmSource extends AbstractSource
 {
     /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
-    private $client;
+    protected $client;
+
+    /** @var string */
+    protected $type = 'lastfm';
 
     /** @var string */
     private $user;
-
-    /**
-     * @param Client $client
-     */
-    public function __construct(Client $client)
-    {
-        $this->client = $client;
-    }
 
     /**
      * @param OutputInterface $output
@@ -63,13 +57,5 @@ class LastfmSource implements SourceInterface
     public function setUser($user)
     {
         $this->user = $user;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'lastfm';
     }
 }

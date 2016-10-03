@@ -7,7 +7,7 @@ use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 
-class YouTubeSource extends Source
+class YouTubeSource extends AbstractSource
 {
     /** @var int */
     protected $perPage = 50;

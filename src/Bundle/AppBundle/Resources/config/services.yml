@@ -50,7 +50,6 @@ services:
   amoscato.current_source.collection:
     class: Amoscato\Bundle\AppBundle\Source\SourceCollection
     arguments:
-    - Amoscato\Bundle\AppBundle\Source\SourceInterface
     -
       - '@amoscato.current_source.lastfm'
 
@@ -72,7 +71,6 @@ services:
   amoscato.stream_source.collection:
     class: Amoscato\Bundle\AppBundle\Source\SourceCollection
     arguments:
-    - Amoscato\Bundle\AppBundle\Stream\Source\SourceInterface
     -
       - '@amoscato.stream_source.flickr'
       - '@amoscato.stream_source.foodspotting'

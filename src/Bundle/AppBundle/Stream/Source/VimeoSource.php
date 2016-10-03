@@ -5,7 +5,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
 
-class VimeoSource extends Source
+class VimeoSource extends AbstractSource
 {
     /** @var int */
     protected $perPage = 50;

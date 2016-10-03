@@ -7,19 +7,13 @@ use InvalidArgumentException;
 
 class SourceCollection extends ArrayObject
 {
-    /** @var string */
-    private $interfaceName;
-
     /**
-     * @param string $interfaceName
      * @param array $input optional
      * @param int $flags optional
      * @param string $iterator_class optional
      */
-    public function __construct($interfaceName, $input = null, $flags = 0, $iterator_class = 'ArrayIterator')
+    public function __construct($input = null, $flags = 0, $iterator_class = 'ArrayIterator')
     {
-        $this->interfaceName = $interfaceName;
-
         $normalizedInput = $input;
 
         if (is_array($input)) {
@@ -49,7 +43,7 @@ class SourceCollection extends ArrayObject
      */
     private function getKey($source)
     {
-        if (!is_subclass_of($source, $this->interfaceName)) {
+        if (!$source instanceof SourceInterface) {
             throw new InvalidArgumentException("Source must implement {$this->interfaceName}");
         }
 

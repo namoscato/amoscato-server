@@ -2,10 +2,10 @@
 
 namespace Tests\Mocks\Bundle\AppBundle\Stream\Source;
 
-use Amoscato\Bundle\AppBundle\Stream\Source\Source;
+use Amoscato\Bundle\AppBundle\Stream\Source\AbstractSource;
 use Amoscato\Console\Helper\PageIterator;
 
-class MockSource extends Source
+class MockSource extends AbstractSource
 {
     protected $type = 'mockType';
 

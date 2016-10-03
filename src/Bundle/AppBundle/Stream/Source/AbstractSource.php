@@ -9,7 +9,7 @@ use Amoscato\Database\PDOFactory;
 use PDO;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class Source implements SourceInterface
+abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\AbstractSource implements SourceInterface
 {
     const LIMIT = 100;
 
@@ -25,9 +25,6 @@ abstract class Source implements SourceInterface
     /** @var Client */
     protected $client;
 
-    /** @var string */
-    protected $type;
-
     /** @var int */
     protected $weight = 1;
 
@@ -39,14 +36,6 @@ abstract class Source implements SourceInterface
     {
         $this->databaseFactory = $databaseFactory;
         $this->client = $client;
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**

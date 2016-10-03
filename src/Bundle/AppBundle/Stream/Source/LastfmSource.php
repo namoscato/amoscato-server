@@ -8,7 +8,7 @@ use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LastfmSource extends Source
+class LastfmSource extends AbstractSource
 {
     /** @var int */
     protected $perPage = 200;

@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GitHubSource extends Source
+class GitHubSource extends AbstractSource
 {
     /** @var int */
     protected $perPage = 30;
