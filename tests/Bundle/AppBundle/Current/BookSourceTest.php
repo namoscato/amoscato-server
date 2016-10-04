@@ -2,16 +2,16 @@
 
 namespace Tests\Bundle\AppBundle\Current\Source;
 
-use Amoscato\Bundle\AppBundle\Current\Source\GoodreadsSource;
+use Amoscato\Bundle\AppBundle\Current\BookSource;
 use Mockery as m;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
+class BookSourceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var GoodreadsSource */
+    /** @var BookSource */
     private $target;
 
     /** @var m\Mock */
@@ -31,7 +31,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
 
-        $this->target = new GoodreadsSource($this->client);
+        $this->target = new BookSource($this->client);
 
         $this
             ->target

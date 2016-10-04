@@ -2,16 +2,16 @@
 
 namespace Tests\Bundle\AppBundle\Current\Source;
 
-use Amoscato\Bundle\AppBundle\Current\Source\LastfmSource;
+use Amoscato\Bundle\AppBundle\Current\MusicSource;
 use Mockery as m;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class LastfmSourceTest extends \PHPUnit_Framework_TestCase
+class MusicSourceTest extends \PHPUnit_Framework_TestCase
 {
-    /** @var LastfmSource */
+    /** @var MusicSource */
     private $target;
 
     /** @var m\Mock */
@@ -35,7 +35,7 @@ class LastfmSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
 
-        $this->target = new LastfmSource($this->client);
+        $this->target = new MusicSource($this->client);
 
         $this
             ->target

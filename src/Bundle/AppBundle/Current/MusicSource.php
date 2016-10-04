@@ -1,12 +1,12 @@
 <?php
 
-namespace Amoscato\Bundle\AppBundle\Current\Source;
+namespace Amoscato\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\AppBundle\Source\AbstractSource;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LastfmSource extends AbstractSource
+class MusicSource extends AbstractSource
 {
     /** @var string */
     protected $type = 'lastfm';

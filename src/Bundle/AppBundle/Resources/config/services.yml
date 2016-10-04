@@ -51,18 +51,18 @@ services:
     class: Amoscato\Bundle\AppBundle\Source\SourceCollection
     arguments:
     -
-      - '@amoscato.current_source.goodreads'
-      - '@amoscato.current_source.lastfm'
+      - '@amoscato.current_source.book'
+      - '@amoscato.current_source.music'
 
-  amoscato.current_source.goodreads:
-    class: Amoscato\Bundle\AppBundle\Current\Source\GoodreadsSource
+  amoscato.current_source.book:
+    class: Amoscato\Bundle\AppBundle\Current\BookSource
     arguments:
     - '@integration.goodreads_client'
     calls:
     - [setUserId, [%goodreads_user_id%]]
 
-  amoscato.current_source.lastfm:
-    class: Amoscato\Bundle\AppBundle\Current\Source\LastfmSource
+  amoscato.current_source.music:
+    class: Amoscato\Bundle\AppBundle\Current\MusicSource
     arguments:
     - '@integration.lastfm_client'
     calls:
