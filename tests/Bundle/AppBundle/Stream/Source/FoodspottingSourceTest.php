@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Bundle\AppBundle\Stream\Stream;
+namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Mockery as m;
 
-class TwitterSourceTest extends \PHPUnit_Framework_TestCase
+class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
     private $client;
@@ -12,7 +12,7 @@ class TwitterSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource */
+    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource */
     private $source;
 
     /** @var m\Mock */
@@ -23,15 +23,15 @@ class TwitterSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource[getStreamStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
             ]
         );
 
-        $this->source->setScreenName(10);
-        $this->source->setStatusUri('twitter.com/');
+        $this->source->setPersonId(10);
+        $this->source->setReviewUri('foodspotting.com/');
 
         $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
@@ -58,7 +58,7 @@ class TwitterSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
-            ->with('twitter')
+            ->with('foodspotting')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
@@ -76,23 +76,32 @@ class TwitterSourceTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->client
-            ->shouldReceive('getUserTweets')
+            ->shouldReceive('getReviews')
             ->with(
                 10,
                 [
-                    'count' => 100,
+                    'page' => 1,
+                    'per_page' => 20,
+                    'sort' => 'latest'
                 ]
             )
             ->andReturn(
                 [
                     (object) [
-                        'id_str' => '1',
-                        'text' => 'tweet',
+                        'id' => 1,
+                        'thumb_280' => 'img.jpg',
+                        'item' => (object) [
+                            'name' => 'item name'
+                        ],
+                        'place' => (object) [
+                            'name' => 'place name'
+                        ],
                         'created_at' => '2016-05-15 19:37:06'
                     ]
-                ],
-                []
-            );
+                ]
+            )
+            ->shouldReceive('getReviews')
+            ->andReturn([]);
 
         $this->statementProvider
             ->shouldReceive('insertRows')
@@ -106,14 +115,14 @@ class TwitterSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
-                            'twitter',
+                            'foodspotting',
                             '1',
-                            'tweet',
-                            'twitter.com/10/status/1',
+                            'item name at place name',
+                            'foodspotting.com/1',
                             '2016-05-15 19:37:06',
-                            null,
-                            null,
-                            null,
+                            'img.jpg',
+                            280,
+                            280,
                         ]));
                 })
             );

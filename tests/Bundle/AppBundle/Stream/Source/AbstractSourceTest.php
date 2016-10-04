@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Bundle\AppBundle\Stream\Stream;
+namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Mockery as m;
 
-class SourceTest extends \PHPUnit_Framework_TestCase
+class AbstractSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
     private $client;

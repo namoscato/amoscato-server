@@ -1,10 +1,14 @@
 <?php
 
-namespace Tests\Bundle\AppBundle\Stream\Stream;
+namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Mockery as m;
 
-class VimeoSourceTest extends \PHPUnit_Framework_TestCase
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ */
+class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
     private $client;
@@ -12,7 +16,7 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource */
+    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource */
     private $source;
 
     /** @var m\Mock */
@@ -20,15 +24,25 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
+        m::mock(
+            'alias:Carbon\Carbon',
+            [
+                'now->toDateTimeString' => 'date'
+            ]
+        );
+
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource[getStreamStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
             ]
         );
+
+        $this->source->setPlaylistId(10);
+        $this->source->setVideoUri('youtube.com/');
 
         $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
@@ -39,6 +53,7 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
         $this->output = m::mock(
             'Symfony\Component\Console\Output\OutputInterface',
             [
+                'writeDebug' => null,
                 'writeln' => null,
                 'writeVerbose' => null
             ]
@@ -54,7 +69,7 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
-            ->with('vimeo')
+            ->with('youtube')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
@@ -72,58 +87,57 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->client
-            ->shouldReceive('getLikes')
+            ->shouldReceive('getPlaylistItems')
             ->with(
+                10,
                 [
-                    'page' => 1,
-                    'per_page' => 50
+                    'maxResults' => 50,
+                    'pageToken' => null
                 ]
             )
             ->andReturn(
                 (object) [
-                    'paging' => (object) [
-                        'next' => 2
-                    ],
-                    'data' => [
+                    'nextPageToken' => 'next1',
+                    'items' => [
                         (object) [
-                            'uri' => '/videos/123',
-                            'name' => 'video1',
-                            'link' => 'link1',
-                            'metadata' => (object) [
-                                'interactions' => (object) [
-                                    'like' => (object) [
-                                        'added_time' => '2013-03-15 09:50:30'
+                            'snippet' => (object) [
+                                'title' => 'video title',
+                                'thumbnails' => (object) [
+                                    'medium' => (object) [
+                                        'url' => 'img.jpg',
+                                        'width' => 100,
+                                        'height' => 300
                                     ]
+                                ],
+                                'resourceId' => (object) [
+                                    'videoId' => 123
                                 ]
-                            ],
-                            'pictures' => (object) [
-                                'sizes' => [
-                                    0,
-                                    1,
-                                    (object) [
-                                        'link' => 'img.jpg',
-                                        'width' => 300,
-                                        'height' => 100
-                                    ]
+                            ]
+                        ],
+                        (object) [
+                            'snippet' => (object) [
+                                'title' => 'video title',
+                                'resourceId' => (object) [
+                                    'videoId' => 123
                                 ]
                             ]
                         ]
                     ]
                 ]
             )
-            ->shouldReceive('getLikes')
+            ->shouldReceive('getPlaylistItems')
+            ->once()
             ->with(
+                10,
                 [
-                    'page' => 2,
-                    'per_page' => 50
+                    'maxResults' => 50,
+                    'pageToken' => 'next1'
                 ]
             )
             ->andReturn(
                 (object) [
-                    'paging' => (object) [
-                        'next' => null
-                    ],
-                    'data' => []
+                    'nextPageToken' => 'next2',
+                    'items' => []
                 ]
             );
 
@@ -139,14 +153,14 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
-                            'vimeo',
-                            '123',
-                            'video1',
-                            'link1',
-                            '2013-03-15 09:50:30',
+                            'youtube',
+                            123,
+                            'video title',
+                            'youtube.com/123',
+                            'date',
                             'img.jpg',
-                            300,
                             100,
+                            300,
                         ]));
                 })
             );

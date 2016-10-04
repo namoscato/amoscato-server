@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Bundle\AppBundle\Stream\Stream;
+namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Mockery as m;
 

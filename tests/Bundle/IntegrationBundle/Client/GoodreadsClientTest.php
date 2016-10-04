@@ -26,6 +26,52 @@ class GoodreadsClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function test_getCurrentlyReadingBooks()
+    {
+        $this->client
+            ->shouldReceive('get')
+            ->once()
+            ->with(
+                'review/list/1.xml',
+                [
+                    'query' => [
+                        'key' => 'key',
+                        'v' => 2,
+                        'shelf' => 'currently-reading',
+                    ]
+                ]
+            )
+            ->andReturn(
+                m::mock(
+                    [
+                        'getBody' => 'body'
+                    ]
+                )
+            );
+
+        $this->goodreadsClient
+            ->shouldReceive('createCrawler')
+            ->with('body')
+            ->andReturn(
+                m::mock(
+                    'Symfony\Component\DomCrawler\Crawler',
+                    function($mock) {
+                        /** @var m\Mock $mock */
+
+                        $mock
+                            ->shouldReceive('filter')
+                            ->with('GoodreadsResponse reviews review')
+                            ->andReturn('books');
+                    }
+                )
+            );
+
+        $this->assertSame(
+            'books',
+            $this->goodreadsClient->getCurrentlyReadingBooks(1)
+        );
+    }
+
     public function test_getReadBooks()
     {
         $this->client

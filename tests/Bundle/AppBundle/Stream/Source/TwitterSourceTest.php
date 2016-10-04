@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Bundle\AppBundle\Stream\Stream;
+namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Mockery as m;
 
-class FlickrSourceTest extends \PHPUnit_Framework_TestCase
+class TwitterSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
     private $client;
@@ -12,7 +12,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource */
+    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource */
     private $source;
 
     /** @var m\Mock */
@@ -23,15 +23,15 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource[getStreamStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
             ]
         );
 
-        $this->source->setUserId(10);
-        $this->source->setPhotoUri('flickr.com/');
+        $this->source->setScreenName(10);
+        $this->source->setStatusUri('twitter.com/');
 
         $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
@@ -58,7 +58,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
-            ->with('flickr')
+            ->with('twitter')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
@@ -76,30 +76,23 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->client
-            ->shouldReceive('getPublicPhotos')
+            ->shouldReceive('getUserTweets')
             ->with(
                 10,
                 [
-                    'extras' => 'url_m,path_alias,date_upload',
-                    'page' => 1,
-                    'per_page' => 100
+                    'count' => 100,
                 ]
             )
             ->andReturn(
                 [
                     (object) [
-                        'id' => 1,
-                        'url_m' => 'img.jpg',
-                        'width_m' => 'w',
-                        'height_m' => 'h',
-                        'title' => 'photo',
-                        'pathalias' => 'user',
-                        'dateupload' => '1463341026'
+                        'id_str' => '1',
+                        'text' => 'tweet',
+                        'created_at' => '2016-05-15 19:37:06'
                     ]
-                ]
-            )
-            ->shouldReceive('getPublicPhotos')
-            ->andReturn([]);
+                ],
+                []
+            );
 
         $this->statementProvider
             ->shouldReceive('insertRows')
@@ -113,14 +106,14 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
-                            'flickr',
+                            'twitter',
                             '1',
-                            'photo',
-                            'flickr.com/user/1',
+                            'tweet',
+                            'twitter.com/10/status/1',
                             '2016-05-15 19:37:06',
-                            'img.jpg',
-                            'w',
-                            'h',
+                            null,
+                            null,
+                            null,
                         ]));
                 })
             );

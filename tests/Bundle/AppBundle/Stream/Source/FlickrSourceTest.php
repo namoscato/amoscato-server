@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests\Bundle\AppBundle\Stream\Stream;
+namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Mockery as m;
 
-class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
+class FlickrSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
     private $client;
@@ -23,15 +23,15 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource[getStreamStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
                 $this->client
             ]
         );
 
-        $this->source->setPersonId(10);
-        $this->source->setReviewUri('foodspotting.com/');
+        $this->source->setUserId(10);
+        $this->source->setPhotoUri('flickr.com/');
 
         $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
 
@@ -58,7 +58,7 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
-            ->with('foodspotting')
+            ->with('flickr')
             ->andReturn(
                 m::mock('PDOStatement', function($mock) {
                     /** @var m\Mock $mock */
@@ -76,31 +76,29 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
             );
 
         $this->client
-            ->shouldReceive('getReviews')
+            ->shouldReceive('getPublicPhotos')
             ->with(
                 10,
                 [
+                    'extras' => 'url_m,path_alias,date_upload',
                     'page' => 1,
-                    'per_page' => 20,
-                    'sort' => 'latest'
+                    'per_page' => 100
                 ]
             )
             ->andReturn(
                 [
                     (object) [
                         'id' => 1,
-                        'thumb_280' => 'img.jpg',
-                        'item' => (object) [
-                            'name' => 'item name'
-                        ],
-                        'place' => (object) [
-                            'name' => 'place name'
-                        ],
-                        'created_at' => '2016-05-15 19:37:06'
+                        'url_m' => 'img.jpg',
+                        'width_m' => 'w',
+                        'height_m' => 'h',
+                        'title' => 'photo',
+                        'pathalias' => 'user',
+                        'dateupload' => '1463341026'
                     ]
                 ]
             )
-            ->shouldReceive('getReviews')
+            ->shouldReceive('getPublicPhotos')
             ->andReturn([]);
 
         $this->statementProvider
@@ -115,14 +113,14 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
-                            'foodspotting',
+                            'flickr',
                             '1',
-                            'item name at place name',
-                            'foodspotting.com/1',
+                            'photo',
+                            'flickr.com/user/1',
                             '2016-05-15 19:37:06',
                             'img.jpg',
-                            280,
-                            280,
+                            'w',
+                            'h',
                         ]));
                 })
             );
