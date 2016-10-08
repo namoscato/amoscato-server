@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class BookSource extends AbstractSource
 {
     /** @var string */
-    protected $type = 'goodreads';
+    protected $type = 'book';
 
     /** @var \Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient */
     protected $client;

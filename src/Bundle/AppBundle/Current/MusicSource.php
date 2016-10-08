@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class MusicSource extends AbstractSource
 {
     /** @var string */
-    protected $type = 'lastfm';
+    protected $type = 'music';
 
     /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
     protected $client;
