@@ -24,17 +24,12 @@ class YouTubeSource extends AbstractSource
     /** @var string */
     private $videoUri;
 
-    /** @var string */
-    private $nowDateTimeString;
-
     /**
      * @param PDOFactory $databaseFactory
      * @param Client $client
      */
     public function __construct(PDOFactory $databaseFactory, Client $client)
     {
-        $this->nowDateTimeString = Carbon::now()->toDateTimeString();
-
         parent::__construct($databaseFactory, $client);
     }
 
@@ -79,7 +74,7 @@ class YouTubeSource extends AbstractSource
         return [
             $item->snippet->title,
             "{$this->videoUri}{$item->snippet->resourceId->videoId}",
-            $this->nowDateTimeString,
+            Carbon::parse($item->snippet->publishedAt)->toDateTimeString(),
             $image->url,
             $image->width,
             $image->height,

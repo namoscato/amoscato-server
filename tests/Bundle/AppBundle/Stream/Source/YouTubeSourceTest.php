@@ -27,7 +27,7 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
         m::mock(
             'alias:Carbon\Carbon',
             [
-                'now->toDateTimeString' => 'date'
+                'parse->toDateTimeString' => 'date'
             ]
         );
 
@@ -101,6 +101,7 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                     'items' => [
                         (object) [
                             'snippet' => (object) [
+                                'publishedAt' => 'date',
                                 'title' => 'video title',
                                 'thumbnails' => (object) [
                                     'medium' => (object) [

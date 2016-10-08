@@ -53,6 +53,7 @@ services:
     -
       - '@amoscato.current_source.book'
       - '@amoscato.current_source.music'
+      - '@amoscato.stream_source.video'
 
   amoscato.current_source.book:
     class: Amoscato\Bundle\AppBundle\Current\BookSource
@@ -67,6 +68,15 @@ services:
     - '@integration.lastfm_client'
     calls:
     - [setUser, [%lastfm_user%]]
+
+  amoscato.stream_source.video:
+    class: Amoscato\Bundle\AppBundle\Current\VideoSource
+    arguments:
+    - '@integration.youtube_client'
+    - '@integration.vimeo_client'
+    calls:
+    - [setYouTubePlaylistId, [%youtube_playlist_id%]]
+    - [setYouTubeVideoUri, [%youtube_video_uri%]]
 
   # Stream Aggregator
   amoscato.stream_aggregator:
