@@ -6,7 +6,11 @@ Server-side processes behind [amoscato.com](http://amoscato.com/) built with [Sy
 
 ### `amoscato:current:load`
 
-Loads and caches current data from a set of sources.
+Loads and caches current data from a set of sources:
+
+* `book` - currently reading book from [Goodreads](https://www.goodreads.com/)
+* `music` - latest scrobble from [Last.fm](http://www.last.fm/)
+* `video` - latest favorite or like from [YouTube](https://www.youtube.com/) or [Vimeo](https://vimeo.com/) respectively
 
 ### `amoscato:stream:cache [--size=1000]`
 

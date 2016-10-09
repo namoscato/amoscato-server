@@ -52,6 +52,7 @@ services:
     arguments:
     -
       - '@amoscato.current_source.book'
+      - '@amoscato.current_source.food'
       - '@amoscato.current_source.music'
       - '@amoscato.stream_source.video'
 
@@ -61,6 +62,14 @@ services:
     - '@integration.goodreads_client'
     calls:
     - [setUserId, [%goodreads_user_id%]]
+
+  amoscato.current_source.food:
+    class: Amoscato\Bundle\AppBundle\Current\FoodSource
+    arguments:
+    - '@integration.foodspotting_client'
+    calls:
+    - [setPersonId, [%foodspotting_person_id%]]
+    - [setReviewUri, [%foodspotting_review_uri%]]
 
   amoscato.current_source.music:
     class: Amoscato\Bundle\AppBundle\Current\MusicSource

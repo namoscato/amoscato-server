@@ -26,7 +26,7 @@ class MusicSource extends AbstractSource
         $tracks = $this->client->getRecentTracks(
             $this->user,
             [
-                'limit' => 3
+                'limit' => 2
             ]
         );
 

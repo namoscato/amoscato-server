@@ -57,7 +57,7 @@ class MusicSourceTest extends \PHPUnit_Framework_TestCase
             ->with(
                 1,
                 [
-                    'limit' => 3
+                    'limit' => 2
                 ]
             )
             ->andReturn(
