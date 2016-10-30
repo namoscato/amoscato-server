@@ -78,6 +78,8 @@
                 "goodreads_api_key": "AMOSCATO_GOODREADS_API_KEY",
                 "lastfm_api_key": "AMOSCATO_LASTFM_API_KEY",
                 "twitter_bearer_token": "AMOSCATO_TWITTER_BEARER_TOKEN",
+                "untappd_client_id": "AMOSCATO_UNTAPPD_CLIENT_ID",
+                "untappd_client_secret": "AMOSCATO_UNTAPPD_CLIENT_SECRET",
                 "vimeo_access_token": "AMOSCATO_VIMEO_ACCESS_TOKEN",
                 "youtube_api_key": "AMOSCATO_YOUTUBE_API_KEY"
             }

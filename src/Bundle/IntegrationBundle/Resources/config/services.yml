@@ -44,6 +44,11 @@ services:
     arguments:
     - base_uri: %twitter_api_uri%
 
+  integration.client.untappd:
+    parent: integration.client
+    arguments:
+    - base_uri: %untappd_api_uri%
+
   integration.client.vimeo:
     parent: integration.client
     arguments:
@@ -92,6 +97,14 @@ services:
     arguments:
     - '@integration.client.twitter'
     - %twitter_bearer_token%
+
+  integration.untappd_client:
+    class: Amoscato\Bundle\IntegrationBundle\Client\UntappdClient
+    arguments:
+    - '@integration.client.untappd'
+    - %untappd_client_secret%
+    calls:
+    - [setClientId, [%untappd_client_id%]]
 
   integration.vimeo_client:
     class: Amoscato\Bundle\IntegrationBundle\Client\VimeoClient

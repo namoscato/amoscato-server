@@ -22,5 +22,7 @@ parameters:
   goodreads_api_key: ~
   lastfm_api_key: ~
   twitter_bearer_token: ~
+  untappd_client_id: ~
+  untappd_client_secret: ~
   vimeo_access_token: ~
   youtube_api_key: ~
