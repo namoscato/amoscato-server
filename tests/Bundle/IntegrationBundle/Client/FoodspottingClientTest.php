@@ -20,6 +20,11 @@ class FoodspottingClientTest extends \PHPUnit_Framework_TestCase
         $this->flickrClient = new FoodspottingClient($this->client, 'key');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getReviews()
     {
         $this->client

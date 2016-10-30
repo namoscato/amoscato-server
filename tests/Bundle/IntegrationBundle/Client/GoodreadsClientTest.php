@@ -26,6 +26,11 @@ class GoodreadsClientTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getCurrentlyReadingBooks()
     {
         $this->client

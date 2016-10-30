@@ -20,6 +20,11 @@ class TwitterClientTest extends \PHPUnit_Framework_TestCase
         $this->twitterClient = new TwitterClient($this->client, 'key');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getUserTweets()
     {
         $this->client

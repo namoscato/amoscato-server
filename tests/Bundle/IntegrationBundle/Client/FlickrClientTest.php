@@ -20,6 +20,11 @@ class FlickrClientTest extends \PHPUnit_Framework_TestCase
         $this->flickrClient = new FlickrClient($this->client, 'key');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getPublicPhotos()
     {
         $this->client

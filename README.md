@@ -9,6 +9,7 @@ Server-side processes behind [amoscato.com](http://amoscato.com/) built with [Sy
 Loads and caches current data from a set of sources:
 
 * `book` - currently reading book from [Goodreads](https://www.goodreads.com/)
+* `drink` - latest checkin from [Untappd](https://untappd.com/)
 * `food` - latest review from [Foodspotting](http://www.foodspotting.com/)
 * `music` - latest scrobble from [Last.fm](http://www.last.fm/)
 * `video` - latest favorite or like from [YouTube](https://www.youtube.com/) or [Vimeo](https://vimeo.com/) respectively
@@ -29,6 +30,7 @@ Available sources include:
 * `goodreads` - latest read books from [Goodreads](https://www.goodreads.com/)
 * `lastfm` - latest scrobbles from [Last.fm](http://www.last.fm/)
 * `twitter` - latest tweets from [Twitter](https://twitter.com/)
+* `untappd` - latest badges from [Untappd](https://untappd.com/)
 * `vimeo` - latest favorites from [Vimeo](https://vimeo.com/)
 * `youtube` - latest favorites from [YouTube](https://www.youtube.com/)
 

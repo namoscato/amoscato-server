@@ -21,6 +21,11 @@ class GitHubClientTest extends \PHPUnit_Framework_TestCase
         $this->gitHubClient->setClientId('id');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getUserEvents()
     {
         $this->client

@@ -20,6 +20,11 @@ class VimeoClientTest extends \PHPUnit_Framework_TestCase
         $this->vimeoClient = new VimeoClient($this->client, 'token');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getPublicPhotos()
     {
         $this->client

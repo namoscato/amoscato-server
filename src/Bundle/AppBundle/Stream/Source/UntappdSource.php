@@ -29,7 +29,7 @@ class UntappdSource extends AbstractSource
         $response = $this->client->getUserBadges(
             $this->username,
             [
-                'offset' => $iterator->current(),
+                'offset' => $iterator->current() - 1,
                 'limit' => $perPage
             ]
         );
@@ -50,8 +50,8 @@ class UntappdSource extends AbstractSource
             $this->client->getBadgeUrl($this->username, $item->user_badge_id),
             Carbon::parse($item->created_at)->toDateTimeString(),
             $item->media->badge_image_lg,
-            120,
-            120
+            400,
+            400
         ];
     }
 

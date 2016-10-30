@@ -20,6 +20,11 @@ class YouTubeClientTest extends \PHPUnit_Framework_TestCase
         $this->youtubeClient = new YouTubeClient($this->client, 'key');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getPublicPhotos()
     {
         $this->client

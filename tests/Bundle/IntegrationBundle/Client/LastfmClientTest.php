@@ -20,6 +20,11 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
         $this->flickrClient = new LastfmClient($this->client, 'key');
     }
 
+    protected function tearDown()
+    {
+        m::close();
+    }
+
     public function test_getAlbumInfoById()
     {
         $this->client
