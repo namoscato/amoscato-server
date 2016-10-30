@@ -9,12 +9,43 @@ class UntappdClient extends Client
 
     /**
      * @param string $username
+     * @param int $userBadgeId
+     * @return string
+     */
+    public function getBadgeUrl($username, $userBadgeId)
+    {
+        return $this->getUserUrl($username, "badges/{$userBadgeId}");
+    }
+
+    /**
+     * @param string $username
      * @param int $checkinId
      * @return string
      */
     public function getCheckinUrl($username, $checkinId)
     {
-        return "https://untappd.com/user/{$username}/checkin/{$checkinId}";
+        return $this->getUserUrl($username, "checkin/{$checkinId}");
+    }
+
+    /**
+     * @param string $username
+     * @param string $path
+     * @return string
+     */
+    public function getUserUrl($username, $path = '')
+    {
+        return "https://untappd.com/user/{$username}/{$path}";
+    }
+
+    /**
+     * @see https://untappd.com/api/docs#userbadges
+     * @param string $username
+     * @param array $args
+     * @return object
+     */
+    public function getUserBadges($username, array $args = [])
+    {
+        return $this->get("user/badges/{$username}", $args);
     }
 
     /**
@@ -25,8 +56,26 @@ class UntappdClient extends Client
      */
     public function getUserCheckins($username, array $args = [])
     {
+        return $this->get("user/checkins/{$username}", $args);
+    }
+
+    /**
+     * @param string $clientId
+     */
+    public function setClientId($clientId)
+    {
+        $this->clientId = $clientId;
+    }
+
+    /**
+     * @param string $uri
+     * @param array $args
+     * @return object
+     */
+    private function get($uri, array $args = [])
+    {
         $response = $this->client->get(
-            "user/checkins/{$username}",
+            $uri,
             [
                 'query' => array_merge(
                     $args,
@@ -39,13 +88,5 @@ class UntappdClient extends Client
         );
 
         return json_decode($response->getBody())->response;
-    }
-
-    /**
-     * @param string $clientId
-     */
-    public function setClientId($clientId)
-    {
-        $this->clientId = $clientId;
     }
 }

@@ -34,8 +34,9 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
      */
     public function __construct(PDOFactory $databaseFactory, Client $client)
     {
+        parent::__construct($client);
+
         $this->databaseFactory = $databaseFactory;
-        $this->client = $client;
     }
 
     /**

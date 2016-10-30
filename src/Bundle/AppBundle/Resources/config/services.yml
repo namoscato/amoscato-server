@@ -113,6 +113,7 @@ services:
       - '@amoscato.stream_source.goodreads'
       - '@amoscato.stream_source.lastfm'
       - '@amoscato.stream_source.twitter'
+      - '@amoscato.stream_source.untappd'
       - '@amoscato.stream_source.vimeo'
       - '@amoscato.stream_source.youtube'
 
@@ -175,6 +176,14 @@ services:
     - [setScreenName, [%twitter_screen_name%]]
     - [setStatusUri, [%twitter_status_uri%]]
     - [setWeight, [2]]
+
+  amoscato.stream_source.untappd:
+    parent: amoscato.stream_source
+    class: Amoscato\Bundle\AppBundle\Stream\Source\UntappdSource
+    arguments:
+    - '@integration.untappd_client'
+    calls:
+    - [setUsername, [%untappd_username%]]
 
   amoscato.stream_source.vimeo:
     parent: amoscato.stream_source
