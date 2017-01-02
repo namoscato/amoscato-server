@@ -2,10 +2,9 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
-use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
-use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class YouTubeSource extends AbstractSource
 {
@@ -23,15 +22,6 @@ class YouTubeSource extends AbstractSource
 
     /** @var string */
     private $videoUri;
-
-    /**
-     * @param PDOFactory $databaseFactory
-     * @param Client $client
-     */
-    public function __construct(PDOFactory $databaseFactory, Client $client)
-    {
-        parent::__construct($databaseFactory, $client);
-    }
 
     /**
      * @param int $perPage
@@ -61,9 +51,10 @@ class YouTubeSource extends AbstractSource
 
     /**
      * @param object $item
+     * @param OutputInterface $output
      * @return array
      */
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         if (!isset($item->snippet->thumbnails)) {
             return false;

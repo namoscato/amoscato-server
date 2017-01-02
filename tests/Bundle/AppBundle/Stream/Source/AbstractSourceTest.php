@@ -26,6 +26,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
             'Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource[getStreamStatementProvider,mockTransform,mockExtract]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
+                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
                 $this->client
             ]
         );

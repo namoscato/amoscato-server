@@ -4,6 +4,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class FoodspottingSource extends AbstractSource
 {
@@ -41,15 +42,16 @@ class FoodspottingSource extends AbstractSource
 
     /**
      * @param object $item
+     * @param OutputInterface $output
      * @return array
      */
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         return [
             "{$item->item->name} at {$item->place->name}",
             "{$this->reviewUri}{$item->id}",
             Carbon::parse($item->created_at)->toDateTimeString(),
-            $item->thumb_280,
+            $this->cachePhoto($output, $item->thumb_280),
             280,
             280
         ];

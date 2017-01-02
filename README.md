@@ -1,6 +1,6 @@
 # Amoscato Server [![Build Status](https://travis-ci.org/namoscato/amoscato-server.svg?branch=master)](https://travis-ci.org/namoscato/amoscato-server)
 
-Server-side processes behind [amoscato.com](http://amoscato.com/) built with [Symfony](https://symfony.com/).
+Server-side processes behind [amoscato.com](https://amoscato.com/) built with [Symfony](https://symfony.com/).
 
 ## Console Commands
 

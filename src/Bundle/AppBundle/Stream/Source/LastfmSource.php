@@ -2,6 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
@@ -27,13 +28,14 @@ class LastfmSource extends AbstractSource
 
     /**
      * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
      * @param Client $client
      */
-    public function __construct(PDOFactory $databaseFactory, Client $client)
+    public function __construct(PDOFactory $databaseFactory, FtpClient $ftpClient, Client $client)
     {
         $this->albumInfo = [];
 
-        parent::__construct($databaseFactory, $client);
+        parent::__construct($databaseFactory, $ftpClient, $client);
     }
 
     /**
@@ -54,9 +56,10 @@ class LastfmSource extends AbstractSource
 
     /**
      * @param object $item
+     * @param OutputInterface $output
      * @return array
      */
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         $albumId = $this->getAlbumId($item);
 
@@ -134,7 +137,7 @@ class LastfmSource extends AbstractSource
                             $this->getType(),
                             $sourceId
                         ],
-                        $this->transform($previousTrack),
+                        $this->transform($previousTrack, $output),
                         $values
                     );
 

@@ -47,9 +47,10 @@ class GitHubSource extends AbstractSource
 
     /**
      * @param object $item
+     * @param OutputInterface $output
      * @return array
      */
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         try {
             $response = $this->client->getCommit($item->url);
@@ -110,7 +111,7 @@ class GitHubSource extends AbstractSource
                         break 3;
                     }
 
-                    $transformedCommit = $this->transform($item->payload->commits[$i]);
+                    $transformedCommit = $this->transform($item->payload->commits[$i], $output);
 
                     if ($transformedCommit === false) { // Skip select items
                         continue;

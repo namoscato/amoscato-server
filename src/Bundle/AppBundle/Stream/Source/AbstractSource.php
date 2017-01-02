@@ -2,6 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
@@ -19,6 +20,9 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
     /** @var PDOFactory */
     private $databaseFactory;
 
+    /** @var FtpClient */
+    private $ftpClient;
+
     /** @var StreamStatementProvider */
     protected $statementProvider;
 
@@ -30,13 +34,15 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
 
     /**
      * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
      * @param Client $client
      */
-    public function __construct(PDOFactory $databaseFactory, Client $client)
+    public function __construct(PDOFactory $databaseFactory, FtpClient $ftpClient, Client $client)
     {
         parent::__construct($client);
 
         $this->databaseFactory = $databaseFactory;
+        $this->ftpClient = $ftpClient;
     }
 
     /**
@@ -64,9 +70,10 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
 
     /**
      * @param object $item
+     * @param OutputInterface $output
      * @return array
      */
-    abstract protected function transform($item);
+    abstract protected function transform($item, OutputInterface $output);
 
     /**
      * @param OutputInterface $output
@@ -92,7 +99,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
                     break 2;
                 }
 
-                $transformedItem = $this->transform($item);
+                $transformedItem = $this->transform($item, $output);
 
                 if ($transformedItem === false) { // Skip select items
                     continue;
@@ -188,5 +195,27 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
         }
 
         return true;
+    }
+
+    /**
+     * @param OutputInterface $output
+     * @param string $url
+     * @return string
+     */
+    public function cachePhoto(OutputInterface $output, $url)
+    {
+        if (false === $data = file_get_contents($url)) {
+            throw new \RuntimeException("Unable to fetch photo '{$url}'");
+        }
+
+        $path = sprintf(
+            '%s.%s',
+            uniqid("{$this->type}_"),
+            pathinfo(parse_url($url)['path'], PATHINFO_EXTENSION)
+        );
+
+        return $this
+            ->ftpClient
+            ->upload($output, $data, $path, 'img');
     }
 }

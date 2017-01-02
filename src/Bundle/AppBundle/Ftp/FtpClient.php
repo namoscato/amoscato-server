@@ -16,25 +16,31 @@ class FtpClient
     /** @var string */
     private $ftpPassword;
 
+    /** @var string */
+    private $ftpDirectory;
+
     /**
      * @param string $ftpHost
      * @param string $ftpUser
      * @param string $ftpPassword
+     * @param string $ftpDirectory
      */
-    public function __construct($ftpHost, $ftpUser, $ftpPassword)
+    public function __construct($ftpHost, $ftpUser, $ftpPassword, $ftpDirectory = '')
     {
         $this->ftpHost = $ftpHost;
         $this->ftpUser = $ftpUser;
         $this->ftpPassword = $ftpPassword;
+        $this->ftpDirectory = $ftpDirectory;
     }
 
     /**
      * @param OutputInterface $output
      * @param string $data
      * @param string $fileName
-     * @return int
+     * @param string $directory
+     * @return string Remote path of uploaded file
      */
-    public function upload(OutputInterface $output, $data, $fileName)
+    public function upload(OutputInterface $output, $data, $fileName, $directory = null)
     {
         /** @var \Amoscato\Console\Output\ConsoleOutput $output */
 
@@ -74,6 +80,30 @@ class FtpClient
             throw new RuntimeException('Unable to enable passive mode.');
         }
 
+        $result = $this->ftpDirectory;
+
+        if (isset($directory)) {
+            try {
+                $output->writeVerbose("Changing to directory {$directory}...");
+
+                ftp_chdir($connectionId, $directory);
+            } catch (\Exception $e) {
+                $output->writeVerbose("Creating directory {$directory}...");
+
+                if (!ftp_mkdir($connectionId, $directory)) {
+                    throw new RuntimeException('Unable to create directory.');
+                }
+
+                $output->writeVerbose("Changing to directory {$directory}...");
+
+                if (!ftp_chdir($connectionId, $directory)) {
+                    throw new RuntimeException('Unable to change directory.');
+                }
+            }
+
+            $result .= "/{$directory}";
+        }
+
         $output->writeVerbose('Uploading file...');
 
         if (!ftp_put($connectionId, $fileName, $filePath, FTP_BINARY)) {
@@ -88,6 +118,6 @@ class FtpClient
             throw new RuntimeException('Error unlinking file.');
         }
 
-        return 0;
+        return "{$result}/{$fileName}";
     }
 }

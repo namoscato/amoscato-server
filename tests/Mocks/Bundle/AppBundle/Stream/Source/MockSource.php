@@ -4,6 +4,7 @@ namespace Tests\Mocks\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Stream\Source\AbstractSource;
 use Amoscato\Console\Helper\PageIterator;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class MockSource extends AbstractSource
 {
@@ -14,7 +15,7 @@ class MockSource extends AbstractSource
         return $this->mockExtract($perPage, $iterator->current());
     }
 
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         return $this->mockTransform($item);
     }

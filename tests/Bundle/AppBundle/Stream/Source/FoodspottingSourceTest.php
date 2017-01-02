@@ -23,9 +23,10 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
         $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource[getStreamStatementProvider]',
+            'Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource[getStreamStatementProvider,cachePhoto]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
+                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
                 $this->client
             ]
         );
@@ -103,7 +104,17 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getReviews')
             ->andReturn([]);
 
-        $this->statementProvider
+        $this
+            ->source
+            ->shouldReceive('cachePhoto')
+            ->with(
+                $this->output,
+                'img.jpg'
+            )
+            ->andReturn('CACHED URL');
+
+        $this
+            ->statementProvider
             ->shouldReceive('insertRows')
             ->once()
             ->with(1)
@@ -120,7 +131,7 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
                             'item name at place name',
                             'foodspotting.com/1',
                             '2016-05-15 19:37:06',
-                            'img.jpg',
+                            'CACHED URL',
                             280,
                             280,
                         ]));

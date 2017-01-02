@@ -4,6 +4,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 class GoodreadsSource extends AbstractSource
@@ -36,9 +37,10 @@ class GoodreadsSource extends AbstractSource
 
     /**
      * @param \DOMElement $item
+     * @param OutputInterface $output
      * @return array
      */
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         $review = $this->createCrawler($item);
         $book = $review->filter('book');

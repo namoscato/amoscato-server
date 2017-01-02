@@ -39,6 +39,7 @@ services:
     - %ftp_host%
     - %ftp_user%
     - %ftp_password%
+    - %ftp_directory%
 
   # Controllers
   amoscato.controller.stream:
@@ -121,6 +122,7 @@ services:
     abstract: true
     arguments:
     - '@amoscato.database'
+    - '@amoscato.ftp_client'
 
   amoscato.stream_source.flickr:
     parent: amoscato.stream_source

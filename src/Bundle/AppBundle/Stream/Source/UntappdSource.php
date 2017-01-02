@@ -4,6 +4,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Console\Helper\PageIterator;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class UntappdSource extends AbstractSource
 {
@@ -41,9 +42,10 @@ class UntappdSource extends AbstractSource
 
     /**
      * @param object $item
+     * @param OutputInterface $output
      * @return array
      */
-    protected function transform($item)
+    protected function transform($item, OutputInterface $output)
     {
         return [
             $item->badge_name,

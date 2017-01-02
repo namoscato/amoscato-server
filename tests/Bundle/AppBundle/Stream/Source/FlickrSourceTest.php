@@ -26,6 +26,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
             'Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource[getStreamStatementProvider]',
             [
                 m::mock('Amoscato\Database\PDOFactory'),
+                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
                 $this->client
             ]
         );
