@@ -3,6 +3,7 @@
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 
 class GitHubSourceTest extends \PHPUnit_Framework_TestCase
@@ -184,7 +185,8 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
             ->andThrow(
                 new ClientException(
                     'message',
-                    m::mock('Psr\Http\Message\RequestInterface')
+                    m::mock('Psr\Http\Message\RequestInterface'),
+                    new Response()
                 )
             );
 
