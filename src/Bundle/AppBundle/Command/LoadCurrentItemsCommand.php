@@ -4,11 +4,12 @@ namespace Amoscato\Bundle\AppBundle\Command;
 
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\AppBundle\Source\SourceCollection;
+use Amoscato\Bundle\AppBundle\Source\SourceCollectionAwareInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LoadCurrentItemsCommand extends Command
+class LoadCurrentItemsCommand extends Command implements SourceCollectionAwareInterface
 {
     /** @var SourceCollection */
     private $sources;
@@ -17,12 +18,10 @@ class LoadCurrentItemsCommand extends Command
     private $ftpClient;
 
     /**
-     * @param SourceCollection $sources
      * @param FtpClient $ftpClient
      */
-    public function __construct(SourceCollection $sources, FtpClient $ftpClient)
+    public function __construct(FtpClient $ftpClient)
     {
-        $this->sources = $sources;
         $this->ftpClient = $ftpClient;
 
         parent::__construct();
@@ -58,5 +57,13 @@ class LoadCurrentItemsCommand extends Command
             json_encode($result),
             'current.json'
         );
+    }
+
+    /**
+     * @param SourceCollection $sourceCollection
+     */
+    public function setSourceCollection(SourceCollection $sourceCollection)
+    {
+        $this->sources = $sourceCollection;
     }
 }

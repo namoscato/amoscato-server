@@ -50,7 +50,7 @@ class FoodspottingSource extends AbstractSource
         return [
             "{$item->item->name} at {$item->place->name}",
             "{$this->reviewUri}{$item->id}",
-            Carbon::parse($item->created_at)->toDateTimeString(),
+            Carbon::parse($item->taken_at)->toDateTimeString(),
             $this->cachePhoto($output, $item->thumb_280),
             280,
             280

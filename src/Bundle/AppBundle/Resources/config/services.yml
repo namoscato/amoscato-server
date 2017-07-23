@@ -3,8 +3,8 @@ services:
   # Commands
   amoscato.command.load_stream_items:
     class: Amoscato\Bundle\AppBundle\Command\LoadStreamItemsCommand
-    arguments:
-    - '@amoscato.stream_source.collection'
+    calls:
+    - [setSourceCollection, ['@amoscato.stream_source.collection']]
     tags:
     - { name: console.command }
 
@@ -19,8 +19,9 @@ services:
   amoscato.command.load_current_items:
     class: Amoscato\Bundle\AppBundle\Command\LoadCurrentItemsCommand
     arguments:
-    - '@amoscato.current_source.collection'
     - '@amoscato.ftp_client'
+    calls:
+    - [setSourceCollection, ['@amoscato.current_source.collection']]
     tags:
     - { name: console.command }
 
@@ -50,13 +51,6 @@ services:
   # Current Sources
   amoscato.current_source.collection:
     class: Amoscato\Bundle\AppBundle\Source\SourceCollection
-    arguments:
-    -
-      - '@amoscato.current_source.book'
-      - '@amoscato.current_source.drink'
-      - '@amoscato.current_source.food'
-      - '@amoscato.current_source.music'
-      - '@amoscato.stream_source.video'
 
   amoscato.current_source.book:
     class: Amoscato\Bundle\AppBundle\Current\BookSource
@@ -64,6 +58,8 @@ services:
     - '@integration.goodreads_client'
     calls:
     - [setUserId, [%goodreads_user_id%]]
+    tags:
+    - { name: amoscato.current_source }
 
   amoscato.current_source.drink:
     class: Amoscato\Bundle\AppBundle\Current\DrinkSource
@@ -71,6 +67,8 @@ services:
     - '@integration.untappd_client'
     calls:
     - [setUsername, [%untappd_username%]]
+    tags:
+    - { name: amoscato.current_source }
 
   amoscato.current_source.food:
     class: Amoscato\Bundle\AppBundle\Current\FoodSource
@@ -79,6 +77,8 @@ services:
     calls:
     - [setPersonId, [%foodspotting_person_id%]]
     - [setReviewUri, [%foodspotting_review_uri%]]
+    tags:
+    - { name: amoscato.current_source }
 
   amoscato.current_source.music:
     class: Amoscato\Bundle\AppBundle\Current\MusicSource
@@ -86,6 +86,8 @@ services:
     - '@integration.lastfm_client'
     calls:
     - [setUser, [%lastfm_user%]]
+    tags:
+    - { name: amoscato.current_source }
 
   amoscato.stream_source.video:
     class: Amoscato\Bundle\AppBundle\Current\VideoSource
@@ -95,28 +97,20 @@ services:
     calls:
     - [setYouTubePlaylistId, [%youtube_playlist_id%]]
     - [setYouTubeVideoUri, [%youtube_video_uri%]]
+    tags:
+    - { name: amoscato.current_source }
 
   # Stream Aggregator
   amoscato.stream_aggregator:
     class: Amoscato\Bundle\AppBundle\Stream\StreamAggregator
     arguments:
     - '@amoscato.database'
-    - '@amoscato.stream_source.collection'
+    calls:
+    - [setSourceCollection, ['@amoscato.stream_source.collection']]
 
   # Stream Sources
   amoscato.stream_source.collection:
     class: Amoscato\Bundle\AppBundle\Source\SourceCollection
-    arguments:
-    -
-      - '@amoscato.stream_source.flickr'
-      - '@amoscato.stream_source.foodspotting'
-      - '@amoscato.stream_source.github'
-      - '@amoscato.stream_source.goodreads'
-      - '@amoscato.stream_source.lastfm'
-      - '@amoscato.stream_source.twitter'
-      - '@amoscato.stream_source.untappd'
-      - '@amoscato.stream_source.vimeo'
-      - '@amoscato.stream_source.youtube'
 
   amoscato.stream_source:
     abstract: true
@@ -132,6 +126,8 @@ services:
     calls:
     - [setUserId, [%flickr_user_id%]]
     - [setPhotoUri, [%flickr_photo_uri%]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.foodspotting:
     parent: amoscato.stream_source
@@ -142,6 +138,8 @@ services:
     - [setPersonId, [%foodspotting_person_id%]]
     - [setReviewUri, [%foodspotting_review_uri%]]
     - [setWeight, [1]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.github:
     parent: amoscato.stream_source
@@ -151,6 +149,8 @@ services:
     calls:
     - [setUsername, [%github_username%]]
     - [setWeight, [3]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.goodreads:
     parent: amoscato.stream_source
@@ -159,6 +159,8 @@ services:
     - '@integration.goodreads_client'
     calls:
     - [setUserId, [%goodreads_user_id%]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.lastfm:
     parent: amoscato.stream_source
@@ -168,6 +170,8 @@ services:
     calls:
     - [setUser, [%lastfm_user%]]
     - [setWeight, [8]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.twitter:
     parent: amoscato.stream_source
@@ -178,6 +182,8 @@ services:
     - [setScreenName, [%twitter_screen_name%]]
     - [setStatusUri, [%twitter_status_uri%]]
     - [setWeight, [2]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.untappd:
     parent: amoscato.stream_source
@@ -186,12 +192,16 @@ services:
     - '@integration.untappd_client'
     calls:
     - [setUsername, [%untappd_username%]]
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.vimeo:
     parent: amoscato.stream_source
     class: Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource
     arguments:
     - '@integration.vimeo_client'
+    tags:
+    - { name: amoscato.stream_source }
 
   amoscato.stream_source.youtube:
     parent: amoscato.stream_source
@@ -201,3 +211,5 @@ services:
     calls:
     - [setPlaylistId, [%youtube_playlist_id%]]
     - [setVideoUri, [%youtube_video_uri%]]
+    tags:
+    - { name: amoscato.stream_source }

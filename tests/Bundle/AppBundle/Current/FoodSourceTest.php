@@ -69,7 +69,7 @@ class FoodSourceTest extends \PHPUnit_Framework_TestCase
                 [
                     (object) [
                         'id' => 2,
-                        'created_at' => 'created at',
+                        'taken_at' => 'created at',
                         'item' => (object) [
                             'name' => 'item'
                         ],

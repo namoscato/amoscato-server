@@ -2,12 +2,13 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream;
 
+use Amoscato\Bundle\AppBundle\Source\SourceCollectionAwareInterface;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\AppBundle\Source\SourceCollection;
 use Amoscato\Database\PDOFactory;
 use PDO;
 
-class StreamAggregator
+class StreamAggregator implements SourceCollectionAwareInterface
 {
     /** @var PDOFactory */
     private $databaseFactory;
@@ -17,12 +18,10 @@ class StreamAggregator
 
     /**
      * @param PDOFactory $pdoFactory
-     * @param SourceCollection $sourceCollection
      */
-    public function __construct(PDOFactory $pdoFactory, SourceCollection $sourceCollection)
+    public function __construct(PDOFactory $pdoFactory)
     {
         $this->databaseFactory = $pdoFactory;
-        $this->sourceCollection = $sourceCollection;
     }
 
     /**
@@ -74,5 +73,13 @@ class StreamAggregator
     public function getStreamStatementProvider()
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());
+    }
+
+    /**
+     * @param SourceCollection $sourceCollection
+     */
+    public function setSourceCollection(SourceCollection $sourceCollection)
+    {
+        $this->sourceCollection = $sourceCollection;
     }
 }

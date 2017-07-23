@@ -39,7 +39,7 @@ class FoodSource extends AbstractSource
         return [
             'item' => $review->item->name,
             'place' => $review->place->name,
-            'date' => Carbon::parse($review->created_at)->toDateTimeString(),
+            'date' => Carbon::parse($review->taken_at)->toDateTimeString(),
             'url' => "{$this->reviewUri}{$review->id}"
         ];
     }

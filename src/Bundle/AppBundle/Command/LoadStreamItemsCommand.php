@@ -3,26 +3,17 @@
 namespace Amoscato\Bundle\AppBundle\Command;
 
 use Amoscato\Bundle\AppBundle\Source\SourceCollection;
+use Amoscato\Bundle\AppBundle\Source\SourceCollectionAwareInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LoadStreamItemsCommand extends Command
+class LoadStreamItemsCommand extends Command implements SourceCollectionAwareInterface
 {
     /** @var SourceCollection */
     private $sources;
-
-    /**
-     * @param SourceCollection $sources
-     */
-    public function __construct(SourceCollection $sources)
-    {
-        $this->sources = $sources;
-
-        parent::__construct();
-    }
 
     protected function configure()
     {
@@ -77,5 +68,13 @@ class LoadStreamItemsCommand extends Command
         $output->writeln("Extracting {$type} source...");
 
         $this->sources[$type]->load($output);
+    }
+
+    /**
+     * @param SourceCollection $sourceCollection
+     */
+    public function setSourceCollection(SourceCollection $sourceCollection)
+    {
+        $this->sources = $sourceCollection;
     }
 }

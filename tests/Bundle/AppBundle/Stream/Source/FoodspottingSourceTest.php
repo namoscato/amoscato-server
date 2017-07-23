@@ -97,7 +97,7 @@ class FoodspottingSourceTest extends \PHPUnit_Framework_TestCase
                         'place' => (object) [
                             'name' => 'place name'
                         ],
-                        'created_at' => '2016-05-15 19:37:06'
+                        'taken_at' => '2016-05-15 19:37:06'
                     ]
                 ]
             )
