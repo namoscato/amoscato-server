@@ -126,6 +126,7 @@ services:
     calls:
     - [setUserId, [%flickr_user_id%]]
     - [setPhotoUri, [%flickr_photo_uri%]]
+    - [setWeight, [2]]
     tags:
     - { name: amoscato.stream_source }
 
@@ -137,7 +138,6 @@ services:
     calls:
     - [setPersonId, [%foodspotting_person_id%]]
     - [setReviewUri, [%foodspotting_review_uri%]]
-    - [setWeight, [1]]
     tags:
     - { name: amoscato.stream_source }
 
