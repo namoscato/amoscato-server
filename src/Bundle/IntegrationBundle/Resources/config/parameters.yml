@@ -1,8 +1,6 @@
 parameters:
   flickr_api_uri: https://api.flickr.com/services/rest/
   flickr_photo_uri: https://www.flickr.com/photos/
-  foodspotting_api_uri: http://www.foodspotting.com/api/v1/
-  foodspotting_review_uri: http://www.foodspotting.com/reviews/
   github_api_uri: https://api.github.com/
   goodreads_api_uri: https://www.goodreads.com/
   lastfm_api_uri: http://ws.audioscrobbler.com/2.0/

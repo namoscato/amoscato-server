@@ -2,5 +2,5 @@ language: php
 php: 7.1
 install: composer install --optimize-autoloader --no-interaction --prefer-dist
 script:
-- vendor/bin/simple-phpunit
+- composer test
 - vendor/bin/phpcs --standard=cs-ruleset.xml

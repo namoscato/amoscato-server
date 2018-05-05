@@ -70,16 +70,6 @@ services:
     tags:
     - { name: amoscato.current_source }
 
-  amoscato.current_source.food:
-    class: Amoscato\Bundle\AppBundle\Current\FoodSource
-    arguments:
-    - '@integration.foodspotting_client'
-    calls:
-    - [setPersonId, [%foodspotting_person_id%]]
-    - [setReviewUri, [%foodspotting_review_uri%]]
-    tags:
-    - { name: amoscato.current_source }
-
   amoscato.current_source.music:
     class: Amoscato\Bundle\AppBundle\Current\MusicSource
     arguments:
@@ -127,17 +117,6 @@ services:
     - [setUserId, [%flickr_user_id%]]
     - [setPhotoUri, [%flickr_photo_uri%]]
     - [setWeight, [2]]
-    tags:
-    - { name: amoscato.stream_source }
-
-  amoscato.stream_source.foodspotting:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\FoodspottingSource
-    arguments:
-    - '@integration.foodspotting_client'
-    calls:
-    - [setPersonId, [%foodspotting_person_id%]]
-    - [setReviewUri, [%foodspotting_review_uri%]]
     tags:
     - { name: amoscato.stream_source }
 

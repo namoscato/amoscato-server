@@ -50,7 +50,8 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
-        ]
+        ],
+        "test": "simple-phpunit"
     },
     "extra": {
         "symfony-app-dir": "app",
@@ -72,7 +73,6 @@
                 "ftp_password": "AMOSCATO_FTP_PASSWORD",
                 "secret": "AMOSCATO_SECRET",
                 "flickr_api_key": "AMOSCATO_FLICKR_API_KEY",
-                "foodspotting_api_key": "AMOSCATO_FOODSPOTTING_API_KEY",
                 "github_client_secret": "AMOSCATO_GITHUB_CLIENT_SECRET",
                 "goodreads_api_key": "AMOSCATO_GOODREADS_API_KEY",
                 "lastfm_api_key": "AMOSCATO_LASTFM_API_KEY",

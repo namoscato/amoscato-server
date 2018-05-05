@@ -19,11 +19,6 @@ services:
     arguments:
     - base_uri: %flickr_api_uri%
 
-  integration.client.foodspotting:
-    parent: integration.client
-    arguments:
-    - base_uri: %foodspotting_api_uri%
-
   integration.client.github:
     parent: integration.client
     arguments:
@@ -65,12 +60,6 @@ services:
     arguments:
     - '@integration.client.flickr'
     - %flickr_api_key%
-
-  integration.foodspotting_client:
-    class: Amoscato\Bundle\IntegrationBundle\Client\FoodspottingClient
-    arguments:
-    - '@integration.client.foodspotting'
-    - %foodspotting_api_key%
 
   integration.github_client:
     class: Amoscato\Bundle\IntegrationBundle\Client\GitHubClient

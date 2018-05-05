@@ -17,7 +17,6 @@ parameters:
   secret: ThisTokenIsNotSoSecretChangeIt
   
   flickr_api_key: ~
-  foodspotting_api_key: ~
   github_client_secret: ~
   goodreads_api_key: ~
   lastfm_api_key: ~

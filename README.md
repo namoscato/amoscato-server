@@ -10,7 +10,6 @@ Loads and caches current data from a set of sources:
 
 * `book` - currently reading book from [Goodreads](https://www.goodreads.com/)
 * `drink` - latest checkin from [Untappd](https://untappd.com/)
-* `food` - latest review from [Foodspotting](http://www.foodspotting.com/)
 * `music` - latest scrobble from [Last.fm](http://www.last.fm/)
 * `video` - latest favorite or like from [YouTube](https://www.youtube.com/) or [Vimeo](https://vimeo.com/) respectively
 
@@ -25,7 +24,6 @@ Loads stream data from the specified set of sources. If no sources are specified
 Available sources include:
 
 * `flickr` - latest photos from [Flickr](https://www.flickr.com/)
-* `foodspotting` - latest reviews from [Foodspotting](http://www.foodspotting.com/)
 * `github` - latest public commits from [GitHub](https://github.com/)
 * `goodreads` - latest read books from [Goodreads](https://www.goodreads.com/)
 * `lastfm` - latest scrobbles from [Last.fm](http://www.last.fm/)
