@@ -31,8 +31,7 @@ class LoadCurrentItemsCommand extends Command implements SourceCollectionAwareIn
     {
         $this
             ->setName('amoscato:current:load')
-            ->setDescription('Loads current source data')
-        ;
+            ->setDescription('Loads current source data');
     }
 
     /**

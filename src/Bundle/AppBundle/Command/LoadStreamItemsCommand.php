@@ -24,8 +24,7 @@ class LoadStreamItemsCommand extends Command implements SourceCollectionAwareInt
                 'sources',
                 InputArgument::IS_ARRAY | InputArgument::OPTIONAL,
                 'Optional set of sources to load'
-            )
-        ;
+            );
     }
 
     /**

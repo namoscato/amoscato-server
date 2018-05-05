@@ -40,8 +40,7 @@ class CacheStreamCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Number of stream items to cache',
                 1000.0
-            )
-        ;
+            );
     }
 
     /**
