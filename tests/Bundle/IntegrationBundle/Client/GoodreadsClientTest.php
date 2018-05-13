@@ -4,6 +4,7 @@ namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
 use Mockery as m;
+use GuzzleHttp\Client;
 
 class GoodreadsClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class GoodreadsClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = m::mock('GuzzleHttp\Client');
+        $this->client = m::mock(Client::class);
 
         $this->goodreadsClient = m::mock(
             'Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient[createCrawler]',

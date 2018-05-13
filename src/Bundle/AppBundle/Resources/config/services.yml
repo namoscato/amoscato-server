@@ -8,7 +8,7 @@ services:
       $streamSources: !tagged amoscato.stream_source
 
   Amoscato\Bundle\AppBundle\:
-    resource: '../../{Command,Source,Stream}/*'
+    resource: '../../{Command,Controller,Source,Stream}/*'
 
   Amoscato\Database\PDOFactory:
     arguments:
@@ -22,10 +22,6 @@ services:
     - %ftp_user%
     - %ftp_password%
     - %ftp_directory%
-
-  # Controllers
-  amoscato.controller.stream:
-    class: Amoscato\Bundle\AppBundle\Controller\StreamController
 
   # Current Sources
   Amoscato\Bundle\AppBundle\Current\BookSource:

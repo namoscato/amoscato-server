@@ -4,6 +4,7 @@ namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
 use Mockery as m;
+use GuzzleHttp\Client;
 
 class GitHubClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,10 +16,9 @@ class GitHubClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = m::mock('GuzzleHttp\Client');
+        $this->client = m::mock(Client::class);
 
-        $this->gitHubClient = new GitHubClient($this->client, 'secret');
-        $this->gitHubClient->setClientId('id');
+        $this->gitHubClient = new GitHubClient($this->client, 'secret', 'id');
     }
 
     protected function tearDown()

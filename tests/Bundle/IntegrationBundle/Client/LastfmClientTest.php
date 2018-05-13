@@ -4,6 +4,7 @@ namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Mockery as m;
+use GuzzleHttp\Client;
 
 class LastfmClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,7 +16,7 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = m::mock('GuzzleHttp\Client');
+        $this->client = m::mock(Client::class);
 
         $this->flickrClient = new LastfmClient($this->client, 'key');
     }

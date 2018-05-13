@@ -4,6 +4,7 @@ namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
 use Mockery as m;
+use GuzzleHttp\Client;
 
 class UntappdClientTest extends \PHPUnit_Framework_TestCase
 {
@@ -15,11 +16,9 @@ class UntappdClientTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = m::mock('GuzzleHttp\Client');
+        $this->client = m::mock(Client::class);
 
-        $this->untappdClient = new UntappdClient($this->client, 'key');
-
-        $this->untappdClient->setClientId('client');
+        $this->untappdClient = new UntappdClient($this->client, 'key', 'client');
     }
 
     protected function tearDown()
