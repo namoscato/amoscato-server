@@ -14,7 +14,7 @@ class GitHubClient extends Client
      * @see https://developer.github.com/v3/activity/events/#list-events-performed-by-a-user
      * @param string $username
      * @param array $args optional
-     * @return object
+     * @return array
      */
     public function getUserEvents($username, array $args = [])
     {

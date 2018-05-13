@@ -3,4 +3,4 @@ php: 7.1
 install: composer install --optimize-autoloader --no-interaction --prefer-dist
 script:
 - composer test
-- vendor/bin/phpcs --standard=cs-ruleset.xml
+- composer cs

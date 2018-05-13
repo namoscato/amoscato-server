@@ -3,12 +3,11 @@
 namespace Tests\Bundle\AppBundle\Current\Source;
 
 use Amoscato\Bundle\AppBundle\Current\BookSource;
+use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
 use Mockery as m;
+use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class BookSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var BookSource */
@@ -22,22 +21,11 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        m::mock(
-            'alias:Carbon\Carbon',
-            [
-                'parse->setTimezone->toDateTimeString' => 'DATE'
-            ]
-        );
+        $this->client = m::mock(GoodreadsClient::class);
 
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->target = new BookSource($this->client, 1);
 
-        $this->target = new BookSource($this->client);
-
-        $this
-            ->target
-            ->setUserId(1);
-
-        $this->output = m::mock('Symfony\Component\Console\Output\OutputInterface');
+        $this->output = m::mock(OutputInterface::class);
     }
 
     protected function tearDown()
@@ -58,7 +46,7 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
             )
             ->andReturn(
                 m::mock(
-                    'Symfony\Component\DomCrawler\Crawler',
+                    Crawler::class,
                     [
                         'count' => 0
                     ]
@@ -78,20 +66,22 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getCurrentlyReadingBooks')
             ->andReturn(
                 m::mock(
-                    'Symfony\Component\DomCrawler\Crawler',
+                    Crawler::class,
                     [
                         'count' => 1,
                         'first' => m::mock(
-                            'Symfony\Component\DomCrawler\Crawler',
+                            Crawler::class,
                             function($mock) {
+                                /** @var m\Mock $mock */
+
                                 $mock
                                     ->shouldReceive('filter')
                                     ->with('started_at')
                                     ->andReturn(
                                         m::mock(
-                                            'Symfony\Component\DomCrawler\Crawler',
+                                            Crawler::class,
                                             [
-                                                'text' => '2016'
+                                                'text' => '2018-05-13 12:00:00',
                                             ]
                                         )
                                     );
@@ -101,14 +91,16 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
                                     ->with('book')
                                     ->andReturn(
                                         m::mock(
-                                            'Symfony\Component\DomCrawler\Crawler',
+                                            Crawler::class,
                                             function($mock) {
+                                                /** @var m\Mock $mock */
+
                                                 $mock
                                                     ->shouldReceive('filter')
                                                     ->with('authors')
                                                     ->andReturn(
                                                         m::mock(
-                                                            'Symfony\Component\DomCrawler\Crawler',
+                                                            Crawler::class,
                                                             [
                                                                 'first->filter->text' => 'AUTHOR'
                                                             ]
@@ -120,7 +112,7 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
                                                     ->with('title')
                                                     ->andReturn(
                                                         m::mock(
-                                                            'Symfony\Component\DomCrawler\Crawler',
+                                                            Crawler::class,
                                                             [
                                                                 'text' => 'TITLE'
                                                             ]
@@ -132,7 +124,7 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
                                                     ->with('link')
                                                     ->andReturn(
                                                         m::mock(
-                                                            'Symfony\Component\DomCrawler\Crawler',
+                                                            Crawler::class,
                                                             [
                                                                 'text' => 'LINK'
                                                             ]
@@ -150,7 +142,7 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(
             [
                 'author' => 'AUTHOR',
-                'date' => 'DATE',
+                'date' => '2018-05-13 12:00:00',
                 'title' => 'TITLE',
                 'url' => 'LINK'
             ],

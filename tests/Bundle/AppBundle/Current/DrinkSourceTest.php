@@ -3,12 +3,10 @@
 namespace Tests\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\AppBundle\Current\DrinkSource;
+use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
 use Mockery as m;
+use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class DrinkSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var DrinkSource */
@@ -22,29 +20,11 @@ class DrinkSourceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        m::mock(
-            'alias:Carbon\Carbon',
-            function($mock) {
-                $mock
-                    ->shouldReceive('parse')
-                    ->with('created at')
-                    ->andReturn(
-                        m::mock(
-                            [
-                                'toDateTimeString' => 'date'
-                            ]
-                        )
-                    );
-            }
-        );
+        $this->client = m::mock(UntappdClient::class);
 
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->target = new DrinkSource($this->client, 'username');
 
-        $this->target = new DrinkSource($this->client);
-
-        $this->target->setUsername('username');
-
-        $this->output = m::mock('Symfony\Component\Console\Output\OutputInterface');
+        $this->output = m::mock(OutputInterface::class);
     }
 
     protected function tearDown()
@@ -69,7 +49,7 @@ class DrinkSourceTest extends \PHPUnit_Framework_TestCase
                         'items' => [
                             (object) [
                                 'checkin_id' => 'id',
-                                'created_at' => 'created at',
+                                'created_at' => '2018-05-13 12:00:00',
                                 'brewery' => (object) [
                                     'brewery_name' => 'brewery'
                                 ],
@@ -97,7 +77,7 @@ class DrinkSourceTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(
             [
                 'brewery' => 'brewery',
-                'date' => 'date',
+                'date' => '2018-05-13 12:00:00',
                 'name' => 'beer',
                 'venue' => 'venue',
                 'url' => 'url',

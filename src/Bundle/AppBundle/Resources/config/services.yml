@@ -1,41 +1,22 @@
 services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: false
+    bind:
+      $currentSources: !tagged amoscato.current_source
+      $streamSources: !tagged amoscato.stream_source
 
-  # Commands
-  amoscato.command.load_stream_items:
-    class: Amoscato\Bundle\AppBundle\Command\LoadStreamItemsCommand
-    calls:
-    - [setSourceCollection, ['@amoscato.stream_source.collection']]
-    tags:
-    - { name: console.command }
+  Amoscato\Bundle\AppBundle\:
+    resource: '../../{Command,Source,Stream}/*'
 
-  amoscato.command.cache_stream:
-    class: Amoscato\Bundle\AppBundle\Command\CacheStreamCommand
-    arguments:
-    - '@amoscato.stream_aggregator'
-    - '@amoscato.ftp_client'
-    tags:
-    - { name: console.command }
-
-  amoscato.command.load_current_items:
-    class: Amoscato\Bundle\AppBundle\Command\LoadCurrentItemsCommand
-    arguments:
-    - '@amoscato.ftp_client'
-    calls:
-    - [setSourceCollection, ['@amoscato.current_source.collection']]
-    tags:
-    - { name: console.command }
-
-  # Database Connections
-  amoscato.database:
-    class: Amoscato\Database\PDOFactory
+  Amoscato\Database\PDOFactory:
     arguments:
     - pgsql:host=%database_host%;port=%database_port%;dbname=%database_name%
     - %database_user%
     - %database_password%
 
-  # FTP Client
-  amoscato.ftp_client:
-    class: Amoscato\Bundle\AppBundle\Ftp\FtpClient
+  Amoscato\Bundle\AppBundle\Ftp\FtpClient:
     arguments:
     - %ftp_host%
     - %ftp_user%
@@ -45,150 +26,62 @@ services:
   # Controllers
   amoscato.controller.stream:
     class: Amoscato\Bundle\AppBundle\Controller\StreamController
-    arguments:
-    - '@amoscato.stream_aggregator'
 
   # Current Sources
-  amoscato.current_source.collection:
-    class: Amoscato\Bundle\AppBundle\Source\SourceCollection
-
-  amoscato.current_source.book:
-    class: Amoscato\Bundle\AppBundle\Current\BookSource
+  Amoscato\Bundle\AppBundle\Current\BookSource:
     arguments:
-    - '@integration.goodreads_client'
-    calls:
-    - [setUserId, [%goodreads_user_id%]]
-    tags:
-    - { name: amoscato.current_source }
+      $userId: %goodreads_user_id%
 
-  amoscato.current_source.drink:
-    class: Amoscato\Bundle\AppBundle\Current\DrinkSource
+  Amoscato\Bundle\AppBundle\Current\DrinkSource:
     arguments:
-    - '@integration.untappd_client'
-    calls:
-    - [setUsername, [%untappd_username%]]
-    tags:
-    - { name: amoscato.current_source }
+      $username: %untappd_username%
 
-  amoscato.current_source.music:
-    class: Amoscato\Bundle\AppBundle\Current\MusicSource
+  Amoscato\Bundle\AppBundle\Current\MusicSource:
     arguments:
-    - '@integration.lastfm_client'
-    calls:
-    - [setUser, [%lastfm_user%]]
-    tags:
-    - { name: amoscato.current_source }
+      $user: %lastfm_user%
 
-  amoscato.stream_source.video:
-    class: Amoscato\Bundle\AppBundle\Current\VideoSource
+  Amoscato\Bundle\AppBundle\Current\VideoSource:
     arguments:
-    - '@integration.youtube_client'
-    - '@integration.vimeo_client'
-    calls:
-    - [setYouTubePlaylistId, [%youtube_playlist_id%]]
-    - [setYouTubeVideoUri, [%youtube_video_uri%]]
-    tags:
-    - { name: amoscato.current_source }
-
-  # Stream Aggregator
-  amoscato.stream_aggregator:
-    class: Amoscato\Bundle\AppBundle\Stream\StreamAggregator
-    arguments:
-    - '@amoscato.database'
-    calls:
-    - [setSourceCollection, ['@amoscato.stream_source.collection']]
+      $youTubePlaylistId: %youtube_playlist_id%
+      $youTubeVideoUri: %youtube_video_uri%
 
   # Stream Sources
-  amoscato.stream_source.collection:
-    class: Amoscato\Bundle\AppBundle\Source\SourceCollection
-
-  amoscato.stream_source:
-    abstract: true
+  Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource:
     arguments:
-    - '@amoscato.database'
-    - '@amoscato.ftp_client'
-
-  amoscato.stream_source.flickr:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource
-    arguments:
-    - '@integration.flickr_client'
+      $userId: %flickr_user_id%
+      $photoUri: %flickr_photo_uri%
     calls:
-    - [setUserId, [%flickr_user_id%]]
-    - [setPhotoUri, [%flickr_photo_uri%]]
     - [setWeight, [2]]
-    tags:
-    - { name: amoscato.stream_source }
 
-  amoscato.stream_source.github:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource
+  Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource:
     arguments:
-    - '@integration.github_client'
+      $username: %github_username%
     calls:
-    - [setUsername, [%github_username%]]
     - [setWeight, [3]]
-    tags:
-    - { name: amoscato.stream_source }
 
-  amoscato.stream_source.goodreads:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource
+  Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource:
     arguments:
-    - '@integration.goodreads_client'
-    calls:
-    - [setUserId, [%goodreads_user_id%]]
-    tags:
-    - { name: amoscato.stream_source }
+      $userId: %goodreads_user_id%
 
-  amoscato.stream_source.lastfm:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource
+  Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource:
     arguments:
-    - '@integration.lastfm_client'
+      $user: %lastfm_user%
     calls:
-    - [setUser, [%lastfm_user%]]
     - [setWeight, [8]]
-    tags:
-    - { name: amoscato.stream_source }
 
-  amoscato.stream_source.twitter:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource
+  Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource:
+    class:
     arguments:
-    - '@integration.twitter_client'
+      $screenName: %twitter_screen_name%
+      $statusUri: %twitter_status_uri%
     calls:
-    - [setScreenName, [%twitter_screen_name%]]
-    - [setStatusUri, [%twitter_status_uri%]]
     - [setWeight, [2]]
-    tags:
-    - { name: amoscato.stream_source }
 
-  amoscato.stream_source.untappd:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\UntappdSource
+  Amoscato\Bundle\AppBundle\Stream\Source\UntappdSource:
     arguments:
-    - '@integration.untappd_client'
-    calls:
-    - [setUsername, [%untappd_username%]]
-    tags:
-    - { name: amoscato.stream_source }
+      $username: %untappd_username%
 
-  amoscato.stream_source.vimeo:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource
+  Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource:
     arguments:
-    - '@integration.vimeo_client'
-    tags:
-    - { name: amoscato.stream_source }
-
-  amoscato.stream_source.youtube:
-    parent: amoscato.stream_source
-    class: Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource
-    arguments:
-    - '@integration.youtube_client'
-    calls:
-    - [setPlaylistId, [%youtube_playlist_id%]]
-    - [setVideoUri, [%youtube_video_uri%]]
-    tags:
-    - { name: amoscato.stream_source }
+      $playlistId: %youtube_playlist_id%
+      $videoUri: %youtube_video_uri%

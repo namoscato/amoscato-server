@@ -2,7 +2,13 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource;
+use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
 use Mockery as m;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class VimeoSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,33 +18,33 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource */
+    /** @var VimeoSource */
     private $source;
 
     /** @var m\Mock */
     private $output;
-    
+
     protected function setUp()
     {
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(VimeoClient::class);
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\VimeoSource[getStreamStatementProvider]',
+            sprintf('%s[getStreamStatementProvider]', VimeoSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
             ]
         );
 
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            OutputInterface::class,
             [
                 'writeln' => null,
                 'writeVerbose' => null
@@ -111,7 +117,10 @@ class VimeoSourceTest extends \PHPUnit_Framework_TestCase
                         ]
                     ]
                 ]
-            )
+            );
+
+        $this
+            ->client
             ->shouldReceive('getLikes')
             ->with(
                 [

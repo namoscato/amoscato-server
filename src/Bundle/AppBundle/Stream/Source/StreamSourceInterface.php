@@ -2,7 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
-interface SourceInterface extends \Amoscato\Bundle\AppBundle\Source\SourceInterface
+interface StreamSourceInterface extends \Amoscato\Bundle\AppBundle\Source\SourceInterface
 {
     /**
      * @return int

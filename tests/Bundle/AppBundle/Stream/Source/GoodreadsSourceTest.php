@@ -2,7 +2,14 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource;
+use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
 use Mockery as m;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DomCrawler\Crawler;
 
 class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,7 +19,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource */
+    /** @var GoodreadsSource */
     private $source;
 
     /** @var m\Mock */
@@ -20,30 +27,29 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(GoodreadsClient::class);
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource[getStreamStatementProvider,createCrawler,getImageSize]',
+            sprintf('%s[getStreamStatementProvider,createCrawler,getImageSize]', GoodreadsSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
+                10
             ]
         );
 
-        $this->source->setUserId(10);
-
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            OutputInterface::class,
             [
                 'writeln' => null,
-                'writeVerbose' => null
+                'writeVerbose' => null,
             ]
         );
     }
@@ -55,7 +61,8 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
 
     public function test_load()
     {
-        $this->statementProvider
+        $this
+            ->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('goodreads')
             ->andReturn(
@@ -74,7 +81,8 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->client
+        $this
+            ->client
             ->shouldReceive('getReadBooks')
             ->with(
                 10,
@@ -93,12 +101,13 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('getReadBooks')
             ->andReturn([]);
 
-        $this->source
+        $this
+            ->source
             ->shouldReceive('createCrawler')
             ->with('item1')
             ->andReturn(
                 m::mock(
-                    'Symfony\Component\DomCrawler\Crawler',
+                    Crawler::class,
                     function($mock) {
                         /** @var m\Mock $mock */
 
@@ -118,8 +127,10 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                             ->with('book')
                             ->andReturn(
                                 m::mock(
-                                    'Symfony\Component\DomCrawler\Crawler',
+                                    Crawler::class,
                                     function($mock) {
+                                        /** @var m\Mock $mock */
+
                                         $mock
                                             ->shouldReceive('filter')
                                             ->with('image_url')
@@ -170,7 +181,8 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $this->source
+        $this
+            ->source
             ->shouldReceive('getImageSize')
             ->with('goodreads.com/123l/456.jpg')
             ->andReturn(
@@ -180,12 +192,13 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                 ]
             );
 
-        $this->source
+        $this
+            ->source
             ->shouldReceive('createCrawler')
             ->with('item2')
             ->andReturn(
                 m::mock(
-                    'Symfony\Component\DomCrawler\Crawler',
+                    Crawler::class,
                     function($mock) {
                         /** @var m\Mock $mock */
 
@@ -205,8 +218,10 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                             ->with('book')
                             ->andReturn(
                                 m::mock(
-                                    'Symfony\Component\DomCrawler\Crawler',
+                                    Crawler::class,
                                     function($mock) {
+                                        /** @var m\Mock $mock */
+
                                         $mock
                                             ->shouldReceive('filter')
                                             ->with('image_url')

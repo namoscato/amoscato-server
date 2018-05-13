@@ -2,23 +2,53 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UntappdSource extends AbstractSource
+/**
+ * @property UntappdClient $client
+ */
+class UntappdSource extends AbstractStreamSource
 {
-    /** @var int */
-    protected $perPage = 50;
-
-    /** @var string */
-    protected $type = 'untappd';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\UntappdClient */
-    protected $client;
-
     /** @var string */
     private $username;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param UntappdClient $client
+     * @param string $username
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        UntappdClient $client,
+        $username
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->username = $username;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'untappd';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPerPage()
+    {
+        return 50;
+    }
 
     /**
      * @param int $perPage
@@ -64,13 +94,5 @@ class UntappdSource extends AbstractSource
     protected function getSourceId($item)
     {
         return (string) $item->user_badge_id;
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
     }
 }

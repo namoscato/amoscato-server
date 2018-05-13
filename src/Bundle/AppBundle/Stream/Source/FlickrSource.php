@@ -2,23 +2,51 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\IntegrationBundle\Client\FlickrClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FlickrSource extends AbstractSource
+/**
+ * @property FlickrClient $client
+ */
+class FlickrSource extends AbstractStreamSource
 {
-    /** @var string */
-    protected $type = 'flickr';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\FlickrClient */
-    protected $client;
-
     /** @var string */
     private $userId;
 
     /** @var string */
     private $photoUri;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param FlickrClient $client
+     * @param string $userId
+     * @param string $photoUri
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        FlickrClient $client,
+        $userId,
+        $photoUri
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->userId = $userId;
+        $this->photoUri = $photoUri;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'flickr';
+    }
 
     /**
      * @param int $perPage
@@ -52,21 +80,5 @@ class FlickrSource extends AbstractSource
             $item->width_m,
             $item->height_m
         ];
-    }
-
-    /**
-     * @param string $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * @param string $photoUri
-     */
-    public function setPhotoUri($photoUri)
-    {
-        $this->photoUri = $photoUri;
     }
 }

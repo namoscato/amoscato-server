@@ -3,6 +3,7 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Source\AbstractSource;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
@@ -10,12 +11,9 @@ use Amoscato\Database\PDOFactory;
 use PDO;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\AbstractSource implements SourceInterface
+abstract class AbstractStreamSource extends AbstractSource implements StreamSourceInterface
 {
     const LIMIT = 100;
-
-    /** @var int */
-    protected $perPage = self::LIMIT;
 
     /** @var PDOFactory */
     private $databaseFactory;
@@ -25,9 +23,6 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
 
     /** @var StreamStatementProvider */
     protected $statementProvider;
-
-    /** @var Client */
-    protected $client;
 
     /** @var int */
     protected $weight = 1;
@@ -62,6 +57,14 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
     }
 
     /**
+     * @return int
+     */
+    public function getPerPage()
+    {
+        return self::LIMIT;
+    }
+
+    /**
      * @param int $perPage
      * @param PageIterator $iterator
      * @return array
@@ -71,7 +74,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
     /**
      * @param object $item
      * @param OutputInterface $output
-     * @return array
+     * @return array|bool
      */
     abstract protected function transform($item, OutputInterface $output);
 
@@ -89,7 +92,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
         $latestSourceId = $this->getLatestSourceId();
 
         while ($iterator->valid()) {
-            $items = $this->extract($this->perPage, $iterator);
+            $items = $this->extract($this->getPerPage(), $iterator);
 
             foreach ($items as $item) {
                 $sourceId = $this->getSourceId($item);
@@ -114,7 +117,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
                     $values
                 );
 
-                $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
+                $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
 
                 $iterator->incrementCount();
             }
@@ -159,7 +162,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
      */
     public function getStreamStatementProvider()
     {
-        if (!isset($this->statementProvider)) {
+        if (null === $this->statementProvider) {
             $this->statementProvider = new StreamStatementProvider($this->databaseFactory->getInstance());
         }
 
@@ -176,7 +179,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
     {
         /** @var \Amoscato\Console\Output\ConsoleOutput $output */
 
-        $output->writeln("Loading {$count} " . $this->getType() . " items");
+        $output->writeln("Loading {$count} {$this->getType()} items");
 
         if ($count === 0) {
             return true;
@@ -189,7 +192,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
         $result = $statement->execute($values);
 
         if ($result === false) {
-            $output->writeln("Error loading " . $this->getType() . " items");
+            $output->writeln("Error loading {$this->getType()} items");
             $output->writeDebug(var_export($statement->errorInfo(), true));
             return false;
         }
@@ -210,7 +213,7 @@ abstract class AbstractSource extends \Amoscato\Bundle\AppBundle\Source\Abstract
 
         $path = sprintf(
             '%s.%s',
-            uniqid("{$this->type}_"),
+            uniqid("{$this->getType()}_", true),
             pathinfo(parse_url($url)['path'], PATHINFO_EXTENSION)
         );
 

@@ -2,24 +2,38 @@
 
 namespace Amoscato\Bundle\AppBundle\Current;
 
-use Amoscato\Bundle\AppBundle\Source\AbstractSource;
+use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DrinkSource extends AbstractSource
+class DrinkSource implements CurrentSourceInterface
 {
-    /** @var string */
-    protected $type = 'drink';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\UntappdClient */
+    /** @var UntappdClient */
     protected $client;
 
     /** @var string */
     private $username;
 
     /**
-     * @param OutputInterface $output
-     * @return array
+     * @param UntappdClient $client
+     * @param string $username
+     */
+    public function __construct(UntappdClient $client, $username)
+    {
+        $this->client = $client;
+        $this->username = $username;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'drink';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function load(OutputInterface $output)
     {
@@ -41,13 +55,5 @@ class DrinkSource extends AbstractSource
             'venue' => $checkin->venue->venue_name,
             'url' => $this->client->getCheckinUrl($this->username, $checkin->checkin_id)
         ];
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
     }
 }

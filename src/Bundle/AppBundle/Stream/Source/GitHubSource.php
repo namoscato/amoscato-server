@@ -2,25 +2,54 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GitHubSource extends AbstractSource
+/**
+ * @property GitHubClient $client
+ */
+class GitHubSource extends AbstractStreamSource
 {
-    /** @var int */
-    protected $perPage = 30;
-
-    /** @var string */
-    protected $type = 'github';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\GitHubClient */
-    protected $client;
-
     /** @var string */
     private $username;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param GitHubClient $client
+     * @param string $username
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        GitHubClient $client,
+        $username
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->username = $username;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'github';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPerPage()
+    {
+        return 30;
+    }
 
     /**
      * @param int $perPage
@@ -46,9 +75,7 @@ class GitHubSource extends AbstractSource
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
     protected function transform($item, OutputInterface $output)
     {
@@ -88,7 +115,7 @@ class GitHubSource extends AbstractSource
         $latestSourceId = $this->getLatestSourceId();
 
         while ($iterator->valid()) {
-            $items = $this->extract($this->perPage, $iterator);
+            $items = $this->extract($this->getPerPage(), $iterator);
 
             foreach ($items as $item) {
                 if ($item->type !== GitHubClient::EVENT_TYPE_PUSH) {
@@ -126,7 +153,7 @@ class GitHubSource extends AbstractSource
                         $values
                     );
 
-                    $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
+                    $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
 
                     $iterator->incrementCount();
                 }
@@ -145,13 +172,5 @@ class GitHubSource extends AbstractSource
     protected function getSourceId($item)
     {
         return $item->sha;
-    }
-
-    /**
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = $username;
     }
 }

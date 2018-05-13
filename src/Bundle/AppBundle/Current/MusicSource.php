@@ -2,24 +2,38 @@
 
 namespace Amoscato\Bundle\AppBundle\Current;
 
-use Amoscato\Bundle\AppBundle\Source\AbstractSource;
+use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MusicSource extends AbstractSource
+class MusicSource implements CurrentSourceInterface
 {
-    /** @var string */
-    protected $type = 'music';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
+    /** @var LastfmClient */
     protected $client;
 
     /** @var string */
     private $user;
 
     /**
-     * @param OutputInterface $output
-     * @return array
+     * @param LastfmClient $client
+     * @param string $user
+     */
+    public function __construct(LastfmClient $client, $user)
+    {
+        $this->client = $client;
+        $this->user = $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'music';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function load(OutputInterface $output)
     {
@@ -49,13 +63,5 @@ class MusicSource extends AbstractSource
         } while (isset($tracks[++$i]));
 
         return null;
-    }
-
-    /**
-     * @param string $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
     }
 }

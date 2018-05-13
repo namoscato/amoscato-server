@@ -2,26 +2,59 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class YouTubeSource extends AbstractSource
+/**
+ * @property YouTubeClient $client
+ */
+class YouTubeSource extends AbstractStreamSource
 {
-    /** @var int */
-    protected $perPage = 50;
-
-    /** @var string */
-    protected $type = 'youtube';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient */
-    protected $client;
-
     /** @var string */
     private $playlistId;
 
     /** @var string */
     private $videoUri;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param YouTubeClient $client
+     * @param string $playlistId
+     * @param string $videoUri
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        YouTubeClient $client,
+        $playlistId,
+        $videoUri
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->playlistId = $playlistId;
+        $this->videoUri = $videoUri;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'youtube';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPerPage()
+    {
+        return 50;
+    }
 
     /**
      * @param int $perPage
@@ -50,9 +83,7 @@ class YouTubeSource extends AbstractSource
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
     protected function transform($item, OutputInterface $output)
     {
@@ -79,21 +110,5 @@ class YouTubeSource extends AbstractSource
     protected function getSourceId($item)
     {
         return $item->snippet->resourceId->videoId;
-    }
-
-    /**
-     * @param string $playlistId
-     */
-    public function setPlaylistId($playlistId)
-    {
-        $this->playlistId = $playlistId;
-    }
-
-    /**
-     * @param string $videoUri
-     */
-    public function setVideoUri($videoUri)
-    {
-        $this->videoUri = $videoUri;
     }
 }
