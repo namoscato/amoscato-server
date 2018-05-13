@@ -2,7 +2,13 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource;
+use Amoscato\Bundle\IntegrationBundle\Client\FlickrClient;
 use Mockery as m;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class FlickrSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -12,7 +18,7 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource */
+    /** @var FlickrSource */
     private $source;
 
     /** @var m\Mock */
@@ -20,28 +26,27 @@ class FlickrSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(FlickrClient::class);
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\FlickrSource[getStreamStatementProvider]',
+            sprintf('%s[getStreamStatementProvider]', FlickrSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
+                10,
+                'flickr.com/',
             ]
         );
 
-        $this->source->setUserId(10);
-        $this->source->setPhotoUri('flickr.com/');
-
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            OutputInterface::class,
             [
                 'writeDebug' => null,
                 'writeln' => null,

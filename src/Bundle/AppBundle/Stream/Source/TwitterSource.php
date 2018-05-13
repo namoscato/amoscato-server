@@ -2,23 +2,51 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\IntegrationBundle\Client\TwitterClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TwitterSource extends AbstractSource
+/**
+ * @property TwitterClient $client
+ */
+class TwitterSource extends AbstractStreamSource
 {
-    /** @var string */
-    protected $type = 'twitter';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\TwitterClient */
-    protected $client;
-
     /** @var string */
     private $screenName;
 
     /** @var string */
     private $statusUri;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param TwitterClient $client
+     * @param string $screenName
+     * @param string $statusUri
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        TwitterClient $client,
+        $screenName,
+        $statusUri
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->screenName = $screenName;
+        $this->statusUri = $statusUri;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'twitter';
+    }
 
     /**
      * @param int $perPage
@@ -59,21 +87,5 @@ class TwitterSource extends AbstractSource
     protected function getSourceId($item)
     {
         return $item->id_str;
-    }
-
-    /**
-     * @param string $screenName
-     */
-    public function setScreenName($screenName)
-    {
-        $this->screenName = $screenName;
-    }
-
-    /**
-     * @param string $statusUri
-     */
-    public function setStatusUri($statusUri)
-    {
-        $this->statusUri = $statusUri;
     }
 }

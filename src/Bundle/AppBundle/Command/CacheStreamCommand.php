@@ -23,10 +23,10 @@ class CacheStreamCommand extends Command
      */
     public function __construct(StreamAggregator $streamAggregator, FtpClient $ftpClient)
     {
+        parent::__construct();
+
         $this->streamAggregator = $streamAggregator;
         $this->ftpClient = $ftpClient;
-
-        parent::__construct();
     }
 
     protected function configure()

@@ -8,7 +8,7 @@ class TwitterClient extends Client
      * @see https://dev.twitter.com/rest/reference/get/statuses/user_timeline
      * @param string $screenName
      * @param array $args optional
-     * @return object
+     * @return array
      */
     public function getUserTweets($screenName, array $args = [])
     {

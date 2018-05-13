@@ -2,10 +2,24 @@
 
 namespace Amoscato\Bundle\IntegrationBundle\Client;
 
+use GuzzleHttp\Client as GuzzleClient;
+
 class UntappdClient extends Client
 {
     /** @var string */
     private $clientId;
+
+    /**
+     * @param GuzzleClient $client
+     * @param string $apiKey
+     * @param string $clientId
+     */
+    public function __construct(GuzzleClient $client, $apiKey, $clientId)
+    {
+        parent::__construct($client, $apiKey);
+
+        $this->clientId = $clientId;
+    }
 
     /**
      * @param string $username
@@ -57,14 +71,6 @@ class UntappdClient extends Client
     public function getUserCheckins($username, array $args = [])
     {
         return $this->get("user/checkins/{$username}", $args);
-    }
-
-    /**
-     * @param string $clientId
-     */
-    public function setClientId($clientId)
-    {
-        $this->clientId = $clientId;
     }
 
     /**

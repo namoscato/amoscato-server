@@ -2,18 +2,29 @@
 
 namespace Amoscato\Bundle\AppBundle\Command;
 
-use Amoscato\Bundle\AppBundle\Source\SourceCollection;
-use Amoscato\Bundle\AppBundle\Source\SourceCollectionAwareInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LoadStreamItemsCommand extends Command implements SourceCollectionAwareInterface
+class LoadStreamItemsCommand extends Command
 {
-    /** @var SourceCollection */
-    private $sources;
+    /** @var \Amoscato\Bundle\AppBundle\Source\SourceInterface[] */
+    private $streamSources = [];
+
+    /**
+     * @param \Traversable $streamSources
+     */
+    public function __construct(\Traversable $streamSources)
+    {
+        parent::__construct();
+
+        foreach ($streamSources as $streamSource) {
+            /** @var \Amoscato\Bundle\AppBundle\Source\SourceInterface $streamSource */
+            $this->streamSources[$streamSource->getType()] = $streamSource;
+        }
+    }
 
     protected function configure()
     {
@@ -38,13 +49,13 @@ class LoadStreamItemsCommand extends Command implements SourceCollectionAwareInt
         $sources = $input->getArgument('sources');
 
         foreach ($sources as $type) { // Validate arguments
-            if (!isset($this->sources[$type])) {
+            if (!isset($this->streamSources[$type])) {
                 throw new InvalidArgumentException("Source type '{$type}' is undefined");
             }
         }
 
         if (empty($sources)) {
-            foreach ($this->sources as $type => $source) {
+            foreach ($this->streamSources as $type => $source) {
                 $this->loadSource($output, $type);
             }
         } else {
@@ -52,7 +63,7 @@ class LoadStreamItemsCommand extends Command implements SourceCollectionAwareInt
                 $this->loadSource($output, $type);
             }
         }
-        
+
         return 0;
     }
 
@@ -62,18 +73,7 @@ class LoadStreamItemsCommand extends Command implements SourceCollectionAwareInt
      */
     private function loadSource(OutputInterface $output, $type)
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
-
         $output->writeln("Extracting {$type} source...");
-
-        $this->sources[$type]->load($output);
-    }
-
-    /**
-     * @param SourceCollection $sourceCollection
-     */
-    public function setSourceCollection(SourceCollection $sourceCollection)
-    {
-        $this->sources = $sourceCollection;
+        $this->streamSources[$type]->load($output);
     }
 }

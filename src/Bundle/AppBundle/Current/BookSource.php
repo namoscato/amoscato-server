@@ -2,24 +2,38 @@
 
 namespace Amoscato\Bundle\AppBundle\Current;
 
-use Amoscato\Bundle\AppBundle\Source\AbstractSource;
+use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class BookSource extends AbstractSource
+class BookSource implements CurrentSourceInterface
 {
-    /** @var string */
-    protected $type = 'book';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient */
+    /** @var GoodreadsClient */
     protected $client;
 
     /** @var string */
     private $userId;
 
     /**
-     * @param OutputInterface $output
-     * @return array
+     * @param GoodreadsClient $client
+     * @param string $userId
+     */
+    public function __construct(GoodreadsClient $client, $userId)
+    {
+        $this->client = $client;
+        $this->userId = $userId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'book';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function load(OutputInterface $output)
     {
@@ -52,13 +66,5 @@ class BookSource extends AbstractSource
             'title' => $book->filter('title')->text(),
             'url' => $book->filter('link')->text()
         ];
-    }
-
-    /**
-     * @param string $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
     }
 }

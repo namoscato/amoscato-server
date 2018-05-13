@@ -2,12 +2,14 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource;
+use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
 use Mockery as m;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
@@ -16,7 +18,7 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource */
+    /** @var YouTubeSource */
     private $source;
 
     /** @var m\Mock */
@@ -24,39 +26,31 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        m::mock(
-            'alias:Carbon\Carbon',
-            [
-                'parse->toDateTimeString' => 'date'
-            ]
-        );
-
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(YouTubeClient::class);
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource[getStreamStatementProvider]',
+            sprintf('%s[getStreamStatementProvider]', YouTubeSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
+                10,
+                'youtube.com/'
             ]
         );
 
-        $this->source->setPlaylistId(10);
-        $this->source->setVideoUri('youtube.com/');
-
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            OutputInterface::class,
             [
                 'writeDebug' => null,
                 'writeln' => null,
-                'writeVerbose' => null
+                'writeVerbose' => null,
             ]
         );
     }
@@ -87,7 +81,8 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->client
+        $this
+            ->client
             ->shouldReceive('getPlaylistItems')
             ->with(
                 10,
@@ -102,7 +97,7 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                     'items' => [
                         (object) [
                             'snippet' => (object) [
-                                'publishedAt' => 'date',
+                                'publishedAt' => '2018-05-13 12:00:00',
                                 'title' => 'video title',
                                 'thumbnails' => (object) [
                                     'medium' => (object) [
@@ -126,7 +121,10 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                         ]
                     ]
                 ]
-            )
+            );
+
+        $this
+            ->client
             ->shouldReceive('getPlaylistItems')
             ->once()
             ->with(
@@ -159,7 +157,7 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                             123,
                             'video title',
                             'youtube.com/123',
-                            'date',
+                            '2018-05-13 12:00:00',
                             'img.jpg',
                             100,
                             300,

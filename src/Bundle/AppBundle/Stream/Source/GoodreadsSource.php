@@ -2,21 +2,46 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class GoodreadsSource extends AbstractSource
+/**
+ * @property GoodreadsClient $client
+ */
+class GoodreadsSource extends AbstractStreamSource
 {
-    /** @var string */
-    protected $type = 'goodreads';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient */
-    protected $client;
-
     /** @var integer */
     private $userId;
+
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param GoodreadsClient $client
+     * @param string $userId
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        GoodreadsClient $client,
+        $userId
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->userId = $userId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'goodreads';
+    }
 
     /**
      * @param int $perPage
@@ -58,10 +83,7 @@ class GoodreadsSource extends AbstractSource
                 $imageUrl
             );
 
-            $imageSize = $this->getImageSize($imageUrl);
-
-            $imageWidth = $imageSize[0];
-            $imageHeight = $imageSize[1];
+            list($imageWidth, $imageHeight) = $this->getImageSize($imageUrl);
         }
 
         $readAt = $review->filter('read_at')->text();
@@ -89,14 +111,6 @@ class GoodreadsSource extends AbstractSource
         $crawler = $this->createCrawler($item);
 
         return $crawler->filter('id')->text();
-    }
-
-    /**
-     * @param string $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
     }
 
     /**

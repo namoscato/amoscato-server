@@ -2,17 +2,17 @@
 
 namespace Amoscato\Bundle\AppBundle\Current;
 
-use Amoscato\Bundle\AppBundle\Source\SourceInterface;
-use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
+use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class VideoSource implements SourceInterface
+class VideoSource implements CurrentSourceInterface
 {
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient */
+    /** @var YouTubeClient */
     private $youTubeClient;
 
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\VimeoClient */
+    /** @var VimeoClient */
     private $vimeoClient;
 
     /** @var string */
@@ -22,18 +22,33 @@ class VideoSource implements SourceInterface
     private $youTubeVideoUri;
 
     /**
-     * @param Client $youTubeClient
-     * @param Client $vimeoClient
+     * @param YouTubeClient $youTubeClient
+     * @param string $youTubePlaylistId
+     * @param string $youTubeVideoUri
+     * @param VimeoClient $vimeoClient
      */
-    public function __construct(Client $youTubeClient, Client $vimeoClient)
-    {
+    public function __construct(
+        YouTubeClient $youTubeClient,
+        $youTubePlaylistId,
+        $youTubeVideoUri,
+        VimeoClient $vimeoClient
+    ) {
         $this->youTubeClient = $youTubeClient;
+        $this->youTubePlaylistId = $youTubePlaylistId;
+        $this->youTubeVideoUri = $youTubeVideoUri;
         $this->vimeoClient = $vimeoClient;
     }
 
     /**
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'video';
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function load(OutputInterface $output)
     {
@@ -71,29 +86,5 @@ class VideoSource implements SourceInterface
             'title' => $title,
             'url' => $url
         ];
-    }
-
-    /**
-     * @return string
-     */
-    public function getType()
-    {
-        return 'video';
-    }
-
-    /**
-     * @param string $youTubePlaylistId
-     */
-    public function setYouTubePlaylistId($youTubePlaylistId)
-    {
-        $this->youTubePlaylistId = $youTubePlaylistId;
-    }
-
-    /**
-     * @param string $youTubeVideoUri
-     */
-    public function setYouTubeVideoUri($youTubeVideoUri)
-    {
-        $this->youTubeVideoUri = $youTubeVideoUri;
     }
 }

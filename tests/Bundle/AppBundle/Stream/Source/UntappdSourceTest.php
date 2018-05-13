@@ -2,12 +2,14 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\UntappdSource;
+use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
 use Mockery as m;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class UntappdSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
@@ -16,7 +18,7 @@ class UntappdSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\UntappdSource */
+    /** @var UntappdSource */
     private $source;
 
     /** @var m\Mock */
@@ -24,43 +26,26 @@ class UntappdSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        m::mock(
-            'alias:Carbon\Carbon',
-            function($mock) {
-                $mock
-                    ->shouldReceive('parse')
-                    ->with('created at')
-                    ->andReturn(
-                        m::mock(
-                            [
-                                'toDateTimeString' => 'date'
-                            ]
-                        )
-                    );
-            }
-        );
-
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(UntappdClient::class);
         
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\UntappdSource[getStreamStatementProvider]',
+            sprintf('%s[getStreamStatementProvider]', UntappdSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
+                'username'
             ]
         );
 
-        $this->source->setUsername('username');
-
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            OutputInterface::class,
             [
                 'writeln' => null,
                 'writeVerbose' => null
@@ -94,7 +79,8 @@ class UntappdSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->client
+        $this
+            ->client
             ->shouldReceive('getUserBadges')
             ->with(
                 'username',
@@ -109,14 +95,17 @@ class UntappdSourceTest extends \PHPUnit_Framework_TestCase
                         (object) [
                             'badge_name' => 'badge',
                             'user_badge_id' => 'id',
-                            'created_at' => 'created at',
+                            'created_at' => '2018-05-13 12:00:00',
                             'media' => (object) [
                                 'badge_image_lg' => 'img.jpg'
                             ]
                         ]
                     ]
                 ]
-            )
+            );
+
+        $this
+            ->client
             ->shouldReceive('getUserBadges')
             ->with(
                 'username',
@@ -156,7 +145,7 @@ class UntappdSourceTest extends \PHPUnit_Framework_TestCase
                             'id',
                             'badge',
                             'badge url',
-                            'date',
+                            '2018-05-13 12:00:00',
                             'img.jpg',
                             400,
                             400

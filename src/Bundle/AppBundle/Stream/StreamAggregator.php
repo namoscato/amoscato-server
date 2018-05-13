@@ -2,26 +2,25 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream;
 
-use Amoscato\Bundle\AppBundle\Source\SourceCollectionAwareInterface;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
-use Amoscato\Bundle\AppBundle\Source\SourceCollection;
 use Amoscato\Database\PDOFactory;
-use PDO;
 
-class StreamAggregator implements SourceCollectionAwareInterface
+class StreamAggregator
 {
     /** @var PDOFactory */
     private $databaseFactory;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\SourceInterface[] */
-    private $sourceCollection;
+    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\StreamSourceInterface[] */
+    private $streamSources;
 
     /**
      * @param PDOFactory $pdoFactory
+     * @param \Traversable $streamSources
      */
-    public function __construct(PDOFactory $pdoFactory)
+    public function __construct(PDOFactory $pdoFactory, \Traversable $streamSources)
     {
         $this->databaseFactory = $pdoFactory;
+        $this->streamSources = $streamSources;
     }
 
     /**
@@ -33,7 +32,7 @@ class StreamAggregator implements SourceCollectionAwareInterface
         $weightedTypeHash = [];
         $weightedTypeHashCount = 0;
 
-        foreach ($this->sourceCollection as $source) {
+        foreach ($this->streamSources as $source) {
             for ($i = 0; $i < $source->getWeight(); $i++) {
                 $weightedTypeHash[] = $source->getType();
                 $weightedTypeHashCount++;
@@ -43,7 +42,7 @@ class StreamAggregator implements SourceCollectionAwareInterface
         $streamStatementProvider = $this->getStreamStatementProvider();
         $typeResults = [];
 
-        foreach ($this->sourceCollection as $source) {
+        foreach ($this->streamSources as $source) {
             $statement = $streamStatementProvider->selectStreamRows(
                 $source->getType(),
                 ceil($size / $weightedTypeHashCount * $source->getWeight())
@@ -51,7 +50,7 @@ class StreamAggregator implements SourceCollectionAwareInterface
 
             $statement->execute();
 
-            $typeResults[$source->getType()] = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $typeResults[$source->getType()] = $statement->fetchAll(\PDO::FETCH_ASSOC);
         }
 
         $result = [];
@@ -73,13 +72,5 @@ class StreamAggregator implements SourceCollectionAwareInterface
     public function getStreamStatementProvider()
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());
-    }
-
-    /**
-     * @param SourceCollection $sourceCollection
-     */
-    public function setSourceCollection(SourceCollection $sourceCollection)
-    {
-        $this->sourceCollection = $sourceCollection;
     }
 }

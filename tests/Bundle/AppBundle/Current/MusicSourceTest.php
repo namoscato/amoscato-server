@@ -3,12 +3,10 @@
 namespace Tests\Bundle\AppBundle\Current\Source;
 
 use Amoscato\Bundle\AppBundle\Current\MusicSource;
+use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Mockery as m;
+use Symfony\Component\Console\Output\OutputInterface;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- */
 class MusicSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var MusicSource */
@@ -22,26 +20,11 @@ class MusicSourceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        m::mock(
-            'alias:Carbon\Carbon',
-            [
-                'createFromTimestampUTC' => m::mock(
-                    [
-                        'toDateTimeString' => 'DATE'
-                    ]
-                )
-            ]
-        );
+        $this->client = m::mock(LastfmClient::class);
 
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->target = new MusicSource($this->client, 1);
 
-        $this->target = new MusicSource($this->client);
-
-        $this
-            ->target
-            ->setUser(1);
-
-        $this->output = m::mock('Symfony\Component\Console\Output\OutputInterface');
+        $this->output = m::mock(OutputInterface::class);
     }
 
     protected function tearDown()
@@ -75,7 +58,7 @@ class MusicSourceTest extends \PHPUnit_Framework_TestCase
                             '#text' => 'ARTIST'
                         ],
                         'date' => (object) [
-                            'uts' => 123
+                            'uts' => 1526234751
                         ],
                         'name' => 'NAME',
                         'url' => 'URL'
@@ -87,7 +70,7 @@ class MusicSourceTest extends \PHPUnit_Framework_TestCase
             [
                 'album' => 'ALBUM',
                 'artist' => 'ARTIST',
-                'date' => 'DATE',
+                'date' => '2018-05-13 18:05:51',
                 'name' => 'NAME',
                 'url' => 'URL'
             ],

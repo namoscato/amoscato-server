@@ -2,9 +2,16 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource;
+use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Symfony\Component\Console\Output\OutputInterface;
+use Psr\Http\Message\RequestInterface;
 
 class GitHubSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +21,7 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource */
+    /** @var GitHubSource */
     private $source;
 
     /** @var m\Mock */
@@ -22,27 +29,26 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(GitHubClient::class);
 
         $this->source = m::mock(
-            'Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource[getStreamStatementProvider]',
+            sprintf('%s[getStreamStatementProvider]', GitHubSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
+                'username'
             ]
         );
 
-        $this->source->setUsername('username');
-
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            OutputInterface::class,
             [
                 'writeDebug' => null,
                 'writeln' => null,
@@ -159,12 +165,12 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
                                 (object) [
                                     'sha' => 0,
                                     'url' => 'api.github.com/0',
-                                    'message' => "message 0"
+                                    'message' => 'message 0'
                                 ],
                                 (object) [
                                     'sha' => 1,
                                     'url' => 'api.github.com/1',
-                                    'message' => "message 1"
+                                    'message' => 'message 1'
                                 ],
                                 (object) [
                                     'sha' => 2,
@@ -185,7 +191,7 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
             ->andThrow(
                 new ClientException(
                     'message',
-                    m::mock('Psr\Http\Message\RequestInterface'),
+                    m::mock(RequestInterface::class),
                     new Response()
                 )
             );
@@ -313,17 +319,17 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
                                 (object) [
                                     'sha' => 99,
                                     'url' => 'api.github.com/99',
-                                    'message' => "message 99"
+                                    'message' => 'message 99'
                                 ],
                                 (object) [
                                     'sha' => 100,
                                     'url' => 'api.github.com/100',
-                                    'message' => "message 100"
+                                    'message' => 'message 100'
                                 ],
                                 (object) [
                                     'sha' => 101,
                                     'url' => 'api.github.com/101',
-                                    'message' => "message 101"
+                                    'message' => 'message 101'
                                 ]
                             ]
                         ]

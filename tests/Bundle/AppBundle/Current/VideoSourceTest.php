@@ -3,7 +3,10 @@
 namespace Tests\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\AppBundle\Current\VideoSource;
+use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
+use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
 use Mockery as m;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @runTestsInSeparateProcesses
@@ -58,16 +61,18 @@ class VideoSourceTest extends \PHPUnit_Framework_TestCase
             }
         );
 
-        $this->youTubeClient = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->youTubeClient = m::mock(YouTubeClient::class);
 
-        $this->vimeoClient = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->vimeoClient = m::mock(VimeoClient::class);
 
-        $this->target = new VideoSource($this->youTubeClient, $this->vimeoClient);
+        $this->target = new VideoSource(
+            $this->youTubeClient,
+            'ID',
+            'youtube.com/',
+            $this->vimeoClient
+        );
 
-        $this->target->setYouTubePlaylistId('ID');
-        $this->target->setYouTubeVideoUri('youtube.com/');
-
-        $this->output = m::mock('Symfony\Component\Console\Output\OutputInterface');
+        $this->output = m::mock(OutputInterface::class);
 
         $this
             ->youTubeClient

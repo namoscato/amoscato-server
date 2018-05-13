@@ -3,28 +3,28 @@
 namespace Amoscato\Bundle\AppBundle\Command;
 
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
-use Amoscato\Bundle\AppBundle\Source\SourceCollection;
-use Amoscato\Bundle\AppBundle\Source\SourceCollectionAwareInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LoadCurrentItemsCommand extends Command implements SourceCollectionAwareInterface
+class LoadCurrentItemsCommand extends Command
 {
-    /** @var SourceCollection */
-    private $sources;
+    /** @var \Amoscato\Bundle\AppBundle\Source\SourceInterface[] */
+    private $currentSources;
 
     /** @var FtpClient */
     private $ftpClient;
 
     /**
      * @param FtpClient $ftpClient
+     * @param \Traversable $currentSources
      */
-    public function __construct(FtpClient $ftpClient)
+    public function __construct(FtpClient $ftpClient, \Traversable $currentSources)
     {
-        $this->ftpClient = $ftpClient;
-
         parent::__construct();
+
+        $this->ftpClient = $ftpClient;
+        $this->currentSources = $currentSources;
     }
 
     protected function configure()
@@ -45,10 +45,10 @@ class LoadCurrentItemsCommand extends Command implements SourceCollectionAwareIn
 
         $result = [];
 
-        foreach ($this->sources as $type => $source) {
+        foreach ($this->currentSources as $source) {
+            $type = $source->getType();
             $output->writeln("Loading {$type} source...");
-
-            $result[$type] = $this->sources[$type]->load($output);
+            $result[$type] = $source->load($output);
         }
 
         return $this->ftpClient->upload(
@@ -56,13 +56,5 @@ class LoadCurrentItemsCommand extends Command implements SourceCollectionAwareIn
             json_encode($result),
             'current.json'
         );
-    }
-
-    /**
-     * @param SourceCollection $sourceCollection
-     */
-    public function setSourceCollection(SourceCollection $sourceCollection)
-    {
-        $this->sources = $sourceCollection;
     }
 }

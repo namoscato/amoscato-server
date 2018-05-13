@@ -2,20 +2,46 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class VimeoSource extends AbstractSource
+/**
+ * @property VimeoClient $client
+ */
+class VimeoSource extends AbstractStreamSource
 {
-    /** @var int */
-    protected $perPage = 50;
+    /**
+     * @param PDOFactory $databaseFactory
+     * @param FtpClient $ftpClient
+     * @param VimeoClient $client
+     */
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        VimeoClient $client
+    ) {
+        parent::__construct($databaseFactory, $ftpClient, $client);
+    }
 
-    /** @var string */
-    protected $type = 'vimeo';
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'vimeo';
+    }
 
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\VimeoClient */
-    protected $client;
+    /**
+     * {@inheritdoc}
+     */
+    public function getPerPage()
+    {
+        return 50;
+    }
 
     /**
      * @param int $perPage

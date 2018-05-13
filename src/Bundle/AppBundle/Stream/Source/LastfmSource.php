@@ -3,23 +3,17 @@
 namespace Amoscato\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
-use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LastfmSource extends AbstractSource
+/**
+ * @property LastfmClient $client
+ */
+class LastfmSource extends AbstractStreamSource
 {
-    /** @var int */
-    protected $perPage = 200;
-
-    /** @var string */
-    protected $type = 'lastfm';
-
-    /** @var \Amoscato\Bundle\IntegrationBundle\Client\LastfmClient */
-    protected $client;
-
     /** @var array */
     private $albumInfo;
 
@@ -29,13 +23,35 @@ class LastfmSource extends AbstractSource
     /**
      * @param PDOFactory $databaseFactory
      * @param FtpClient $ftpClient
-     * @param Client $client
+     * @param LastfmClient $client
+     * @param string $user
      */
-    public function __construct(PDOFactory $databaseFactory, FtpClient $ftpClient, Client $client)
-    {
-        $this->albumInfo = [];
-
+    public function __construct(
+        PDOFactory $databaseFactory,
+        FtpClient $ftpClient,
+        LastfmClient $client,
+        $user
+    ) {
         parent::__construct($databaseFactory, $ftpClient, $client);
+
+        $this->albumInfo = [];
+        $this->user = $user;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'lastfm';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPerPage()
+    {
+        return 200;
     }
 
     /**
@@ -115,10 +131,10 @@ class LastfmSource extends AbstractSource
         $sourceId = null;
 
         while ($iterator->valid()) {
-            $tracks = $this->extract($this->perPage, $iterator);
+            $tracks = $this->extract($this->getPerPage(), $iterator);
 
             foreach ($tracks as $track) {
-                if (!isset($track->date) || empty($track->album->mbid) && empty($track->album->{'#text'})) {
+                if (!isset($track->date) || (empty($track->album->mbid) && empty($track->album->{'#text'}))) {
                     continue; // Skip currently playing track and tracks without album
                 }
 
@@ -141,7 +157,7 @@ class LastfmSource extends AbstractSource
                         $values
                     );
 
-                    $output->writeVerbose("Transforming " . $this->getType() . " item: {$values[2]}");
+                    $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
 
                     $iterator->incrementCount();
                 }
@@ -185,13 +201,5 @@ class LastfmSource extends AbstractSource
     protected function getSourceId($item)
     {
         return $this->getAlbumId($item, true);
-    }
-
-    /**
-     * @param string $user
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
     }
 }
