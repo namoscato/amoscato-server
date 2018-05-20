@@ -2,9 +2,15 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource;
 
-class AbstractSourceTest extends \PHPUnit_Framework_TestCase
+class AbstractStreamSourceTest extends \PHPUnit_Framework_TestCase
 {
     /** @var m\Mock */
     private $client;
@@ -12,7 +18,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var \Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource */
+    /** @var MockSource */
     private $source;
 
     /** @var m\Mock */
@@ -20,25 +26,25 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
     
     protected function setUp()
     {
-        $this->client = m::mock('Amoscato\Bundle\IntegrationBundle\Client\Client');
+        $this->client = m::mock(Client::class);
         
         $this->source = m::mock(
-            'Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource[getStreamStatementProvider,mockTransform,mockExtract]',
+            sprintf('%s[getStreamStatementProvider,mockTransform,mockExtract]', MockSource::class),
             [
-                m::mock('Amoscato\Database\PDOFactory'),
-                m::mock('\Amoscato\Bundle\AppBundle\Ftp\FtpClient'),
-                $this->client
+                m::mock(PDOFactory::class),
+                m::mock(FtpClient::class),
+                $this->client,
             ]
         );
 
-        $this->statementProvider = m::mock('Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider');
+        $this->statementProvider = m::mock(StreamStatementProvider::class);
 
         $this->source
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            'Symfony\Component\Console\Output\OutputInterface',
+            ConsoleOutput::class,
             [
                 'writeDebug' => null,
                 'writeln' => null,
@@ -84,10 +90,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('insertRows')
             ->never();
 
-        $this->assertSame(
-            true,
-            $this->source->load($this->output)
-        );
+        $this->assertTrue($this->source->load($this->output, 100));
     }
 
     public function test_load_with_items()
@@ -194,10 +197,7 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->assertSame(
-            true,
-            $this->source->load($this->output)
-        );
+        $this->assertTrue($this->source->load($this->output, 100));
     }
 
     public function test_load_with_previous_items()
@@ -252,6 +252,6 @@ class AbstractSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->source->load($this->output);
+        $this->source->load($this->output, 100);
     }
 }

@@ -4,9 +4,9 @@ namespace Tests\Bundle\AppBundle\Current\Source;
 
 use Amoscato\Bundle\AppBundle\Current\BookSource;
 use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class BookSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -25,7 +25,7 @@ class BookSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->target = new BookSource($this->client, 1);
 
-        $this->output = m::mock(OutputInterface::class);
+        $this->output = m::mock(ConsoleOutput::class);
     }
 
     protected function tearDown()

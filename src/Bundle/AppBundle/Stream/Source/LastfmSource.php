@@ -5,6 +5,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,9 +50,9 @@ class LastfmSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getPerPage()
+    protected function getMaxPerPage()
     {
-        return 200;
+        return 1000;
     }
 
     /**
@@ -115,14 +116,11 @@ class LastfmSource extends AbstractStreamSource
     }
 
     /**
-     * @param OutputInterface $output
-     * @return bool
+     * {@inheritdoc}
      */
-    public function load(OutputInterface $output)
+    public function load(ConsoleOutput $output, $limit = 1)
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
-
-        $iterator = new PageIterator(self::LIMIT);
+        $iterator = new PageIterator($limit);
         $previousAlbumId = null;
         $previousTrack = null;
         $values = [];
@@ -131,7 +129,7 @@ class LastfmSource extends AbstractStreamSource
         $sourceId = null;
 
         while ($iterator->valid()) {
-            $tracks = $this->extract($this->getPerPage(), $iterator);
+            $tracks = $this->extract($this->getPerPage(2 * $limit), $iterator);
 
             foreach ($tracks as $track) {
                 if (!isset($track->date) || (empty($track->album->mbid) && empty($track->album->{'#text'}))) {

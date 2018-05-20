@@ -49,6 +49,14 @@ class FlickrSource extends AbstractStreamSource
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getMaxPerPage()
+    {
+        return 500;
+    }
+
+    /**
      * @param int $perPage
      * @param PageIterator $iterator
      * @return array

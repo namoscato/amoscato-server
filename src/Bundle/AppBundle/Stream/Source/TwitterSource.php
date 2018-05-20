@@ -49,6 +49,14 @@ class TwitterSource extends AbstractStreamSource
     }
 
     /**
+     * {@inheritdoc}
+     */
+    protected function getMaxPerPage()
+    {
+        return 200;
+    }
+
+    /**
      * @param int $perPage
      * @param PageIterator $iterator
      * @return array

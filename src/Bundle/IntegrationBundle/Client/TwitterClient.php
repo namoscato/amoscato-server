@@ -5,7 +5,7 @@ namespace Amoscato\Bundle\IntegrationBundle\Client;
 class TwitterClient extends Client
 {
     /**
-     * @see https://dev.twitter.com/rest/reference/get/statuses/user_timeline
+     * @see https://developer.twitter.com/en/docs/tweets/timelines/api-reference/get-statuses-user_timeline
      * @param string $screenName
      * @param array $args optional
      * @return array

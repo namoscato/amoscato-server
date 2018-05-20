@@ -7,21 +7,17 @@ use Mockery as m;
 
 class StreamStatementProviderTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var m\Mock
-     */
+    /** @var m\Mock */
     private $database;
 
-    /**
-     * @var StreamStatementProvider
-     */
-    private $streamStatementProvider;
+    /** @var StreamStatementProvider */
+    private $target;
 
     protected function setUp()
     {
         $this->database = m::mock('PDO');
 
-        $this->streamStatementProvider = new StreamStatementProvider($this->database);
+        $this->target = new StreamStatementProvider($this->database);
     }
 
     protected function tearDown()
@@ -51,7 +47,8 @@ ON CONFLICT ON CONSTRAINT stream_type_source_id DO UPDATE SET
   photo_height = EXCLUDED.photo_height;
 SQL;
 
-        $this->database
+        $this
+            ->database
             ->shouldReceive('prepare')
             ->once()
             ->with($sql)
@@ -59,7 +56,7 @@ SQL;
 
         $this->assertSame(
             'stmt',
-            $this->streamStatementProvider->insertRows(2)
+            $this->target->insertRows(2)
         );
     }
 
@@ -78,7 +75,7 @@ SQL;
                 /** @var m\Mock $mock */
 
                 $mock
-                    ->shouldReceive('bindValue')
+                    ->shouldReceive('bindParam')
                     ->once()
                     ->with(
                         ':type',
@@ -86,7 +83,7 @@ SQL;
                     );
 
                 $mock
-                    ->shouldReceive('bindValue')
+                    ->shouldReceive('bindParam')
                     ->once()
                     ->with(
                         ':limit',
@@ -96,7 +93,8 @@ SQL;
             }
         );
 
-        $this->database
+        $this
+            ->database
             ->shouldReceive('prepare')
             ->once()
             ->with($sql)
@@ -104,7 +102,7 @@ SQL;
 
         $this->assertSame(
             $statement,
-            $this->streamStatementProvider->selectLatestSourceId('TYPE')
+            $this->target->selectLatestSourceId('TYPE')
         );
     }
 
@@ -123,7 +121,7 @@ SQL;
                 /** @var m\Mock $mock */
 
                 $mock
-                    ->shouldReceive('bindValue')
+                    ->shouldReceive('bindParam')
                     ->once()
                     ->with(
                         ':type',
@@ -131,7 +129,7 @@ SQL;
                     );
 
                 $mock
-                    ->shouldReceive('bindValue')
+                    ->shouldReceive('bindParam')
                     ->once()
                     ->with(
                         ':limit',
@@ -141,7 +139,8 @@ SQL;
             }
         );
 
-        $this->database
+        $this
+            ->database
             ->shouldReceive('prepare')
             ->once()
             ->with($sql)
@@ -149,7 +148,69 @@ SQL;
 
         $this->assertSame(
             $statement,
-            $this->streamStatementProvider->selectStreamRows('TYPE', 10)
+            $this->target->selectStreamRows('TYPE', 10)
         );
+    }
+
+    public function test_selectCreatedDateAtOffset()
+    {
+        $this
+            ->database
+            ->shouldReceive('prepare')
+            ->andReturn(m::mock(
+                \PDOStatement::class,
+                function ($stmt) {
+                    /** @var m\Mock $stmt */
+
+                    $stmt
+                        ->shouldReceive('bindParam')
+                        ->once()
+                        ->with(':type', 'TYPE');
+
+                    $stmt
+                        ->shouldReceive('bindParam')
+                        ->once()
+                        ->with(':offset', 10, \PDO::PARAM_INT);
+
+                    $stmt
+                        ->shouldReceive('execute')
+                        ->once();
+
+                    $stmt
+                        ->shouldReceive('fetchColumn')
+                        ->andReturn('DATE');
+                }
+            ));
+
+        $this->assertEquals('DATE', $this->target->selectCreatedDateAtOffset('TYPE', 10));
+    }
+
+    public function test_deleteOldItems()
+    {
+        $this
+            ->database
+            ->shouldReceive('prepare')
+            ->andReturn(m::mock(
+                \PDOStatement::class,
+                function ($stmt) {
+                    /** @var m\Mock $stmt */
+
+                    $stmt
+                        ->shouldReceive('bindParam')
+                        ->once()
+                        ->with(':type', 'TYPE');
+
+                    $stmt
+                        ->shouldReceive('bindParam')
+                        ->once()
+                        ->with(':createdAt', 'DATE');
+
+                    $stmt
+                        ->shouldReceive('execute')
+                        ->andReturnTrue();
+                }
+            ));
+
+        $this->assertTrue($this->target->deleteOldItems('TYPE', 'DATE'));
     }
 }

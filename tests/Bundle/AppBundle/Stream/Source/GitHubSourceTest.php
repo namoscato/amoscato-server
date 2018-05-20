@@ -4,13 +4,13 @@ namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource;
 use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 use Amoscato\Database\PDOFactory;
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
-use Symfony\Component\Console\Output\OutputInterface;
 use Psr\Http\Message\RequestInterface;
 
 class GitHubSourceTest extends \PHPUnit_Framework_TestCase
@@ -48,7 +48,7 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            OutputInterface::class,
+            ConsoleOutput::class,
             [
                 'writeDebug' => null,
                 'writeln' => null,
@@ -97,10 +97,7 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('insertRows')
             ->never();
 
-        $this->assertSame(
-            true,
-            $this->source->load($this->output)
-        );
+        $this->assertTrue($this->source->load($this->output), 100);
     }
 
     public function test_load_with_items()
@@ -300,10 +297,7 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->assertSame(
-            true,
-            $this->source->load($this->output)
-        );
+        $this->assertTrue($this->source->load($this->output, 100));
     }
 
     public function test_load_with_previous_items()
@@ -376,7 +370,7 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->source->load($this->output);
+        $this->source->load($this->output, 100);
     }
 
     public function test_load_with_max_event_pages()
@@ -432,6 +426,6 @@ class GitHubSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->source->load($this->output);
+        $this->source->load($this->output, 100);
     }
 }

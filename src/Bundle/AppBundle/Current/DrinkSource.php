@@ -3,8 +3,8 @@
 namespace Amoscato\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class DrinkSource implements CurrentSourceInterface
 {
@@ -35,7 +35,7 @@ class DrinkSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output)
+    public function load(ConsoleOutput $output, $limit = 1)
     {
         $response = $this
             ->client

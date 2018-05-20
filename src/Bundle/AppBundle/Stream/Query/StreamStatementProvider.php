@@ -2,15 +2,26 @@
 
 namespace Amoscato\Bundle\AppBundle\Stream\Query;
 
-use PDO;
-
 class StreamStatementProvider
 {
-    /** @var PDO */
+    /** @var \PDO */
     private $database;
 
-    /** @var string */
-    private static $insertionSql = <<<SQL
+    /**
+     * @param \PDO $database
+     */
+    public function __construct(\PDO $database)
+    {
+        $this->database = $database;
+    }
+
+    /**
+     * @param integer $rowCount
+     * @return \PDOStatement
+     */
+    public function insertRows($rowCount)
+    {
+        $sql = <<<SQL
 INSERT INTO stream (
   type,
   source_id,
@@ -29,39 +40,13 @@ ON CONFLICT ON CONSTRAINT stream_type_source_id DO UPDATE SET
   photo_width = EXCLUDED.photo_width,
   photo_height = EXCLUDED.photo_height;
 SQL;
-
-    /** @var string */
-    private static $selectStreamTypeSql = <<<SQL
-SELECT %s
-FROM stream
-WHERE type = :type
-ORDER BY created_at DESC, id DESC
-LIMIT :limit;
-SQL;
-
-    /** @var string */
-    private static $insertionRowSql;
-
-    /**
-     * @param PDO $database
-     */
-    public function __construct(PDO $database)
-    {
-        $this->database = $database;
-
-        self::$insertionRowSql = '(' . implode(', ', array_fill(0, 8, '?')) . ')';
-    }
-
-    /**
-     * @param integer $rowCount
-     * @return \PDOStatement
-     */
-    public function insertRows($rowCount)
-    {
         return $this->database->prepare(
             sprintf(
-                self::$insertionSql,
-                implode(', ', array_fill(0, $rowCount, self::$insertionRowSql))
+                $sql,
+                implode(
+                    ', ',
+                    array_fill(0, $rowCount, sprintf('(%s)', implode(', ', array_fill(0, 8, '?'))))
+                )
             )
         );
     }
@@ -83,16 +68,58 @@ SQL;
      */
     public function selectStreamRows($type, $limit, $select = '*')
     {
-        $statement = $this->database->prepare(
-            sprintf(
-                self::$selectStreamTypeSql,
-                $select
-            )
-        );
+        $sql = <<<SQL
+SELECT %s
+FROM stream
+WHERE type = :type
+ORDER BY created_at DESC, id DESC
+LIMIT :limit;
+SQL;
+        $statement = $this->database->prepare(sprintf($sql, $select));
 
-        $statement->bindValue(':type', $type);
-        $statement->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':type', $type);
+        $statement->bindParam(':limit', $limit, \PDO::PARAM_INT);
 
         return $statement;
+    }
+
+    /**
+     * @param string $type
+     * @param int $offset
+     * @return string
+     */
+    public function selectCreatedDateAtOffset($type, $offset)
+    {
+        $sql = <<<SQL
+SELECT created_at
+FROM stream
+WHERE type = :type
+ORDER BY created_at DESC
+OFFSET :offset
+LIMIT 1;
+SQL;
+        $stmt = $this->database->prepare($sql);
+
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchColumn();
+    }
+
+    /**
+     * @param string $type
+     * @param string $createdAt
+     * @return bool
+     */
+    public function deleteOldItems($type, $createdAt)
+    {
+        $stmt = $this->database->prepare('DELETE FROM stream WHERE type = :type AND created_at < :createdAt;');
+
+        $stmt->bindParam(':type', $type);
+        $stmt->bindParam(':createdAt', $createdAt);
+
+        return $stmt->execute();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Amoscato\Bundle\AppBundle\Source;
 
-use Symfony\Component\Console\Output\OutputInterface;
+use Amoscato\Console\Output\ConsoleOutput;
 
 interface SourceInterface
 {
@@ -12,8 +12,9 @@ interface SourceInterface
     public function getType();
 
     /**
-     * @param OutputInterface $output
+     * @param ConsoleOutput $output
+     * @param int $limit
      * @return array
      */
-    public function load(OutputInterface $output);
+    public function load(ConsoleOutput $output, $limit = 1);
 }

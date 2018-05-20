@@ -5,6 +5,7 @@ namespace Amoscato\Bundle\AppBundle\Stream\Source;
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
@@ -46,7 +47,7 @@ class GitHubSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getPerPage()
+    protected function getMaxPerPage()
     {
         return 30;
     }
@@ -100,14 +101,11 @@ class GitHubSource extends AbstractStreamSource
     }
 
     /**
-     * @param OutputInterface $output
-     * @return bool
+     * {@inheritdoc}
      */
-    public function load(OutputInterface $output)
+    public function load(ConsoleOutput $output, $limit = 1)
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
-
-        $iterator = new PageIterator(self::LIMIT);
+        $iterator = new PageIterator($limit);
 
         $commitHashes = [];
         $values = [];
@@ -115,7 +113,7 @@ class GitHubSource extends AbstractStreamSource
         $latestSourceId = $this->getLatestSourceId();
 
         while ($iterator->valid()) {
-            $items = $this->extract($this->getPerPage(), $iterator);
+            $items = $this->extract($this->getPerPage($limit), $iterator);
 
             foreach ($items as $item) {
                 if ($item->type !== GitHubClient::EVENT_TYPE_PUSH) {
@@ -147,7 +145,7 @@ class GitHubSource extends AbstractStreamSource
                     $values = array_merge(
                         [
                             $this->getType(),
-                            $hash
+                            $hash,
                         ],
                         $transformedCommit,
                         $values

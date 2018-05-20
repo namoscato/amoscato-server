@@ -5,8 +5,8 @@ namespace Tests\Bundle\AppBundle\Current;
 use Amoscato\Bundle\AppBundle\Current\VideoSource;
 use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
 use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @runTestsInSeparateProcesses
@@ -72,7 +72,7 @@ class VideoSourceTest extends \PHPUnit_Framework_TestCase
             $this->vimeoClient
         );
 
-        $this->output = m::mock(OutputInterface::class);
+        $this->output = m::mock(ConsoleOutput::class);
 
         $this
             ->youTubeClient

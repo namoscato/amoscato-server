@@ -4,11 +4,11 @@ namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Stream\Source\GoodreadsSource;
 use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
 use Amoscato\Database\PDOFactory;
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
@@ -46,7 +46,7 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            OutputInterface::class,
+            ConsoleOutput::class,
             [
                 'writeln' => null,
                 'writeVerbose' => null,
@@ -305,6 +305,6 @@ class GoodreadsSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->source->load($this->output);
+        $this->source->load($this->output, 100);
     }
 }
