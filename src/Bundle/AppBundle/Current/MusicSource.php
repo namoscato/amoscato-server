@@ -3,8 +3,8 @@
 namespace Amoscato\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class MusicSource implements CurrentSourceInterface
 {
@@ -35,7 +35,7 @@ class MusicSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output)
+    public function load(ConsoleOutput $output, $limit = 1)
     {
         $tracks = $this->client->getRecentTracks(
             $this->user,

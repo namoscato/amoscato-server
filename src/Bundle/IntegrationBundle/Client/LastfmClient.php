@@ -2,6 +2,8 @@
 
 namespace Amoscato\Bundle\IntegrationBundle\Client;
 
+use Amoscato\Bundle\IntegrationBundle\Exception\LastfmBadResponseException;
+
 class LastfmClient extends Client
 {
     const METHOD_ALBUM_GET_INFO = 'album.getInfo';
@@ -17,14 +19,7 @@ class LastfmClient extends Client
     {
         $args['mbid'] = $id;
 
-        $response = $this->get(
-            self::METHOD_ALBUM_GET_INFO,
-            $args
-        );
-
-        $body = json_decode($response->getBody());
-
-        return $body->album;
+        return $this->get(self::METHOD_ALBUM_GET_INFO, $args)->album;
     }
 
     /**
@@ -39,12 +34,7 @@ class LastfmClient extends Client
         $args['artist'] = $artistName;
         $args['album'] = $albumName;
 
-        $response = $this->get(
-            self::METHOD_ALBUM_GET_INFO,
-            $args
-        );
-
-        $body = json_decode($response->getBody());
+        $body = $this->get(self::METHOD_ALBUM_GET_INFO, $args);
 
         if (isset($body->album)) {
             return $body->album;
@@ -54,6 +44,7 @@ class LastfmClient extends Client
     }
 
     /**
+     * @see http://www.last.fm/api/show/user.getRecentTracks
      * @param string $user
      * @param array $args optional
      * @return array
@@ -62,25 +53,17 @@ class LastfmClient extends Client
     {
         $args['user'] = $user;
 
-        $response = $this->get(
-            self::METHOD_USER_GET_RECENT_TRACKS,
-            $args
-        );
-
-        $body = json_decode($response->getBody());
-
-        return $body->recenttracks->track;
+        return $this->get(self::METHOD_USER_GET_RECENT_TRACKS, $args)->recenttracks->track;
     }
 
     /**
-     * @see http://www.last.fm/api/show/user.getRecentTracks
      * @param string $method
      * @param array $args optional
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return object
      */
     private function get($method, array $args = [])
     {
-        return $this->client->get(
+        $response = $this->client->get(
             '',
             [
                 'query' => array_merge(
@@ -93,5 +76,13 @@ class LastfmClient extends Client
                 )
             ]
         );
+
+        $responseBody = \GuzzleHttp\json_decode($response->getBody());
+
+        if (!empty($responseBody->error)) {
+            throw new LastfmBadResponseException($responseBody);
+        }
+
+        return $responseBody;
     }
 }

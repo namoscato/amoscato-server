@@ -4,11 +4,11 @@ namespace Tests\Bundle\AppBundle\Stream\Source;
 
 use Amoscato\Bundle\AppBundle\Stream\Source\YouTubeSource;
 use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
 use Amoscato\Database\PDOFactory;
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -46,7 +46,7 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
             ->andReturn($this->statementProvider);
 
         $this->output = m::mock(
-            OutputInterface::class,
+            ConsoleOutput::class,
             [
                 'writeDebug' => null,
                 'writeln' => null,
@@ -165,6 +165,6 @@ class YouTubeSourceTest extends \PHPUnit_Framework_TestCase
                 })
             );
 
-        $this->source->load($this->output);
+        $this->source->load($this->output, 100);
     }
 }

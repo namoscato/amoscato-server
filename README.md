@@ -32,3 +32,6 @@ Available sources include:
 * `vimeo` - latest favorites from [Vimeo](https://vimeo.com/)
 * `youtube` - latest favorites from [YouTube](https://www.youtube.com/)
 
+### `amoscato:stream:truncate [--size=1500]`
+
+Truncates historic stream data, keeping a stream of the specified _size_.

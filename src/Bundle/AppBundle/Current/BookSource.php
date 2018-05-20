@@ -3,8 +3,8 @@
 namespace Amoscato\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class BookSource implements CurrentSourceInterface
 {
@@ -35,7 +35,7 @@ class BookSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output)
+    public function load(ConsoleOutput $output, $limit = 1)
     {
         $reviews = $this
             ->client

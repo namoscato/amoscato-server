@@ -2,10 +2,12 @@
 
 namespace Amoscato\Bundle\AppBundle\Command;
 
+use Amoscato\Bundle\AppBundle\Stream\Source\StreamSourceInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class LoadStreamItemsCommand extends Command
@@ -35,13 +37,20 @@ class LoadStreamItemsCommand extends Command
                 'sources',
                 InputArgument::IS_ARRAY | InputArgument::OPTIONAL,
                 'Optional set of sources to load'
+            )
+            ->addOption(
+                'limit',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Number of items to load',
+                100
             );
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return integer
+     * {@inheritdoc}
+     *
+     * @param \Amoscato\Console\Output\ConsoleOutput $output
      * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -55,25 +64,19 @@ class LoadStreamItemsCommand extends Command
         }
 
         if (empty($sources)) {
-            foreach ($this->streamSources as $type => $source) {
-                $this->loadSource($output, $type);
-            }
-        } else {
-            foreach ($sources as $type) {
-                $this->loadSource($output, $type);
-            }
+            $sources = &$this->streamSources;
         }
 
-        return 0;
-    }
+        $limit = $input->getOption('limit');
 
-    /**
-     * @param OutputInterface $output
-     * @param string $type
-     */
-    private function loadSource(OutputInterface $output, $type)
-    {
-        $output->writeln("Extracting {$type} source...");
-        $this->streamSources[$type]->load($output);
+        foreach ($sources as $type => $source) {
+            if (!$source instanceof StreamSourceInterface) {
+                $source = $this->streamSources[$source];
+                $type = $source->getType();
+            }
+
+            $output->writeln("Extracting {$limit} {$type} source...");
+            $source->load($output, $limit);
+        }
     }
 }

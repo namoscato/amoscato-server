@@ -3,14 +3,17 @@
 namespace Amoscato\Bundle\AppBundle\Stream;
 
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Amoscato\Bundle\AppBundle\Stream\Source\StreamSourceInterface;
 use Amoscato\Database\PDOFactory;
 
 class StreamAggregator
 {
+    const DEFAULT_SIZE = 1000.0;
+
     /** @var PDOFactory */
     private $databaseFactory;
 
-    /** @var \Amoscato\Bundle\AppBundle\Stream\Source\StreamSourceInterface[] */
+    /** @var StreamSourceInterface[] */
     private $streamSources;
 
     /**
@@ -27,25 +30,16 @@ class StreamAggregator
      * @param float $size optional
      * @return array
      */
-    public function aggregate($size = 1000.0)
+    public function aggregate($size = self::DEFAULT_SIZE)
     {
-        $weightedTypeHash = [];
-        $weightedTypeHashCount = 0;
-
-        foreach ($this->streamSources as $source) {
-            for ($i = 0; $i < $source->getWeight(); $i++) {
-                $weightedTypeHash[] = $source->getType();
-                $weightedTypeHashCount++;
-            }
-        }
-
         $streamStatementProvider = $this->getStreamStatementProvider();
         $typeResults = [];
+        $weightedTypeHash = self::getWeightedTypeHash($this->streamSources);
 
         foreach ($this->streamSources as $source) {
             $statement = $streamStatementProvider->selectStreamRows(
                 $source->getType(),
-                ceil($size / $weightedTypeHashCount * $source->getWeight())
+                self::getSourceLimit($weightedTypeHash, $size, $source)
             );
 
             $statement->execute();
@@ -56,7 +50,7 @@ class StreamAggregator
         $result = [];
 
         for ($i = 0; $i < $size; $i++) {
-            $randomIndex = rand(0, $weightedTypeHashCount - 1);
+            $randomIndex = mt_rand(0, count($weightedTypeHash) - 1);
 
             if ($item = array_shift($typeResults[$weightedTypeHash[$randomIndex]])) {
                 $result[] = $item;
@@ -72,5 +66,35 @@ class StreamAggregator
     public function getStreamStatementProvider()
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());
+    }
+
+    /**
+     * Returns the weighted type hash for the specified set of sources
+     * @param StreamSourceInterface[] $sources
+     * @return string[]
+     */
+    public static function getWeightedTypeHash($sources)
+    {
+        $weightedTypeHash = [];
+
+        foreach ($sources as $source) {
+            for ($i = 0; $i < $source->getWeight(); $i++) {
+                $weightedTypeHash[] = $source->getType();
+            }
+        }
+
+        return $weightedTypeHash;
+    }
+
+    /**
+     * Returns the limit for the specified source
+     * @param string[] $weightedTypeHash
+     * @param int $size
+     * @param StreamSourceInterface $source
+     * @return int
+     */
+    public static function getSourceLimit(array &$weightedTypeHash, $size, StreamSourceInterface $source)
+    {
+        return ceil($size / count($weightedTypeHash) * $source->getWeight());
     }
 }

@@ -7,14 +7,13 @@ use Amoscato\Bundle\AppBundle\Source\AbstractSource;
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
 use PDO;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractStreamSource extends AbstractSource implements StreamSourceInterface
 {
-    const LIMIT = 100;
-
     /** @var PDOFactory */
     private $databaseFactory;
 
@@ -41,28 +40,10 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     }
 
     /**
-     * @param int $weight
-     */
-    public function setWeight($weight)
-    {
-        $this->weight = $weight;
-    }
-
-    /**
+     * Returns the maximum number of items per page
      * @return int
      */
-    public function getWeight()
-    {
-        return $this->weight;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPerPage()
-    {
-        return self::LIMIT;
-    }
+    abstract protected function getMaxPerPage();
 
     /**
      * @param int $perPage
@@ -79,20 +60,34 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     abstract protected function transform($item, OutputInterface $output);
 
     /**
-     * @param OutputInterface $output
-     * @return bool
+     * @param int $weight
      */
-    public function load(OutputInterface $output)
+    public function setWeight($weight)
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
+        $this->weight = $weight;
+    }
 
-        $iterator = new PageIterator(self::LIMIT);
+    /**
+     * @return int
+     */
+    public function getWeight()
+    {
+        return $this->weight;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(ConsoleOutput $output, $limit = 1)
+    {
+        $iterator = new PageIterator($limit);
+        $perPage = $this->getPerPage($limit);
         $values = [];
 
         $latestSourceId = $this->getLatestSourceId();
 
         while ($iterator->valid()) {
-            $items = $this->extract($this->getPerPage(), $iterator);
+            $items = $this->extract($perPage, $iterator);
 
             foreach ($items as $item) {
                 $sourceId = $this->getSourceId($item);
@@ -111,7 +106,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
                 $values = array_merge(
                     [
                         $this->getType(),
-                        $sourceId
+                        $sourceId,
                     ],
                     $transformedItem,
                     $values
@@ -220,5 +215,20 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
         return $this
             ->ftpClient
             ->upload($output, $data, $path, 'img');
+    }
+
+    /**
+     * @param int $limit
+     * @return int
+     */
+    protected function getPerPage($limit)
+    {
+        $perPage = $this->getMaxPerPage();
+
+        if ($limit < $perPage) {
+            $perPage = $limit;
+        }
+
+        return $perPage;
     }
 }

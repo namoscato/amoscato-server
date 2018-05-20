@@ -50,10 +50,7 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $this->assertSame(
-            'data',
-            $this->flickrClient->getAlbumInfoById(1)
-        );
+        $this->assertSame('data', $this->flickrClient->getAlbumInfoById(1));
     }
 
     public function test_getAlbumInfoByName_success()
@@ -81,27 +78,19 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $this->assertSame(
-            'data',
-            $this->flickrClient->getAlbumInfoByName('foo', 'bar')
-        );
+        $this->assertSame('data', $this->flickrClient->getAlbumInfoByName('foo', 'bar'));
     }
 
     public function test_getAlbumInfoByName_error()
     {
-        $this->client
+        $this
+            ->client
             ->shouldReceive('get')
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"error":"data"}'
-                    ]
-                )
-            );
+            ->andReturn(m::mock(['getBody' => '{"no_album":"value"}']));
 
         $this->assertEquals(
             (object) [
-                'error' => 'data'
+                'no_album' => 'value'
             ],
             $this->flickrClient->getAlbumInfoByName('foo', 'bar')
         );
@@ -109,7 +98,8 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
 
     public function test_getRecentTracks()
     {
-        $this->client
+        $this
+            ->client
             ->shouldReceive('get')
             ->once()
             ->with(
@@ -131,9 +121,26 @@ class LastfmClientTest extends \PHPUnit_Framework_TestCase
                 )
             );
 
-        $this->assertSame(
-            'data',
-            $this->flickrClient->getRecentTracks(1)
-        );
+        $this->assertSame('data', $this->flickrClient->getRecentTracks(1));
+    }
+
+    /**
+     * @expectedException \Amoscato\Bundle\IntegrationBundle\Exception\LastfmBadResponseException
+     * @expectedExceptionMessage foo
+     * @expectedExceptionCode 1
+     */
+    public function test_getRecentTracks_exception()
+    {
+        $this
+            ->client
+            ->shouldReceive('get')
+            ->andReturn(m::mock([
+                'getBody' => \GuzzleHttp\json_encode([
+                    'error' => 1,
+                    'message' => 'foo',
+                ])
+            ]));
+
+        $this->assertSame('data', $this->flickrClient->getRecentTracks(1));
     }
 }

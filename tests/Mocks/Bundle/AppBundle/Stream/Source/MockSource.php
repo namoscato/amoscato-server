@@ -13,6 +13,11 @@ class MockSource extends AbstractStreamSource
         return 'mockType';
     }
 
+    protected function getMaxPerPage()
+    {
+        return 100;
+    }
+
     protected function extract($perPage, PageIterator $iterator)
     {
         return $this->mockExtract($perPage, $iterator->current());

@@ -4,8 +4,8 @@ namespace Tests\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\AppBundle\Current\DrinkSource;
 use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class DrinkSourceTest extends \PHPUnit_Framework_TestCase
 {
@@ -24,7 +24,7 @@ class DrinkSourceTest extends \PHPUnit_Framework_TestCase
 
         $this->target = new DrinkSource($this->client, 'username');
 
-        $this->output = m::mock(OutputInterface::class);
+        $this->output = m::mock(ConsoleOutput::class);
     }
 
     protected function tearDown()

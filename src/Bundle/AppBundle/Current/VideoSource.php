@@ -4,8 +4,8 @@ namespace Amoscato\Bundle\AppBundle\Current;
 
 use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
 use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
+use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class VideoSource implements CurrentSourceInterface
 {
@@ -50,7 +50,7 @@ class VideoSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output)
+    public function load(ConsoleOutput $output, $limit = 1)
     {
         $youTubeResponse = $this->youTubeClient->getPlaylistItems(
             $this->youTubePlaylistId,

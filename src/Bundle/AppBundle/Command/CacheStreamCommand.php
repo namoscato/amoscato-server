@@ -39,7 +39,7 @@ class CacheStreamCommand extends Command
                 null,
                 InputOption::VALUE_REQUIRED,
                 'Number of stream items to cache',
-                1000.0
+                StreamAggregator::DEFAULT_SIZE
             );
     }
 
@@ -52,11 +52,7 @@ class CacheStreamCommand extends Command
     {
         return $this->ftpClient->upload(
             $output,
-            json_encode(
-                $this->streamAggregator->aggregate(
-                    floatval($input->getOption('size'))
-                )
-            ),
+            json_encode($this->streamAggregator->aggregate((float)$input->getOption('size'))),
             'stream.json'
         );
     }

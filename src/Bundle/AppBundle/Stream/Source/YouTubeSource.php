@@ -51,7 +51,7 @@ class YouTubeSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getPerPage()
+    protected function getMaxPerPage()
     {
         return 50;
     }
