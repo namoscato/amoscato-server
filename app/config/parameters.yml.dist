@@ -20,6 +20,7 @@ parameters:
   github_client_secret: ~
   goodreads_api_key: ~
   lastfm_api_key: ~
+  strava_access_token: ~
   twitter_bearer_token: ~
   untappd_client_id: ~
   untappd_client_secret: ~
