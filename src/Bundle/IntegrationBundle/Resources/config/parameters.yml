@@ -4,6 +4,8 @@ parameters:
   github_api_uri: https://api.github.com/
   goodreads_api_uri: https://www.goodreads.com/
   lastfm_api_uri: http://ws.audioscrobbler.com/2.0/
+  strava_activity_uri: https://www.strava.com/activities/
+  strava_api_uri: https://www.strava.com/api/v3/
   twitter_api_uri: https://api.twitter.com/1.1/
   twitter_status_uri: https://twitter.com/
   untappd_api_uri: https://api.untappd.com/v4/

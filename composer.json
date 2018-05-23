@@ -1,5 +1,6 @@
 {
     "name": "namoscato/amoscato-server",
+    "description": "Server-side processes behind amoscato.com",
     "license": "proprietary",
     "type": "project",
     "autoload": {
@@ -77,6 +78,7 @@
                 "github_client_secret": "AMOSCATO_GITHUB_CLIENT_SECRET",
                 "goodreads_api_key": "AMOSCATO_GOODREADS_API_KEY",
                 "lastfm_api_key": "AMOSCATO_LASTFM_API_KEY",
+                "strava_access_token": "AMOSCATO_STRAVA_ACCESS_TOKEN",
                 "twitter_bearer_token": "AMOSCATO_TWITTER_BEARER_TOKEN",
                 "untappd_client_id": "AMOSCATO_UNTAPPD_CLIENT_ID",
                 "untappd_client_secret": "AMOSCATO_UNTAPPD_CLIENT_SECRET",

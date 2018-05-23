@@ -35,9 +35,7 @@ class LoadCurrentItemsCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return int
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -51,10 +49,10 @@ class LoadCurrentItemsCommand extends Command
             $result[$type] = $source->load($output);
         }
 
-        return $this->ftpClient->upload(
-            $output,
-            json_encode($result),
-            'current.json'
-        );
+        if ('dev' === $input->getOption('env')) {
+            $output->writeln(var_export($result, true));
+        } else {
+            $this->ftpClient->upload($output, json_encode($result), 'current.json');
+        }
     }
 }
