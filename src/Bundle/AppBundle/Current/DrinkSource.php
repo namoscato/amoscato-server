@@ -52,7 +52,7 @@ class DrinkSource implements CurrentSourceInterface
             'brewery' => $checkin->brewery->brewery_name,
             'date' => Carbon::parse($checkin->created_at)->toDateTimeString(),
             'name' => $checkin->beer->beer_name,
-            'venue' => $checkin->venue->venue_name,
+            'venue' => empty($checkin->venue) ? null : $checkin->venue->venue_name,
             'url' => $this->client->getCheckinUrl($this->username, $checkin->checkin_id)
         ];
     }
