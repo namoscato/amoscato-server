@@ -1,31 +1,226 @@
 parameters:
   locale: 'en'
+  flickr_api_uri: https://api.flickr.com/services/rest/
+  flickr_photo_uri: https://www.flickr.com/photos/
   flickr_user_id: 91374488@N07
+  ftp_directory: /data
+  github_api_uri: https://api.github.com/
   github_client_id: d3acc90fe9b0b0064b6a
   github_username: namoscato
+  goodreads_api_uri: https://www.goodreads.com/
   goodreads_user_id: 16453252
+  lastfm_api_uri: http://ws.audioscrobbler.com/2.0/
   lastfm_user: namoscato
-  untappd_username: namoscato
+  strava_activity_uri: https://www.strava.com/activities/
+  strava_api_uri: https://www.strava.com/api/v3/
+  twitter_api_uri: https://api.twitter.com/1.1/
   twitter_screen_name: namoscato
+  twitter_status_uri: https://twitter.com/
+  untappd_api_uri: https://api.untappd.com/v4/
+  untappd_username: namoscato
+  vimeo_api_uri: https://api.vimeo.com/
+  youtube_api_uri: https://www.googleapis.com/youtube/v3/
   youtube_playlist_id: FLGxACpnRvOrg3YGcTP0rjTA
-  ftp_directory: /data
+  youtube_video_uri: https://youtu.be/
 
 services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      $currentSources: !tagged amoscato.current_source
+      $streamSources: !tagged amoscato.stream_source
 
-#  # makes classes in src/ available to be used as services
-#  # this creates a service per class whose id is the fully-qualified class name
-#  Amoscato\:
-#    resource: '../src/*'
-#    exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
-#
-#  # controllers are imported separately to make sure services can be injected
-#  # as action arguments even if you don't extend any base controller class
-#  Amoscato\Bundle\AppBundle\Controller\:
-#    resource: '../src/Bundle/AppBundle/Controller'
-#    tags: ['controller.service_arguments']
+  _instanceof:
+    Amoscato\Source\Current\CurrentSourceInterface:
+      tags: ['amoscato.current_source']
+    Amoscato\Source\Stream\StreamSourceInterface:
+      tags: ['amoscato.stream_source']
 
-  # add more service definitions when explicit configuration is needed
-  # please note that last definitions always *replace* previous ones
+  #region Resources
+  Amoscato\:
+    resource: '../src/*'
+    exclude: '../src/{DependencyInjection,Resources,Kernel.php}'
+
+  Amoscato\Controller\:
+    resource: '../src/Controller'
+    tags: ['controller.service_arguments']
+  #endregion
+
+  #region Database
+  Amoscato\Database\PDOFactory:
+    arguments:
+    - 'pgsql:host=%env(AMOSCATO_DATABASE_HOST)%;port=%env(AMOSCATO_DATABASE_PORT)%;dbname=%env(AMOSCATO_DATABASE_NAME)%'
+    - '%env(AMOSCATO_DATABASE_USER)%'
+    - '%env(AMOSCATO_DATABASE_PASSWORD)%'
+  #endregion
+
+  #region FTP
+  Amoscato\Ftp\FtpClient:
+    arguments:
+    - '%env(AMOSCATO_FTP_HOST)%'
+    - '%env(AMOSCATO_FTP_USER)%'
+    - '%env(AMOSCATO_FTP_PASSWORD)%'
+    - '%ftp_directory%'
+  #endregion
+
+  #region Current Sources
+  Amoscato\Source\Current\AthleticActivitySource:
+    arguments:
+      $activityUri: '%strava_activity_uri%'
+
+  Amoscato\Source\Current\BookSource:
+    arguments:
+      $userId: '%goodreads_user_id%'
+
+  Amoscato\Source\Current\DrinkSource:
+    arguments:
+      $username: '%untappd_username%'
+
+  Amoscato\Source\Current\MusicSource:
+    arguments:
+      $user: '%lastfm_user%'
+
+  Amoscato\Source\Current\VideoSource:
+    arguments:
+      $youTubePlaylistId: '%youtube_playlist_id%'
+      $youTubeVideoUri: '%youtube_video_uri%'
+  #endregion
+
+  #region Stream Sources
+  Amoscato\Source\Stream\FlickrSource:
+    arguments:
+      $userId: '%flickr_user_id%'
+      $photoUri: '%flickr_photo_uri%'
+    calls:
+    - [setWeight, [2]]
+
+  Amoscato\Source\Stream\GitHubSource:
+    arguments:
+      $username: '%github_username%'
+    calls:
+    - [setWeight, [3]]
+
+  Amoscato\Source\Stream\GoodreadsSource:
+    arguments:
+      $userId: '%goodreads_user_id%'
+
+  Amoscato\Source\Stream\LastfmSource:
+    arguments:
+      $user: '%lastfm_user%'
+    calls:
+    - [setWeight, [8]]
+
+  Amoscato\Source\Stream\TwitterSource:
+    class:
+    arguments:
+      $screenName: '%twitter_screen_name%'
+      $statusUri: '%twitter_status_uri%'
+    calls:
+    - [setWeight, [2]]
+
+  Amoscato\Source\Stream\UntappdSource:
+    arguments:
+      $username: '%untappd_username%'
+
+  Amoscato\Source\Stream\YouTubeSource:
+    arguments:
+      $playlistId: '%youtube_playlist_id%'
+      $videoUri: '%youtube_video_uri%'
+  #endregion
+
+  #region Guzzle Clients
+  integration.client.flickr:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%flickr_api_uri%'
+
+  integration.client.github:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%github_api_uri%'
+
+  integration.client.goodreads:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%goodreads_api_uri%'
+
+  integration.client.lastfm:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%lastfm_api_uri%'
+
+  integration.client.strava:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%strava_api_uri%'
+
+  integration.client.twitter:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%twitter_api_uri%'
+
+  integration.client.untappd:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%untappd_api_uri%'
+
+  integration.client.vimeo:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%vimeo_api_uri%'
+
+  integration.client.youtube:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%youtube_api_uri%'
+  #endregion
+
+  #region Integration Clients
+  Amoscato\Integration\Client\FlickrClient:
+    arguments:
+    - '@integration.client.flickr'
+    - '%env(AMOSCATO_FLICKR_API_KEY)%'
+
+  Amoscato\Integration\Client\GitHubClient:
+    arguments:
+    - '@integration.client.github'
+    - '%env(AMOSCATO_GITHUB_CLIENT_SECRET)%'
+    - '%github_client_id%'
+
+  Amoscato\Integration\Client\GoodreadsClient:
+    arguments:
+    - '@integration.client.goodreads'
+    - '%env(AMOSCATO_GOODREADS_API_KEY)%'
+
+  Amoscato\Integration\Client\LastfmClient:
+    arguments:
+    - '@integration.client.lastfm'
+    - '%env(AMOSCATO_LASTFM_API_KEY)%'
+
+  Amoscato\Integration\Client\StravaClient:
+    arguments:
+    - '@integration.client.strava'
+    - '%env(AMOSCATO_STRAVA_ACCESS_TOKEN)%'
+
+  Amoscato\Integration\Client\TwitterClient:
+    arguments:
+    - '@integration.client.twitter'
+    - '%env(AMOSCATO_TWITTER_BEARER_TOKEN)%'
+
+  Amoscato\Integration\Client\UntappdClient:
+    arguments:
+    - '@integration.client.untappd'
+    - '%env(AMOSCATO_UNTAPPD_CLIENT_SECRET)%'
+    - '%env(AMOSCATO_UNTAPPD_CLIENT_ID)%'
+
+  Amoscato\Integration\Client\VimeoClient:
+    arguments:
+    - '@integration.client.vimeo'
+    - '%env(AMOSCATO_VIMEO_ACCESS_TOKEN)%'
+
+  Amoscato\Integration\Client\YouTubeClient:
+    arguments:
+    - '@integration.client.youtube'
+    - '%env(AMOSCATO_YOUTUBE_API_KEY)%'
+  #endregion
