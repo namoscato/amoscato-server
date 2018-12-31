@@ -1,0 +1,70 @@
+<?php
+
+namespace Amoscato\Source\Current;
+
+use Amoscato\Integration\Client\GoodreadsClient;
+use Amoscato\Console\Output\ConsoleOutput;
+use Carbon\Carbon;
+
+class BookSource implements CurrentSourceInterface
+{
+    /** @var GoodreadsClient */
+    protected $client;
+
+    /** @var string */
+    private $userId;
+
+    /**
+     * @param GoodreadsClient $client
+     * @param string $userId
+     */
+    public function __construct(GoodreadsClient $client, $userId)
+    {
+        $this->client = $client;
+        $this->userId = $userId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getType()
+    {
+        return 'book';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function load(ConsoleOutput $output, $limit = 1)
+    {
+        $reviews = $this
+            ->client
+            ->getCurrentlyReadingBooks(
+                $this->userId,
+                [
+                    'per_page' => 1
+                ]
+            );
+
+        if ($reviews->count() === 0) {
+            return null;
+        }
+
+        $review = $reviews->first();
+
+        $startedAt = $review->filter('started_at')->text();
+
+        if (empty($startedAt)) {
+            $startedAt = $review->filter('date_added')->text();
+        }
+
+        $book = $review->filter('book');
+
+        return [
+            'author' => $book->filter('authors')->first()->filter('name')->text(),
+            'date' => Carbon::parse($startedAt)->setTimezone('UTC')->toDateTimeString(),
+            'title' => $book->filter('title')->text(),
+            'url' => $book->filter('link')->text()
+        ];
+    }
+}

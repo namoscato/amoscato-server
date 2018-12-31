@@ -1,90 +1,75 @@
 {
     "name": "namoscato/amoscato-server",
     "description": "Server-side processes behind amoscato.com",
-    "license": "proprietary",
     "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^7.1.3",
+        "ext-ctype": "*",
+        "ext-ftp": "*",
+        "ext-iconv": "*",
+        "guzzlehttp/guzzle": "^6.3",
+        "nesbot/carbon": "^2.9",
+        "sensio/framework-extra-bundle": "^5.2",
+        "symfony/apache-pack": "^1.0",
+        "symfony/console": "4.2.*",
+        "symfony/css-selector": "4.2.*",
+        "symfony/dom-crawler": "4.2.*",
+        "symfony/dotenv": "4.2.*",
+        "symfony/flex": "^1.1",
+        "symfony/framework-bundle": "4.2.*",
+        "symfony/yaml": "4.2.*"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": {
             "Amoscato\\": "src/"
-        },
-        "classmap": [
-            "app/AppKernel.php",
-            "app/AppCache.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
         }
     },
-    "require": {
-        "php": "^7.1",
-        "symfony/symfony": "3.4.*",
-        "symfony/monolog-bundle": "^3.1",
-        "symfony/polyfill-apcu": "^1.0",
-        "sensio/distribution-bundle": "^5.0.19",
-        "sensio/framework-extra-bundle": "^5.0",
-        "incenteev/composer-parameter-handler": "^2.0",
-        "guzzlehttp/guzzle": "~6.0",
-        "nesbot/carbon": "^1.21",
-        "ext-ftp": "*"
-    },
-    "require-dev": {
-        "sensio/generator-bundle": "^3.0",
-        "symfony/phpunit-bridge": "^3.0",
-        "mockery/mockery": "dev-master",
-        "squizlabs/php_codesniffer": "^3.2"
+    "replace": {
+        "paragonie/random_compat": "2.*",
+        "symfony/polyfill-ctype": "*",
+        "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php71": "*",
+        "symfony/polyfill-php70": "*",
+        "symfony/polyfill-php56": "*"
     },
     "scripts": {
+        "auto-scripts": {
+            "cache:clear": "symfony-cmd",
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+        },
         "post-install-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "@auto-scripts"
         ],
         "post-update-cmd": [
-            "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget"
+            "@auto-scripts"
         ],
-        "test": "simple-phpunit",
-        "cs": "phpcs --standard=cs-ruleset.xml"
+        "cs": "phpcs"
+    },
+    "conflict": {
+        "symfony/symfony": "*"
     },
     "extra": {
-        "symfony-app-dir": "app",
-        "symfony-bin-dir": "bin",
-        "symfony-var-dir": "var",
-        "symfony-web-dir": "web",
-        "symfony-tests-dir": "tests",
-        "symfony-assets-install": "relative",
-        "incenteev-parameters": {
-            "file": "app/config/parameters.yml",
-            "env-map": {
-                "database_host": "AMOSCATO_DATABASE_HOST",
-                "database_port": "AMOSCATO_DATABASE_PORT",
-                "database_name": "AMOSCATO_DATABASE_NAME",
-                "database_user": "AMOSCATO_DATABASE_USER",
-                "database_password": "AMOSCATO_DATABASE_PASSWORD",
-                "ftp_host": "AMOSCATO_FTP_HOST",
-                "ftp_user": "AMOSCATO_FTP_USER",
-                "ftp_password": "AMOSCATO_FTP_PASSWORD",
-                "secret": "AMOSCATO_SECRET",
-                "flickr_api_key": "AMOSCATO_FLICKR_API_KEY",
-                "github_client_secret": "AMOSCATO_GITHUB_CLIENT_SECRET",
-                "goodreads_api_key": "AMOSCATO_GOODREADS_API_KEY",
-                "lastfm_api_key": "AMOSCATO_LASTFM_API_KEY",
-                "strava_access_token": "AMOSCATO_STRAVA_ACCESS_TOKEN",
-                "twitter_bearer_token": "AMOSCATO_TWITTER_BEARER_TOKEN",
-                "untappd_client_id": "AMOSCATO_UNTAPPD_CLIENT_ID",
-                "untappd_client_secret": "AMOSCATO_UNTAPPD_CLIENT_SECRET",
-                "vimeo_access_token": "AMOSCATO_VIMEO_ACCESS_TOKEN",
-                "youtube_api_key": "AMOSCATO_YOUTUBE_API_KEY"
-            }
+        "symfony": {
+            "allow-contrib": false,
+            "require": "4.2.*"
         }
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.2",
+        "squizlabs/php_codesniffer": "^3.4",
+        "symfony/phpunit-bridge": "4.2.*",
+        "symfony/web-server-bundle": "4.2.*"
     }
 }

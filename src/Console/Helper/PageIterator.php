@@ -109,7 +109,7 @@ class PageIterator implements Iterator
 
     /**
      * Returns the internal count
-     * 
+     *
      * @return int
      */
     public function getCount()
@@ -119,7 +119,7 @@ class PageIterator implements Iterator
 
     /**
      * Sets the next page value
-     * 
+     *
      * @param mixed $value
      */
     public function setNextPageValue($value)
@@ -129,7 +129,7 @@ class PageIterator implements Iterator
 
     /**
      * Sets the valid property
-     * 
+     *
      * @param bool $isValid
      */
     public function setIsValid($isValid)

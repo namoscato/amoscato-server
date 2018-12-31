@@ -3,8 +3,9 @@
 namespace Tests\Console\Helper;
 
 use Amoscato\Console\Helper\PageIterator;
+use PHPUnit\Framework\TestCase;
 
-class PageIteratorTest extends \PHPUnit_Framework_TestCase
+class PageIteratorTest extends TestCase
 {
     public function test_limit()
     {
