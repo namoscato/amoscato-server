@@ -6,9 +6,10 @@ use Amoscato\Bundle\AppBundle\Current\BookSource;
 use Amoscato\Bundle\IntegrationBundle\Client\GoodreadsClient;
 use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
-class BookSourceTest extends \PHPUnit_Framework_TestCase
+class BookSourceTest extends TestCase
 {
     /** @var BookSource */
     private $target;

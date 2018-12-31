@@ -3,10 +3,11 @@
 namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
-use Mockery as m;
 use GuzzleHttp\Client;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class GitHubClientTest extends \PHPUnit_Framework_TestCase
+class GitHubClientTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

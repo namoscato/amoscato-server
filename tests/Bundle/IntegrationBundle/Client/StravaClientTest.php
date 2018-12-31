@@ -6,8 +6,9 @@ use Amoscato\Bundle\IntegrationBundle\Client\StravaClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class StravaClientTest extends \PHPUnit_Framework_TestCase
+class StravaClientTest extends TestCase
 {
     /** @var StravaClient */
     private $target;

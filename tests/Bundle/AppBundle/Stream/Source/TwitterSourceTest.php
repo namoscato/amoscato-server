@@ -2,15 +2,16 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\AppBundle\Stream\Source\TwitterSource;
 use Amoscato\Bundle\IntegrationBundle\Client\TwitterClient;
 use Amoscato\Console\Output\ConsoleOutput;
-use Mockery as m;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
-use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class TwitterSourceTest extends \PHPUnit_Framework_TestCase
+class TwitterSourceTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

@@ -3,10 +3,11 @@
 namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\TwitterClient;
-use Mockery as m;
 use GuzzleHttp\Client;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class TwitterClientTest extends \PHPUnit_Framework_TestCase
+class TwitterClientTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

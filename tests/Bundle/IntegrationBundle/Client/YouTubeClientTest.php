@@ -3,10 +3,11 @@
 namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
-use Mockery as m;
 use GuzzleHttp\Client;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class YouTubeClientTest extends \PHPUnit_Framework_TestCase
+class YouTubeClientTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

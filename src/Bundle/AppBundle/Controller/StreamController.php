@@ -3,11 +3,11 @@
 namespace Amoscato\Bundle\AppBundle\Controller;
 
 use Amoscato\Bundle\AppBundle\Stream\StreamAggregator;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Annotation\Route;
 
-class StreamController extends Controller
+class StreamController extends AbstractController
 {
     /**
      * @Route("/stream")

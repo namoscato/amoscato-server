@@ -3,10 +3,11 @@
 namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
-use Mockery as m;
 use GuzzleHttp\Client;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class LastfmClientTest extends \PHPUnit_Framework_TestCase
+class LastfmClientTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

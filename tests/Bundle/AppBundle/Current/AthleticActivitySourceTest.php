@@ -6,8 +6,9 @@ use Amoscato\Bundle\AppBundle\Current\AthleticActivitySource;
 use Amoscato\Bundle\IntegrationBundle\Client\StravaClient;
 use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class AthleticActivitySourceTest extends \PHPUnit_Framework_TestCase
+class AthleticActivitySourceTest extends TestCase
 {
     /** @var AthleticActivitySource */
     private $target;

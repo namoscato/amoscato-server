@@ -12,15 +12,15 @@ services:
 
   Amoscato\Database\PDOFactory:
     arguments:
-    - pgsql:host=%database_host%;port=%database_port%;dbname=%database_name%
-    - '%database_user%'
-    - '%database_password%'
+    - 'pgsql:host=%env(AMOSCATO_DATABASE_HOST)%;port=%env(AMOSCATO_DATABASE_PORT)%;dbname=%env(AMOSCATO_DATABASE_NAME)%'
+    - '%env(AMOSCATO_DATABASE_USER)%'
+    - '%env(AMOSCATO_DATABASE_PASSWORD)%'
 
   Amoscato\Bundle\AppBundle\Ftp\FtpClient:
     arguments:
-    - '%ftp_host%'
-    - '%ftp_user%'
-    - '%ftp_password%'
+    - '%env(AMOSCATO_FTP_HOST)%'
+    - '%env(AMOSCATO_FTP_USER)%'
+    - '%env(AMOSCATO_FTP_PASSWORD)%'
     - '%ftp_directory%'
 
   # Current Sources

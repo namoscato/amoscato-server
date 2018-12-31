@@ -7,12 +7,13 @@ use Amoscato\Bundle\IntegrationBundle\Client\VimeoClient;
 use Amoscato\Bundle\IntegrationBundle\Client\YouTubeClient;
 use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class VideoSourceTest extends \PHPUnit_Framework_TestCase
+class VideoSourceTest extends TestCase
 {
     /** @var VideoSource */
     private $target;

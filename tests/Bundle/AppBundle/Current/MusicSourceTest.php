@@ -6,8 +6,9 @@ use Amoscato\Bundle\AppBundle\Current\MusicSource;
 use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class MusicSourceTest extends \PHPUnit_Framework_TestCase
+class MusicSourceTest extends TestCase
 {
     /** @var MusicSource */
     private $target;

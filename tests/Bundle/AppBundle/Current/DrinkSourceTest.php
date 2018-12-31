@@ -6,8 +6,9 @@ use Amoscato\Bundle\AppBundle\Current\DrinkSource;
 use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
 use Amoscato\Console\Output\ConsoleOutput;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class DrinkSourceTest extends \PHPUnit_Framework_TestCase
+class DrinkSourceTest extends TestCase
 {
     /** @var DrinkSource */
     private $target;

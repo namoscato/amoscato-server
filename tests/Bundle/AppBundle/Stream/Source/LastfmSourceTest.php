@@ -2,15 +2,16 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\AppBundle\Stream\Source\LastfmSource;
 use Amoscato\Bundle\IntegrationBundle\Client\LastfmClient;
 use Amoscato\Console\Output\ConsoleOutput;
-use Mockery as m;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
-use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class LastfmSourceTest extends \PHPUnit_Framework_TestCase
+class LastfmSourceTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

@@ -4,8 +4,9 @@ namespace Tests\Bundle\AppBundle\Stream\Query;
 
 use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class StreamStatementProviderTest extends \PHPUnit_Framework_TestCase
+class StreamStatementProviderTest extends TestCase
 {
     /** @var m\Mock */
     private $database;

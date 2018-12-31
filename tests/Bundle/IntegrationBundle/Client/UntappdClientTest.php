@@ -3,10 +3,11 @@
 namespace Tests\Bundle\IntegrationBundle\Client;
 
 use Amoscato\Bundle\IntegrationBundle\Client\UntappdClient;
-use Mockery as m;
 use GuzzleHttp\Client;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-class UntappdClientTest extends \PHPUnit_Framework_TestCase
+class UntappdClientTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

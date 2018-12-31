@@ -2,15 +2,16 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
-use Amoscato\Console\Output\ConsoleOutput;
-use Mockery as m;
-use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
-use Amoscato\Database\PDOFactory;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\IntegrationBundle\Client\Client;
+use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Database\PDOFactory;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Tests\Mocks\Bundle\AppBundle\Stream\Source\MockSource;
 
-class AbstractStreamSourceTest extends \PHPUnit_Framework_TestCase
+class AbstractStreamSourceTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

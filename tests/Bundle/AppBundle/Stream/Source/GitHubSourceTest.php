@@ -2,18 +2,19 @@
 
 namespace Tests\Bundle\AppBundle\Stream\Source;
 
+use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
+use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
 use Amoscato\Bundle\AppBundle\Stream\Source\GitHubSource;
 use Amoscato\Bundle\IntegrationBundle\Client\GitHubClient;
 use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Database\PDOFactory;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
-use Amoscato\Database\PDOFactory;
-use Amoscato\Bundle\AppBundle\Ftp\FtpClient;
-use Amoscato\Bundle\AppBundle\Stream\Query\StreamStatementProvider;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\RequestInterface;
 
-class GitHubSourceTest extends \PHPUnit_Framework_TestCase
+class GitHubSourceTest extends TestCase
 {
     /** @var m\Mock */
     private $client;

@@ -1,0 +1,3 @@
+#index:
+#  resource: '../src/Bundle/AppBundle/Controller/StreamController'
+#  type: annotation

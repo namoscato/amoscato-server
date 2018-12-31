@@ -84,7 +84,7 @@ class GitHubSource extends AbstractStreamSource
             $response = $this->client->getCommit($item->url);
 
             if ($response->author->login !== $this->username) {
-                return false; 
+                return false;
             }
 
             return [
