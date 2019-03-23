@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
+use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Console\Output\OutputDecorator;
+use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\Client;
 use Amoscato\Source\AbstractSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Integration\Client\Client;
-use Amoscato\Console\Helper\PageIterator;
-use Amoscato\Console\Output\ConsoleOutput;
-use Amoscato\Database\PDOFactory;
 use PDO;
+use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractStreamSource extends AbstractSource implements StreamSourceInterface
@@ -40,24 +43,28 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     }
 
     /**
-     * Returns the maximum number of items per page
+     * Returns the maximum number of items per page.
+     *
      * @return int
      */
-    abstract protected function getMaxPerPage();
+    abstract protected function getMaxPerPage(): int;
 
     /**
+     * Extracts data for the specified page.
+     *
      * @param int $perPage
      * @param PageIterator $iterator
-     * @return array
+     *
+     * @return iterable
      */
-    abstract protected function extract($perPage, PageIterator $iterator);
+    abstract protected function extract($perPage, PageIterator $iterator): iterable;
 
     /**
      * @param object $item
-     * @param OutputInterface $output
+     *
      * @return array|bool
      */
-    abstract protected function transform($item, OutputInterface $output);
+    abstract protected function transform($item);
 
     /**
      * @param int $weight
@@ -70,7 +77,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * @return int
      */
-    public function getWeight()
+    public function getWeight(): int
     {
         return $this->weight;
     }
@@ -78,8 +85,10 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output, $limit = 1): bool
     {
+        $output = OutputDecorator::create($output);
+
         $iterator = new PageIterator($limit);
         $perPage = $this->getPerPage($limit);
         $values = [];
@@ -97,12 +106,13 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
                     break 2;
                 }
 
-                $transformedItem = $this->transform($item, $output);
+                $transformedItem = $this->transform($item);
 
-                if ($transformedItem === false) { // Skip select items
+                if (false === $transformedItem) { // Skip select items
                     continue;
                 }
 
+                /** @noinspection SlowArrayOperationsInLoopInspection */
                 $values = array_merge(
                     [
                         $this->getType(),
@@ -114,6 +124,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
                 $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
 
+                /** @noinspection DisconnectedForeachInstructionInspection */
                 $iterator->incrementCount();
             }
 
@@ -126,7 +137,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * @return string|null
      */
-    protected function getLatestSourceId()
+    protected function getLatestSourceId(): ?string
     {
         $statement = $this
             ->getStreamStatementProvider()
@@ -145,9 +156,10 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
     /**
      * @param object $item
+     *
      * @return string
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return (string) $item->id;
     }
@@ -155,7 +167,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * @return StreamStatementProvider
      */
-    public function getStreamStatementProvider()
+    public function getStreamStatementProvider(): StreamStatementProvider
     {
         if (null === $this->statementProvider) {
             $this->statementProvider = new StreamStatementProvider($this->databaseFactory->getInstance());
@@ -165,18 +177,17 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     }
 
     /**
-     * @param OutputInterface $output
+     * @param OutputDecorator $output
      * @param int $count
      * @param array $values
+     *
      * @return bool
      */
-    protected function insertValues(OutputInterface $output, $count, array $values)
+    protected function insertValues(OutputDecorator $output, $count, array $values): bool
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
-
         $output->writeln("Loading {$count} {$this->getType()} items");
 
-        if ($count === 0) {
+        if (0 === $count) {
             return true;
         }
 
@@ -186,9 +197,10 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
         $result = $statement->execute($values);
 
-        if ($result === false) {
+        if (false === $result) {
             $output->writeln("Error loading {$this->getType()} items");
             $output->writeDebug(var_export($statement->errorInfo(), true));
+
             return false;
         }
 
@@ -198,12 +210,13 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * @param OutputInterface $output
      * @param string $url
+     *
      * @return string
      */
-    public function cachePhoto(OutputInterface $output, $url)
+    public function cachePhoto(OutputInterface $output, $url): string
     {
         if (false === $data = file_get_contents($url)) {
-            throw new \RuntimeException("Unable to fetch photo '{$url}'");
+            throw new RuntimeException("Unable to fetch photo '{$url}'");
         }
 
         $path = sprintf(
@@ -219,9 +232,10 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
     /**
      * @param int $limit
+     *
      * @return int
      */
-    protected function getPerPage($limit)
+    protected function getPerPage($limit): int
     {
         $perPage = $this->getMaxPerPage();
 

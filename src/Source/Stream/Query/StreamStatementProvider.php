@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream\Query;
 
 class StreamStatementProvider
@@ -16,7 +18,8 @@ class StreamStatementProvider
     }
 
     /**
-     * @param integer $rowCount
+     * @param int $rowCount
+     *
      * @return \PDOStatement
      */
     public function insertRows($rowCount)
@@ -40,6 +43,7 @@ ON CONFLICT ON CONSTRAINT stream_type_source_id DO UPDATE SET
   photo_width = EXCLUDED.photo_width,
   photo_height = EXCLUDED.photo_height;
 SQL;
+
         return $this->database->prepare(
             sprintf(
                 $sql,
@@ -53,6 +57,7 @@ SQL;
 
     /**
      * @param string $type
+     *
      * @return \PDOStatement
      */
     public function selectLatestSourceId($type)
@@ -64,6 +69,7 @@ SQL;
      * @param string $type
      * @param int $limit
      * @param string $select optional
+     *
      * @return \PDOStatement
      */
     public function selectStreamRows($type, $limit, $select = '*')
@@ -86,6 +92,7 @@ SQL;
     /**
      * @param string $type
      * @param int $offset
+     *
      * @return string
      */
     public function selectCreatedDateAtOffset($type, $offset)
@@ -111,6 +118,7 @@ SQL;
     /**
      * @param string $type
      * @param string $createdAt
+     *
      * @return bool
      */
     public function deleteOldItems($type, $createdAt)

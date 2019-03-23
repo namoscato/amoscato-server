@@ -1,29 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Console\Command;
 
+use Amoscato\Console\Output\OutputDecorator;
+use Amoscato\Database\PDOFactory;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\StreamAggregator;
-use Amoscato\Database\PDOFactory;
+use Amoscato\Source\Stream\StreamSourceInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Traversable;
+use Webmozart\Assert\Assert;
 
 class TruncateStreamCommand extends Command
 {
     /** @var PDOFactory */
     private $databaseFactory;
 
-    /** @var \Amoscato\Source\Stream\StreamSourceInterface[] */
+    /** @var StreamSourceInterface[] */
     private $streamSources;
 
     /**
      * @param PDOFactory $pdoFactory
-     * @param \Traversable $streamSources
+     * @param Traversable $streamSources
      */
-    public function __construct(PDOFactory $pdoFactory, \Traversable $streamSources)
+    public function __construct(PDOFactory $pdoFactory, Traversable $streamSources)
     {
+        Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
+
         parent::__construct();
 
         $this->databaseFactory = $pdoFactory;
@@ -46,11 +54,10 @@ class TruncateStreamCommand extends Command
 
     /**
      * {@inheritdoc}
-     *
-     * @param \Amoscato\Console\Output\ConsoleOutput $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output = OutputDecorator::create($output);
         $size = $input->getOption('size');
         $statementProvider = $this->getStreamStatementProvider();
         $weightedTypeHash = StreamAggregator::getWeightedTypeHash($this->streamSources);
@@ -74,7 +81,7 @@ class TruncateStreamCommand extends Command
     /**
      * @return StreamStatementProvider
      */
-    public function getStreamStatementProvider()
+    public function getStreamStatementProvider(): StreamStatementProvider
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());
     }

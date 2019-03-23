@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Current;
 
 use Amoscato\Integration\Client\GoodreadsClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class BookSource implements CurrentSourceInterface
 {
@@ -27,7 +29,7 @@ class BookSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'book';
     }
@@ -35,18 +37,18 @@ class BookSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output): ?array
     {
         $reviews = $this
             ->client
             ->getCurrentlyReadingBooks(
                 $this->userId,
                 [
-                    'per_page' => 1
+                    'per_page' => 1,
                 ]
             );
 
-        if ($reviews->count() === 0) {
+        if (0 === $reviews->count()) {
             return null;
         }
 
@@ -64,7 +66,7 @@ class BookSource implements CurrentSourceInterface
             'author' => $book->filter('authors')->first()->filter('name')->text(),
             'date' => Carbon::parse($startedAt)->setTimezone('UTC')->toDateTimeString(),
             'title' => $book->filter('title')->text(),
-            'url' => $book->filter('link')->text()
+            'url' => $book->filter('link')->text(),
         ];
     }
 }

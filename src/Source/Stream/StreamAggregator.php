@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Source\Stream\StreamSourceInterface;
+use Traversable;
+use Webmozart\Assert\Assert;
 
 class StreamAggregator
 {
-    const DEFAULT_SIZE = 1000.0;
+    public const DEFAULT_SIZE = 1000.0;
 
     /** @var PDOFactory */
     private $databaseFactory;
@@ -18,19 +21,22 @@ class StreamAggregator
 
     /**
      * @param PDOFactory $pdoFactory
-     * @param \Traversable $streamSources
+     * @param Traversable $streamSources
      */
-    public function __construct(PDOFactory $pdoFactory, \Traversable $streamSources)
+    public function __construct(PDOFactory $pdoFactory, Traversable $streamSources)
     {
+        Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
+
         $this->databaseFactory = $pdoFactory;
         $this->streamSources = $streamSources;
     }
 
     /**
      * @param float $size optional
+     *
      * @return array
      */
-    public function aggregate($size = self::DEFAULT_SIZE)
+    public function aggregate($size = self::DEFAULT_SIZE): array
     {
         $streamStatementProvider = $this->getStreamStatementProvider();
         $typeResults = [];
@@ -49,7 +55,7 @@ class StreamAggregator
 
         $result = [];
 
-        for ($i = 0; $i < $size; $i++) {
+        for ($i = 0; $i < $size; ++$i) {
             $randomIndex = mt_rand(0, count($weightedTypeHash) - 1);
 
             if ($item = array_shift($typeResults[$weightedTypeHash[$randomIndex]])) {
@@ -63,22 +69,24 @@ class StreamAggregator
     /**
      * @return StreamStatementProvider
      */
-    public function getStreamStatementProvider()
+    public function getStreamStatementProvider(): StreamStatementProvider
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());
     }
 
     /**
-     * Returns the weighted type hash for the specified set of sources
+     * Returns the weighted type hash for the specified set of sources.
+     *
      * @param StreamSourceInterface[] $sources
+     *
      * @return string[]
      */
-    public static function getWeightedTypeHash($sources)
+    public static function getWeightedTypeHash($sources): array
     {
         $weightedTypeHash = [];
 
         foreach ($sources as $source) {
-            for ($i = 0; $i < $source->getWeight(); $i++) {
+            for ($i = 0; $i < $source->getWeight(); ++$i) {
                 $weightedTypeHash[] = $source->getType();
             }
         }
@@ -87,13 +95,15 @@ class StreamAggregator
     }
 
     /**
-     * Returns the limit for the specified source
+     * Returns the limit for the specified source.
+     *
      * @param string[] $weightedTypeHash
      * @param int $size
      * @param StreamSourceInterface $source
-     * @return int
+     *
+     * @return float
      */
-    public static function getSourceLimit(array &$weightedTypeHash, $size, StreamSourceInterface $source)
+    public static function getSourceLimit(array &$weightedTypeHash, $size, StreamSourceInterface $source): float
     {
         return ceil($size / count($weightedTypeHash) * $source->getWeight());
     }

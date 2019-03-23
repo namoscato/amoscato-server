@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\YouTubeClient;
 use GuzzleHttp\Client;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class YouTubeClientTest extends TestCase
+class YouTubeClientTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,11 +24,6 @@ class YouTubeClientTest extends TestCase
         $this->youtubeClient = new YouTubeClient($this->client, 'key');
     }
 
-    protected function tearDown()
-    {
-        m::close();
-    }
-
     public function test_getPublicPhotos()
     {
         $this->client
@@ -38,21 +35,21 @@ class YouTubeClientTest extends TestCase
                     'query' => [
                         'key' => 'key',
                         'part' => 'snippet',
-                        'playlistId' => 1
-                    ]
+                        'playlistId' => 1,
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => '{"key":"value"}'
+                        'getBody' => '{"key":"value"}',
                     ]
                 )
             );
 
         $this->assertEquals(
             (object) [
-                'key' => 'value'
+                'key' => 'value',
             ],
             $this->youtubeClient->getPlaylistItems(1)
         );

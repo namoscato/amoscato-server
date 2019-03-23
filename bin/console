@@ -1,10 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Debug\Debug;
 
 set_time_limit(0);
@@ -27,7 +28,7 @@ if ($input->hasParameterOption('--no-debug', true)) {
     putenv('APP_DEBUG='.$_SERVER['APP_DEBUG'] = $_ENV['APP_DEBUG'] = '0');
 }
 
-$output = new ConsoleOutput();
+$output = OutputDecorator::create(new ConsoleOutput());
 
 require dirname(__DIR__).'/config/bootstrap.php';
 

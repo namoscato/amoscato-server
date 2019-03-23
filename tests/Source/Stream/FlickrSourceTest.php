@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Source\Stream\FlickrSource;
-use Amoscato\Integration\Client\FlickrClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\FlickrClient;
+use Amoscato\Source\Stream\FlickrSource;
+use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class FlickrSourceTest extends TestCase
+class FlickrSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,13 +25,13 @@ class FlickrSourceTest extends TestCase
     /** @var FlickrSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
-    
+
     protected function setUp()
     {
         $this->client = m::mock(FlickrClient::class);
-        
+
         $this->source = m::mock(
             sprintf('%s[getStreamStatementProvider]', FlickrSource::class),
             [
@@ -46,20 +49,7 @@ class FlickrSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeDebug' => null,
-                'writeln' => null,
-                'writeVerbose' => null
-            ]
-        );
-    }
-
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -68,8 +58,8 @@ class FlickrSourceTest extends TestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('flickr')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -77,7 +67,7 @@ class FlickrSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '10'
+                                'source_id' => '10',
                             ]
                         );
                 })
@@ -90,7 +80,7 @@ class FlickrSourceTest extends TestCase
                 [
                     'extras' => 'url_m,path_alias,date_upload',
                     'page' => 1,
-                    'per_page' => 100
+                    'per_page' => 100,
                 ]
             )
             ->andReturn(
@@ -102,8 +92,8 @@ class FlickrSourceTest extends TestCase
                         'height_m' => 'h',
                         'title' => 'photo',
                         'pathalias' => 'user',
-                        'dateupload' => '1463341026'
-                    ]
+                        'dateupload' => '1463341026',
+                    ],
                 ]
             )
             ->shouldReceive('getPublicPhotos')
@@ -114,8 +104,8 @@ class FlickrSourceTest extends TestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;

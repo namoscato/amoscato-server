@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\GitHubClient;
 use GuzzleHttp\Client;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class GitHubClientTest extends TestCase
+class GitHubClientTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,11 +24,6 @@ class GitHubClientTest extends TestCase
         $this->gitHubClient = new GitHubClient($this->client, 'secret', 'id');
     }
 
-    protected function tearDown()
-    {
-        m::close();
-    }
-
     public function test_getUserEvents()
     {
         $this->client
@@ -37,24 +34,19 @@ class GitHubClientTest extends TestCase
                 [
                     'query' => [
                         'client_id' => 'id',
-                        'client_secret' => 'secret'
-                    ]
+                        'client_secret' => 'secret',
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => '{"key":"data"}'
+                        'getBody' => '["data"]',
                     ]
                 )
             );
 
-        $this->assertEquals(
-            (object) [
-                'key' => 'data'
-            ],
-            $this->gitHubClient->getUserEvents(1)
-        );
+        $this->assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
     }
 
     public function test_getCommit()
@@ -67,21 +59,21 @@ class GitHubClientTest extends TestCase
                 [
                     'query' => [
                         'client_id' => 'id',
-                        'client_secret' => 'secret'
-                    ]
+                        'client_secret' => 'secret',
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => '{"key":"data"}'
+                        'getBody' => '{"key":"data"}',
                     ]
                 )
             );
 
         $this->assertEquals(
             (object) [
-                'key' => 'data'
+                'key' => 'data',
             ],
             $this->gitHubClient->getCommit('github.com')
         );

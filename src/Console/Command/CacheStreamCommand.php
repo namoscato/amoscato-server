@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Console\Command;
 
 use Amoscato\Ftp\FtpClient;
@@ -29,7 +31,10 @@ class CacheStreamCommand extends Command
         $this->ftpClient = $ftpClient;
     }
 
-    protected function configure()
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure(): void
     {
         $this
             ->setName('amoscato:stream:cache')
@@ -44,15 +49,13 @@ class CacheStreamCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @return integer
+     * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        return $this->ftpClient->upload(
+        $this->ftpClient->upload(
             $output,
-            json_encode($this->streamAggregator->aggregate((float)$input->getOption('size'))),
+            json_encode($this->streamAggregator->aggregate((float) $input->getOption('size'))),
             'stream.json'
         );
     }

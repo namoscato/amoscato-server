@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
+use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\YouTubeClient;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\YouTubeSource;
-use Amoscato\Integration\Client\YouTubeClient;
-use Amoscato\Console\Output\ConsoleOutput;
-use Amoscato\Database\PDOFactory;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class YouTubeSourceTest extends TestCase
+class YouTubeSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,13 +25,13 @@ class YouTubeSourceTest extends TestCase
     /** @var YouTubeSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
-    
+
     protected function setUp()
     {
         $this->client = m::mock(YouTubeClient::class);
-        
+
         $this->source = m::mock(
             sprintf('%s[getStreamStatementProvider]', YouTubeSource::class),
             [
@@ -36,7 +39,7 @@ class YouTubeSourceTest extends TestCase
                 m::mock(FtpClient::class),
                 $this->client,
                 10,
-                'youtube.com/'
+                'youtube.com/',
             ]
         );
 
@@ -46,20 +49,7 @@ class YouTubeSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeDebug' => null,
-                'writeln' => null,
-                'writeVerbose' => null,
-            ]
-        );
-    }
-
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -68,8 +58,8 @@ class YouTubeSourceTest extends TestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('youtube')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -77,7 +67,7 @@ class YouTubeSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '10'
+                                'source_id' => '10',
                             ]
                         );
                 })
@@ -90,7 +80,7 @@ class YouTubeSourceTest extends TestCase
                 10,
                 [
                     'maxResults' => 50,
-                    'pageToken' => null
+                    'pageToken' => null,
                 ]
             )
             ->andReturn(
@@ -105,23 +95,23 @@ class YouTubeSourceTest extends TestCase
                                     'medium' => (object) [
                                         'url' => 'img.jpg',
                                         'width' => 100,
-                                        'height' => 300
-                                    ]
+                                        'height' => 300,
+                                    ],
                                 ],
                                 'resourceId' => (object) [
-                                    'videoId' => 123
-                                ]
-                            ]
+                                    'videoId' => '123',
+                                ],
+                            ],
                         ],
                         (object) [
                             'snippet' => (object) [
                                 'title' => 'video title',
                                 'resourceId' => (object) [
-                                    'videoId' => 123
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'videoId' => '123',
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             );
 
@@ -133,13 +123,13 @@ class YouTubeSourceTest extends TestCase
                 10,
                 [
                     'maxResults' => 50,
-                    'pageToken' => 'next1'
+                    'pageToken' => 'next1',
                 ]
             )
             ->andReturn(
                 (object) [
                     'nextPageToken' => 'next2',
-                    'items' => []
+                    'items' => [],
                 ]
             );
 
@@ -148,15 +138,15 @@ class YouTubeSourceTest extends TestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
                             'youtube',
-                            123,
+                            '123',
                             'video title',
                             'youtube.com/123',
                             '2018-05-13 12:00:00',

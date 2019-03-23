@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
+use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Console\Output\OutputDecorator;
+use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\GitHubClient;
-use Amoscato\Console\Helper\PageIterator;
-use Amoscato\Console\Output\ConsoleOutput;
-use Amoscato\Database\PDOFactory;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,7 +41,7 @@ class GitHubSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'github';
     }
@@ -47,28 +49,26 @@ class GitHubSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 30;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         $page = $iterator->current();
 
         $response = $this->client->getUserEvents(
             $this->username,
             [
-                'page' => $page
+                'page' => $page,
             ]
         );
 
-        if ($page === GitHubClient::MAX_EVENT_PAGES) {
+        if (GitHubClient::MAX_EVENT_PAGES === $page) {
             $iterator->setIsValid(false);
         }
 
@@ -78,7 +78,7 @@ class GitHubSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item)
     {
         try {
             $response = $this->client->getCommit($item->url);
@@ -93,7 +93,7 @@ class GitHubSource extends AbstractStreamSource
                 Carbon::parse($response->commit->author->date)->toDateTimeString(),
                 null,
                 null,
-                null
+                null,
             ];
         } catch (ClientException $e) { // Gracefully handle client exceptions (i.e. 404)
             return false;
@@ -103,8 +103,10 @@ class GitHubSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output, $limit = 1): bool
     {
+        $output = OutputDecorator::create($output);
+
         $iterator = new PageIterator($limit);
 
         $commitHashes = [];
@@ -116,13 +118,13 @@ class GitHubSource extends AbstractStreamSource
             $items = $this->extract($this->getPerPage($limit), $iterator);
 
             foreach ($items as $item) {
-                if ($item->type !== GitHubClient::EVENT_TYPE_PUSH) {
+                if (GitHubClient::EVENT_TYPE_PUSH !== $item->type) {
                     continue;
                 }
 
                 $commitCount = count($item->payload->commits) - 1;
 
-                for ($i = $commitCount; $i >= 0; $i--) { // Iterate through push event commits in decreasing chronological order
+                for ($i = $commitCount; $i >= 0; --$i) { // Iterate through push event commits in decreasing chronological order
                     $hash = $this->getSourceId($item->payload->commits[$i]);
 
                     if (isset($commitHashes[$hash])) { // Skip duplicate commits
@@ -136,12 +138,13 @@ class GitHubSource extends AbstractStreamSource
                         break 3;
                     }
 
-                    $transformedCommit = $this->transform($item->payload->commits[$i], $output);
+                    $transformedCommit = $this->transform($item->payload->commits[$i]);
 
-                    if ($transformedCommit === false) { // Skip select items
+                    if (false === $transformedCommit) { // Skip select items
                         continue;
                     }
 
+                    /** @noinspection SlowArrayOperationsInLoopInspection */
                     $values = array_merge(
                         [
                             $this->getType(),
@@ -164,10 +167,9 @@ class GitHubSource extends AbstractStreamSource
     }
 
     /**
-     * @param object $item
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return $item->sha;
     }

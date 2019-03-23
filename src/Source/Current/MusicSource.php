@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Current;
 
 use Amoscato\Integration\Client\LastfmClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class MusicSource implements CurrentSourceInterface
 {
@@ -27,7 +29,7 @@ class MusicSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'music';
     }
@@ -35,15 +37,9 @@ class MusicSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output): ?array
     {
-        $tracks = $this->client->getRecentTracks(
-            $this->user,
-            [
-                'limit' => 2
-            ]
-        );
-
+        $tracks = $this->client->getRecentTracks($this->user, ['limit' => 2]);
         $i = 0;
 
         do {
@@ -57,7 +53,7 @@ class MusicSource implements CurrentSourceInterface
                     'artist' => $track->artist->{'#text'},
                     'date' => $date->toDateTimeString(),
                     'name' => $track->name,
-                    'url' => $track->url
+                    'url' => $track->url,
                 ];
             }
         } while (isset($tracks[++$i]));

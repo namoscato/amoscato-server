@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Integration\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
 
 class GitHubClient extends Client
 {
-    const EVENT_TYPE_PUSH = 'PushEvent';
-    const MAX_EVENT_PAGES = 10;
+    public const EVENT_TYPE_PUSH = 'PushEvent';
+    public const MAX_EVENT_PAGES = 10;
 
     /** @var string */
     private $clientId;
@@ -26,11 +28,13 @@ class GitHubClient extends Client
 
     /**
      * @see https://developer.github.com/v3/activity/events/#list-events-performed-by-a-user
+     *
      * @param string $username
      * @param array $args optional
+     *
      * @return array
      */
-    public function getUserEvents($username, array $args = [])
+    public function getUserEvents($username, array $args = []): array
     {
         return $this->get(
             "users/{$username}/events",
@@ -40,7 +44,9 @@ class GitHubClient extends Client
 
     /**
      * @see https://developer.github.com/v3/git/commits/#get-a-commit
+     *
      * @param string $commitUrl
+     *
      * @return object
      */
     public function getCommit($commitUrl)
@@ -51,6 +57,7 @@ class GitHubClient extends Client
     /**
      * @param string $uri
      * @param array $args optional
+     *
      * @return mixed
      */
     private function get($uri, array $args = [])
@@ -62,12 +69,12 @@ class GitHubClient extends Client
                     $args,
                     [
                         'client_id' => $this->clientId,
-                        'client_secret' => $this->apiKey
+                        'client_secret' => $this->apiKey,
                     ]
-                )
+                ),
             ]
         );
 
-        return json_decode($response->getBody());
+        return \GuzzleHttp\json_decode($response->getBody());
     }
 }

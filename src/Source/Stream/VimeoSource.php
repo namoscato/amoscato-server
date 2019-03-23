@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Integration\Client\VimeoClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\VimeoClient;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @property VimeoClient $client
@@ -30,7 +31,7 @@ class VimeoSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'vimeo';
     }
@@ -38,38 +39,34 @@ class VimeoSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 50;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         $response = $this->client->getLikes(
             [
                 'page' => $iterator->current(),
-                'per_page' => $perPage
+                'per_page' => $perPage,
             ]
         );
 
         if (!isset($response->paging->next)) {
             $iterator->setIsValid(false);
         }
-        
+
         return $response->data;
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item): array
     {
         $image = $item->pictures->sizes[2];
 
@@ -79,15 +76,14 @@ class VimeoSource extends AbstractStreamSource
             Carbon::parse($item->metadata->interactions->like->added_time)->toDateTimeString(),
             $image->link,
             $image->width,
-            $image->height
+            $image->height,
         ];
     }
 
     /**
-     * @param object $item
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return substr($item->uri, 8); // Remove "/videos/" prefix
     }

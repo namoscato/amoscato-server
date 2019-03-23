@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\UntappdClient;
 use GuzzleHttp\Client;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class UntappdClientTest extends TestCase
+class UntappdClientTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -20,11 +22,6 @@ class UntappdClientTest extends TestCase
         $this->client = m::mock(Client::class);
 
         $this->untappdClient = new UntappdClient($this->client, 'key', 'client');
-    }
-
-    protected function tearDown()
-    {
-        m::close();
     }
 
     public function test_getBadgeUrl()
@@ -54,14 +51,14 @@ class UntappdClientTest extends TestCase
                     'query' => [
                         'client_id' => 'client',
                         'client_secret' => 'key',
-                        'limit' => 1
-                    ]
+                        'limit' => 1,
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => '{"response":"data"}'
+                        'getBody' => '{"response":"data"}',
                     ]
                 )
             );
@@ -71,7 +68,7 @@ class UntappdClientTest extends TestCase
             $this->untappdClient->getUserBadges(
                 'username',
                 [
-                    'limit' => 1
+                    'limit' => 1,
                 ]
             )
         );
@@ -87,14 +84,14 @@ class UntappdClientTest extends TestCase
                 [
                     'query' => [
                         'client_id' => 'client',
-                        'client_secret' => 'key'
-                    ]
+                        'client_secret' => 'key',
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => '{"response":"data"}'
+                        'getBody' => '{"response":"data"}',
                     ]
                 )
             );

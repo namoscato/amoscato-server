@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Source\Stream\GitHubSource;
-use Amoscato\Integration\Client\GitHubClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\GitHubClient;
+use Amoscato\Source\Stream\GitHubSource;
+use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Http\Message\RequestInterface;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class GitHubSourceTest extends TestCase
+class GitHubSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -25,7 +28,7 @@ class GitHubSourceTest extends TestCase
     /** @var GitHubSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
@@ -38,7 +41,7 @@ class GitHubSourceTest extends TestCase
                 m::mock(PDOFactory::class),
                 m::mock(FtpClient::class),
                 $this->client,
-                'username'
+                'username',
             ]
         );
 
@@ -48,21 +51,14 @@ class GitHubSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeDebug' => null,
-                'writeln' => null,
-                'writeVerbose' => null
-            ]
-        );
+        $this->output = new NullOutput();
 
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('github')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -70,17 +66,11 @@ class GitHubSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => 100
+                                'source_id' => '100',
                             ]
                         );
                 })
             );
-    }
-
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
     }
 
     public function test_load_with_empty_values()
@@ -90,7 +80,7 @@ class GitHubSourceTest extends TestCase
             ->with(
                 'username',
                 [
-                    'page' => 1
+                    'page' => 1,
                 ]
             )
             ->andReturn([]);
@@ -109,7 +99,7 @@ class GitHubSourceTest extends TestCase
             ->with(
                 'username',
                 [
-                    'page' => 1
+                    'page' => 1,
                 ]
             )
             ->andReturn(
@@ -119,40 +109,40 @@ class GitHubSourceTest extends TestCase
                         'payload' => (object) [
                             'commits' => [
                                 (object) [
-                                    'sha' => 4,
+                                    'sha' => '4',
                                     'url' => 'api.github.com/4',
-                                    'message' => 'message 4'
-                                ]
-                            ]
-                        ]
+                                    'message' => 'message 4',
+                                ],
+                            ],
+                        ],
                     ],
                     (object) [
-                        'type' => 'AnotherEvent'
+                        'type' => 'AnotherEvent',
                     ],
                     (object) [
                         'type' => 'PushEvent',
                         'payload' => (object) [
                             'commits' => [
                                 (object) [
-                                    'sha' => 2,
+                                    'sha' => '2',
                                     'url' => 'api.github.com/2',
-                                    'message' => "message 2\nwith newlines"
+                                    'message' => "message 2\nwith newlines",
                                 ],
                                 (object) [
-                                    'sha' => 3,
+                                    'sha' => '3',
                                     'url' => 'api.github.com/3',
-                                    'message' => 'message 3'
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'message' => 'message 3',
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             )
             ->shouldReceive('getUserEvents')
             ->with(
                 'username',
                 [
-                    'page' => 2
+                    'page' => 2,
                 ]
             )
             ->andReturn(
@@ -162,23 +152,23 @@ class GitHubSourceTest extends TestCase
                         'payload' => (object) [
                             'commits' => [
                                 (object) [
-                                    'sha' => 0,
+                                    'sha' => '0',
                                     'url' => 'api.github.com/0',
-                                    'message' => 'message 0'
+                                    'message' => 'message 0',
                                 ],
                                 (object) [
-                                    'sha' => 1,
+                                    'sha' => '1',
                                     'url' => 'api.github.com/1',
-                                    'message' => 'message 1'
+                                    'message' => 'message 1',
                                 ],
                                 (object) [
-                                    'sha' => 2,
+                                    'sha' => '2',
                                     'url' => 'api.github.com/2',
-                                    'message' => "message 2\nwith newlines"
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'message' => "message 2\nwith newlines",
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             )
             ->shouldReceive('getUserEvents')
@@ -201,14 +191,14 @@ class GitHubSourceTest extends TestCase
             ->andReturn(
                 (object) [
                     'author' => (object) [
-                        'login' => 'username'
+                        'login' => 'username',
                     ],
                     'commit' => (object) [
                         'author' => (object) [
-                            'date' => '2016-05-17 21:00:00'
-                        ]
+                            'date' => '2016-05-17 21:00:00',
+                        ],
                     ],
-                    'html_url' => 'github.com/1'
+                    'html_url' => 'github.com/1',
                 ]
             );
 
@@ -218,14 +208,14 @@ class GitHubSourceTest extends TestCase
             ->andReturn(
                 (object) [
                     'author' => (object) [
-                        'login' => 'username'
+                        'login' => 'username',
                     ],
                     'commit' => (object) [
                         'author' => (object) [
-                            'date' => '2016-05-17 22:00:00'
-                        ]
+                            'date' => '2016-05-17 22:00:00',
+                        ],
                     ],
-                    'html_url' => 'github.com/2'
+                    'html_url' => 'github.com/2',
                 ]
             );
 
@@ -235,8 +225,8 @@ class GitHubSourceTest extends TestCase
             ->andReturn(
                 (object) [
                     'author' => (object) [
-                        'login' => 'another user'
-                    ]
+                        'login' => 'another user',
+                    ],
                 ]
             );
 
@@ -246,14 +236,14 @@ class GitHubSourceTest extends TestCase
             ->andReturn(
                 (object) [
                     'author' => (object) [
-                        'login' => 'username'
+                        'login' => 'username',
                     ],
                     'commit' => (object) [
                         'author' => (object) [
-                            'date' => '2016-05-17 23:00:00'
-                        ]
+                            'date' => '2016-05-17 23:00:00',
+                        ],
                     ],
-                    'html_url' => 'github.com/4'
+                    'html_url' => 'github.com/4',
                 ]
             );
 
@@ -261,14 +251,14 @@ class GitHubSourceTest extends TestCase
             ->shouldReceive('insertRows')
             ->with(3)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
                         ->with(m::mustBe([
                             'github',
-                            1,
+                            '1',
                             'message 1',
                             'github.com/1',
                             '2016-05-17 21:00:00',
@@ -277,7 +267,7 @@ class GitHubSourceTest extends TestCase
                             null,
 
                             'github',
-                            2,
+                            '2',
                             'message 2',
                             'github.com/2',
                             '2016-05-17 22:00:00',
@@ -286,7 +276,7 @@ class GitHubSourceTest extends TestCase
                             null,
 
                             'github',
-                            4,
+                            '4',
                             'message 4',
                             'github.com/4',
                             '2016-05-17 23:00:00',
@@ -295,7 +285,6 @@ class GitHubSourceTest extends TestCase
                             null,
                         ]))
                         ->andReturn(true);
-
                 })
             );
 
@@ -313,23 +302,23 @@ class GitHubSourceTest extends TestCase
                         'payload' => (object) [
                             'commits' => [
                                 (object) [
-                                    'sha' => 99,
+                                    'sha' => '99',
                                     'url' => 'api.github.com/99',
-                                    'message' => 'message 99'
+                                    'message' => 'message 99',
                                 ],
                                 (object) [
-                                    'sha' => 100,
+                                    'sha' => '100',
                                     'url' => 'api.github.com/100',
-                                    'message' => 'message 100'
+                                    'message' => 'message 100',
                                 ],
                                 (object) [
-                                    'sha' => 101,
+                                    'sha' => '101',
                                     'url' => 'api.github.com/101',
-                                    'message' => 'message 101'
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'message' => 'message 101',
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             );
 
@@ -339,14 +328,14 @@ class GitHubSourceTest extends TestCase
             ->andReturn(
                 (object) [
                     'author' => (object) [
-                        'login' => 'username'
+                        'login' => 'username',
                     ],
                     'commit' => (object) [
                         'author' => (object) [
-                            'date' => '2016-05-17 23:00:00'
-                        ]
+                            'date' => '2016-05-17 23:00:00',
+                        ],
                     ],
-                    'html_url' => 'github.com/101'
+                    'html_url' => 'github.com/101',
                 ]
             );
 
@@ -354,14 +343,14 @@ class GitHubSourceTest extends TestCase
             ->shouldReceive('insertRows')
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
                         ->with(m::mustBe([
                             'github',
-                            101,
+                            '101',
                             'message 101',
                             'github.com/101',
                             '2016-05-17 23:00:00',
@@ -381,20 +370,20 @@ class GitHubSourceTest extends TestCase
 
         $this->client
             ->shouldReceive('getUserEvents')
-            ->andReturnUsing(function() use (&$count) {
+            ->andReturnUsing(function () use (&$count) {
                 return [
                     (object) [
                         'type' => 'PushEvent',
                         'payload' => (object) [
                             'commits' => [
                                 (object) [
-                                    'sha' => ++$count,
+                                    'sha' => (string) ++$count,
                                     'url' => "api.github.com/{$count}",
-                                    'message' => "message {$count}"
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'message' => "message {$count}",
+                                ],
+                            ],
+                        ],
+                    ],
                 ];
             });
 
@@ -403,14 +392,14 @@ class GitHubSourceTest extends TestCase
             ->andReturn(
                 (object) [
                     'author' => (object) [
-                        'login' => 'username'
+                        'login' => 'username',
                     ],
                     'commit' => (object) [
                         'author' => (object) [
-                            'date' => '2016-05-17 23:00:00'
-                        ]
+                            'date' => '2016-05-17 23:00:00',
+                        ],
                     ],
-                    'html_url' => 'github.com/x'
+                    'html_url' => 'github.com/x',
                 ]
             );
 
@@ -419,8 +408,8 @@ class GitHubSourceTest extends TestCase
             ->once()
             ->with(10)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')

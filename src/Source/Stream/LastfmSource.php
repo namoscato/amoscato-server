@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
+use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Console\Output\OutputDecorator;
+use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\LastfmClient;
-use Amoscato\Console\Helper\PageIterator;
-use Amoscato\Console\Output\ConsoleOutput;
-use Amoscato\Database\PDOFactory;
+use Amoscato\Integration\Exception\LastfmBadResponseException;
 use Carbon\Carbon;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -42,7 +45,7 @@ class LastfmSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'lastfm';
     }
@@ -50,33 +53,29 @@ class LastfmSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 1000;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator optional
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         return $this->client->getRecentTracks(
             $this->user,
             [
                 'limit' => $perPage,
-                'page' => $iterator->current()
+                'page' => $iterator->current(),
             ]
         );
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item)
     {
         $albumId = $this->getAlbumId($item);
 
@@ -86,13 +85,25 @@ class LastfmSource extends AbstractStreamSource
         if (isset($this->albumInfo[$albumId])) {
             $album = $this->albumInfo[$albumId];
         } else {
-            if (empty($item->album->mbid)) {
-                $album = $this->client->getAlbumInfoByName($artistName, $albumName);
-            } else {
-                $album = $this->client->getAlbumInfoById($item->album->mbid);
+            try {
+                if (empty($item->album->mbid)) {
+                    $album = $this->client->getAlbumInfoByName($artistName, $albumName);
+                } else {
+                    $album = $this->client->getAlbumInfoById($item->album->mbid);
+                }
+            } catch (LastfmBadResponseException $exception) {
+                if (LastfmBadResponseException::CODE_INVALID_PARAMETERS !== $exception->getCode()) {
+                    throw $exception;
+                }
+
+                $album = false; // gracefully handle not found albums
             }
 
             $this->albumInfo[$albumId] = $album; // Cache album info
+        }
+
+        if (false === $album) {
+            return false;
         }
 
         $imageUrl = null;
@@ -111,15 +122,17 @@ class LastfmSource extends AbstractStreamSource
             Carbon::createFromTimestampUTC($item->date->uts)->toDateTimeString(),
             $imageUrl,
             $imageWidth,
-            $imageHeight
+            $imageHeight,
         ];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output, $limit = 1): bool
     {
+        $output = OutputDecorator::create($output);
+
         $iterator = new PageIterator($limit);
         $previousAlbumId = null;
         $previousTrack = null;
@@ -138,7 +151,7 @@ class LastfmSource extends AbstractStreamSource
 
                 $albumId = $this->getAlbumId($track);
 
-                if ($previousAlbumId !== null && $previousAlbumId !== $albumId) { // Skip adjacent tracks on the same album
+                if (null !== $previousAlbumId && $previousAlbumId !== $albumId) { // Skip adjacent tracks on the same album
                     $sourceId = $this->getSourceId($previousTrack);
 
                     if ($latestSourceId === $sourceId) { // Break if item is already in database
@@ -146,12 +159,21 @@ class LastfmSource extends AbstractStreamSource
                         break 2;
                     }
 
+                    var_dump($previousTrack);
+
+                    $transformedTrack = $this->transform($previousTrack);
+
+                    if (false === $transformedTrack) {
+                        continue; // skip not found albums
+                    }
+
+                    /** @noinspection SlowArrayOperationsInLoopInspection */
                     $values = array_merge(
                         [
                             $this->getType(),
-                            $sourceId
+                            $sourceId,
                         ],
-                        $this->transform($previousTrack, $output),
+                        $transformedTrack,
                         $values
                     );
 
@@ -175,9 +197,10 @@ class LastfmSource extends AbstractStreamSource
     /**
      * @param object $track
      * @param bool $isUnique optional
+     *
      * @return string
      */
-    private function getAlbumId($track, $isUnique = false)
+    private function getAlbumId($track, $isUnique = false): string
     {
         if (empty($track->album->mbid)) {
             $albumId = $track->album->{'#text'};
@@ -193,10 +216,9 @@ class LastfmSource extends AbstractStreamSource
     }
 
     /**
-     * @param object $item
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return $this->getAlbumId($item, true);
     }

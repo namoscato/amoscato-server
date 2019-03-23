@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Ftp;
 
+use Amoscato\Console\Output\OutputDecorator;
+use Exception;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -38,11 +42,12 @@ class FtpClient
      * @param string $data
      * @param string $fileName
      * @param string $directory
+     *
      * @return string Remote path of uploaded file
      */
-    public function upload(OutputInterface $output, $data, $fileName, $directory = null)
+    public function upload(OutputInterface $output, $data, $fileName, $directory = null): string
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
+        $output = OutputDecorator::create($output);
 
         if (!$connectionId = ftp_connect($this->ftpHost)) {
             throw new RuntimeException('Unable to connect to FTP server.');
@@ -62,7 +67,7 @@ class FtpClient
 
         $output->writeVerbose(sprintf('Writing to file %s...', $filePath));
 
-        if (!$handle = fopen($filePath, 'w')) {
+        if (!$handle = fopen($filePath, 'wb')) {
             throw new RuntimeException('Error opening file.');
         }
 
@@ -87,7 +92,7 @@ class FtpClient
                 $output->writeVerbose("Changing to directory {$directory}...");
 
                 ftp_chdir($connectionId, $directory);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $output->writeVerbose("Creating directory {$directory}...");
 
                 if (!ftp_mkdir($connectionId, $directory)) {

@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Current;
 
-use Amoscato\Source\Current\MusicSource;
 use Amoscato\Integration\Client\LastfmClient;
-use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Source\Current\MusicSource;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class MusicSourceTest extends TestCase
+class MusicSourceTest extends MockeryTestCase
 {
     /** @var MusicSource */
     private $target;
@@ -16,7 +19,7 @@ class MusicSourceTest extends TestCase
     /** @var m\Mock */
     private $client;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
@@ -25,12 +28,7 @@ class MusicSourceTest extends TestCase
 
         $this->target = new MusicSource($this->client, 1);
 
-        $this->output = m::mock(ConsoleOutput::class);
-    }
-
-    protected function tearDown()
-    {
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -41,29 +39,29 @@ class MusicSourceTest extends TestCase
             ->with(
                 1,
                 [
-                    'limit' => 2
+                    'limit' => 2,
                 ]
             )
             ->andReturn(
                 [
                     (object) [
                         'artist' => (object) [
-                            '#text' => ''
-                        ]
+                            '#text' => '',
+                        ],
                     ],
                     (object) [
                         'album' => (object) [
-                            '#text' => 'ALBUM'
+                            '#text' => 'ALBUM',
                         ],
                         'artist' => (object) [
-                            '#text' => 'ARTIST'
+                            '#text' => 'ARTIST',
                         ],
                         'date' => (object) [
-                            'uts' => 1526234751
+                            'uts' => 1526234751,
                         ],
                         'name' => 'NAME',
-                        'url' => 'URL'
-                    ]
+                        'url' => 'URL',
+                    ],
                 ]
             );
 
@@ -73,7 +71,7 @@ class MusicSourceTest extends TestCase
                 'artist' => 'ARTIST',
                 'date' => '2018-05-13 18:05:51',
                 'name' => 'NAME',
-                'url' => 'URL'
+                'url' => 'URL',
             ],
             $this->target->load($this->output)
         );

@@ -1,20 +1,13 @@
 <?php
 
-namespace Amoscato\Source;
+declare(strict_types=1);
 
-use Amoscato\Console\Output\ConsoleOutput;
+namespace Amoscato\Source;
 
 interface SourceInterface
 {
     /**
      * @return string
      */
-    public function getType();
-
-    /**
-     * @param ConsoleOutput $output
-     * @param int $limit
-     * @return array
-     */
-    public function load(ConsoleOutput $output, $limit = 1);
+    public function getType(): string;
 }

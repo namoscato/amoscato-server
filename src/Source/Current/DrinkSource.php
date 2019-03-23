@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Current;
 
 use Amoscato\Integration\Client\UntappdClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class DrinkSource implements CurrentSourceInterface
 {
@@ -27,7 +29,7 @@ class DrinkSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'drink';
     }
@@ -35,14 +37,14 @@ class DrinkSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output): array
     {
         $response = $this
             ->client
             ->getUserCheckins(
                 $this->username,
                 [
-                    'limit' => 1
+                    'limit' => 1,
                 ]
             );
 
@@ -53,7 +55,7 @@ class DrinkSource implements CurrentSourceInterface
             'date' => Carbon::parse($checkin->created_at)->toDateTimeString(),
             'name' => $checkin->beer->beer_name,
             'venue' => empty($checkin->venue) ? null : $checkin->venue->venue_name,
-            'url' => $this->client->getCheckinUrl($this->username, $checkin->checkin_id)
+            'url' => $this->client->getCheckinUrl($this->username, $checkin->checkin_id),
         ];
     }
 }

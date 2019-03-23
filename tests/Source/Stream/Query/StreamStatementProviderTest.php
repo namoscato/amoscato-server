@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream\Query;
 
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
@@ -72,8 +74,8 @@ LIMIT :limit;
 SQL;
 
         $statement = m::mock('PDOStatement',
-            function($mock) {
-                /** @var m\Mock $mock */
+            function ($mock) {
+                /* @var m\Mock $mock */
 
                 $mock
                     ->shouldReceive('bindParam')
@@ -118,8 +120,8 @@ LIMIT :limit;
 SQL;
 
         $statement = m::mock('PDOStatement',
-            function($mock) {
-                /** @var m\Mock $mock */
+            function ($mock) {
+                /* @var m\Mock $mock */
 
                 $mock
                     ->shouldReceive('bindParam')
@@ -161,7 +163,7 @@ SQL;
             ->andReturn(m::mock(
                 \PDOStatement::class,
                 function ($stmt) {
-                    /** @var m\Mock $stmt */
+                    /* @var m\Mock $stmt */
 
                     $stmt
                         ->shouldReceive('bindParam')
@@ -194,7 +196,7 @@ SQL;
             ->andReturn(m::mock(
                 \PDOStatement::class,
                 function ($stmt) {
-                    /** @var m\Mock $stmt */
+                    /* @var m\Mock $stmt */
 
                     $stmt
                         ->shouldReceive('bindParam')

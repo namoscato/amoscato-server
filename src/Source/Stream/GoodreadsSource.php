@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Integration\Client\GoodreadsClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\GoodreadsClient;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
+use DOMElement;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -15,7 +17,7 @@ use Symfony\Component\DomCrawler\Crawler;
  */
 class GoodreadsSource extends AbstractStreamSource
 {
-    /** @var integer */
+    /** @var int */
     private $userId;
 
     /**
@@ -38,7 +40,7 @@ class GoodreadsSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'goodreads';
     }
@@ -46,34 +48,32 @@ class GoodreadsSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 200;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return \IteratorAggregate
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): iterable
     {
         return $this->client->getReadBooks(
             $this->userId,
             [
                 'page' => $iterator->current(),
                 'per_page' => $perPage,
-                'sort' => 'date_read'
+                'sort' => 'date_read',
             ]
         );
     }
 
     /**
-     * @param \DOMElement $item
-     * @param OutputInterface $output
+     * @param DOMElement $item
+     *
      * @return array
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item): array
     {
         $review = $this->createCrawler($item);
         $book = $review->filter('book');
@@ -91,7 +91,7 @@ class GoodreadsSource extends AbstractStreamSource
                 $imageUrl
             );
 
-            list($imageWidth, $imageHeight) = $this->getImageSize($imageUrl);
+            [$imageWidth, $imageHeight] = $this->getImageSize($imageUrl);
         }
 
         $readAt = $review->filter('read_at')->text();
@@ -106,15 +106,16 @@ class GoodreadsSource extends AbstractStreamSource
             Carbon::parse($readAt)->setTimezone('UTC')->toDateTimeString(),
             $imageUrl,
             $imageWidth,
-            $imageHeight
+            $imageHeight,
         ];
     }
 
     /**
-     * @param \DOMElement $item
+     * @param DOMElement $item
+     *
      * @return string
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         $crawler = $this->createCrawler($item);
 
@@ -122,19 +123,21 @@ class GoodreadsSource extends AbstractStreamSource
     }
 
     /**
-     * @param \DOMElement $node
+     * @param DOMElement $node
+     *
      * @return Crawler
      */
-    public function createCrawler($node)
+    public function createCrawler($node): Crawler
     {
         return new Crawler($node);
     }
 
     /**
      * @param string $filename
+     *
      * @return array
      */
-    public function getImageSize($filename)
+    public function getImageSize($filename): array
     {
         return getimagesize($filename);
     }

@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Current;
 
-use Amoscato\Source\Current\DrinkSource;
 use Amoscato\Integration\Client\UntappdClient;
-use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Source\Current\DrinkSource;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class DrinkSourceTest extends TestCase
+class DrinkSourceTest extends MockeryTestCase
 {
     /** @var DrinkSource */
     private $target;
@@ -16,7 +19,7 @@ class DrinkSourceTest extends TestCase
     /** @var m\Mock */
     private $client;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
@@ -25,12 +28,7 @@ class DrinkSourceTest extends TestCase
 
         $this->target = new DrinkSource($this->client, 'username');
 
-        $this->output = m::mock(ConsoleOutput::class);
-    }
-
-    protected function tearDown()
-    {
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -41,7 +39,7 @@ class DrinkSourceTest extends TestCase
             ->with(
                 'username',
                 [
-                    'limit' => 1
+                    'limit' => 1,
                 ]
             )
             ->andReturn(
@@ -52,17 +50,17 @@ class DrinkSourceTest extends TestCase
                                 'checkin_id' => 'id',
                                 'created_at' => '2018-05-13 12:00:00',
                                 'brewery' => (object) [
-                                    'brewery_name' => 'brewery'
+                                    'brewery_name' => 'brewery',
                                 ],
                                 'beer' => (object) [
-                                    'beer_name' => 'beer'
+                                    'beer_name' => 'beer',
                                 ],
                                 'venue' => (object) [
-                                    'venue_name' => 'venue'
-                                ]
-                            ]
-                        ]
-                    ]
+                                    'venue_name' => 'venue',
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             );
 

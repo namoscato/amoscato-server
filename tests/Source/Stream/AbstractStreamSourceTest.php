@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Integration\Client\Client;
-use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\Client;
+use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Tests\Mocks\Source\Stream\MockSource;
 
-class AbstractStreamSourceTest extends TestCase
+class AbstractStreamSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -19,16 +22,16 @@ class AbstractStreamSourceTest extends TestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var MockSource */
+    /** @var m\Mock */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
-    
-    protected function setUp()
+
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
-        
+
         $this->source = m::mock(
             sprintf('%s[getStreamStatementProvider,mockTransform,mockExtract]', MockSource::class),
             [
@@ -44,21 +47,14 @@ class AbstractStreamSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeDebug' => null,
-                'writeln' => null,
-                'writeVerbose' => null
-            ]
-        );
+        $this->output = new NullOutput();
 
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('mockType')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -68,17 +64,11 @@ class AbstractStreamSourceTest extends TestCase
                         ->with(2)
                         ->andReturn(
                             [
-                                'source_id' => '5000'
+                                'source_id' => '5000',
                             ]
                         );
                 })
             );
-    }
-
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
     }
 
     public function test_load_with_empty_values()
@@ -103,13 +93,13 @@ class AbstractStreamSourceTest extends TestCase
             ->andReturn(
                 [
                     (object) [
-                        'id' => 1
+                        'id' => 1,
                     ],
                     (object) [
-                        'id' => 2
+                        'id' => 2,
                     ],
                     (object) [
-                        'id' => 3
+                        'id' => 3,
                     ],
                 ]
             )
@@ -118,13 +108,13 @@ class AbstractStreamSourceTest extends TestCase
             ->andReturn(
                 [
                     (object) [
-                        'id' => 4
+                        'id' => 4,
                     ],
                     (object) [
-                        'id' => 5
+                        'id' => 5,
                     ],
                     (object) [
-                        'id' => 6
+                        'id' => 6,
                     ],
                 ]
             )
@@ -134,8 +124,8 @@ class AbstractStreamSourceTest extends TestCase
 
         $this->source
             ->shouldReceive('mockTransform')
-            ->andReturnUsing(function($item) {
-                if ($item->id === 6) {
+            ->andReturnUsing(function ($item) {
+                if (6 === $item->id) {
                     return false;
                 }
 
@@ -152,8 +142,8 @@ class AbstractStreamSourceTest extends TestCase
             ->once()
             ->with(5)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
@@ -195,7 +185,6 @@ class AbstractStreamSourceTest extends TestCase
                             'value-1-4',
                         ]))
                         ->andReturn(true);
-
                 })
             );
 
@@ -210,13 +199,13 @@ class AbstractStreamSourceTest extends TestCase
             ->andReturn(
                 [
                     (object) [
-                        'id' => 5001
+                        'id' => 5001,
                     ],
                     (object) [
-                        'id' => 5000
+                        'id' => 5000,
                     ],
                     (object) [
-                        'id' => 4999
+                        'id' => 4999,
                     ],
                 ]
             );
@@ -228,7 +217,7 @@ class AbstractStreamSourceTest extends TestCase
                     1,
                     2,
                     3,
-                    4
+                    4,
                 ]
             );
 
@@ -237,8 +226,8 @@ class AbstractStreamSourceTest extends TestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
@@ -249,7 +238,7 @@ class AbstractStreamSourceTest extends TestCase
                             1,
                             2,
                             3,
-                            4
+                            4,
                         ]));
                 })
             );
