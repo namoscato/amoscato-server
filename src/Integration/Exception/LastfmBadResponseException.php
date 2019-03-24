@@ -19,8 +19,6 @@ class LastfmBadResponseException extends \RuntimeException
      */
     public function __construct($responseBody)
     {
-        var_dump($responseBody);
-        die;
         parent::__construct($responseBody->message, $responseBody->error);
 
         $this->responseBody = $responseBody;

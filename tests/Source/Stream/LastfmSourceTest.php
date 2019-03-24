@@ -237,7 +237,7 @@ class LastfmSourceTest extends TestCase
                         ->once()
                         ->with(m::mustBe([
                             'lastfm',
-                            '74e8f4f589902bfac377ae294b9169f6',
+                            '8b8be0260861856ac48f29c4825cee8b',
                             '"album three" by artist three',
                             null,
                             '2016-05-15 19:36:56',

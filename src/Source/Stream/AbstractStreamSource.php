@@ -124,7 +124,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
                 $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
 
-                /** @noinspection DisconnectedForeachInstructionInspection */
+                /* @noinspection DisconnectedForeachInstructionInspection */
                 $iterator->incrementCount();
             }
 

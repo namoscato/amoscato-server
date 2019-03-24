@@ -44,6 +44,7 @@ class VideoSourceTest extends MockeryTestCase
 
     /**
      * @dataProvider getLoadTests
+     *
      * @param string $youTubeDate
      * @param string $vimeoDate
      * @param array $expected

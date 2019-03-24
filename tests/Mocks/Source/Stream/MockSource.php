@@ -6,7 +6,6 @@ namespace Tests\Mocks\Source\Stream;
 
 use Amoscato\Source\Stream\AbstractStreamSource;
 use Amoscato\Console\Helper\PageIterator;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class MockSource extends AbstractStreamSource
 {

@@ -77,34 +77,7 @@ class LastfmSource extends AbstractStreamSource
      */
     protected function transform($item)
     {
-        $albumId = $this->getAlbumId($item);
-
-        $albumName = $item->album->{'#text'};
-        $artistName = $item->artist->{'#text'};
-
-        if (isset($this->albumInfo[$albumId])) {
-            $album = $this->albumInfo[$albumId];
-        } else {
-            try {
-                if (empty($item->album->mbid)) {
-                    $album = $this->client->getAlbumInfoByName($artistName, $albumName);
-                } else {
-                    $album = $this->client->getAlbumInfoById($item->album->mbid);
-                }
-            } catch (LastfmBadResponseException $exception) {
-                if (LastfmBadResponseException::CODE_INVALID_PARAMETERS !== $exception->getCode()) {
-                    throw $exception;
-                }
-
-                $album = false; // gracefully handle not found albums
-            }
-
-            $this->albumInfo[$albumId] = $album; // Cache album info
-        }
-
-        if (false === $album) {
-            return false;
-        }
+        $album = $this->getAlbum($item, $item->album->mbid ?? null);
 
         $imageUrl = null;
         $imageWidth = null;
@@ -117,8 +90,8 @@ class LastfmSource extends AbstractStreamSource
         }
 
         return [
-            "\"{$albumName}\" by {$artistName}",
-            empty($album->url) ? null : $album->url,
+            "\"{$item->album->{'#text'}}\" by {$item->artist->{'#text'}}",
+            $album->url ?? null,
             Carbon::createFromTimestampUTC($item->date->uts)->toDateTimeString(),
             $imageUrl,
             $imageWidth,
@@ -158,8 +131,6 @@ class LastfmSource extends AbstractStreamSource
                         $output->writeDebug("Item {$latestSourceId} is already in the database");
                         break 2;
                     }
-
-                    var_dump($previousTrack);
 
                     $transformedTrack = $this->transform($previousTrack);
 
@@ -203,7 +174,7 @@ class LastfmSource extends AbstractStreamSource
     private function getAlbumId($track, $isUnique = false): string
     {
         if (empty($track->album->mbid)) {
-            $albumId = $track->album->{'#text'};
+            $albumId = "{$track->album->{'#text'}}-{$track->artist->{'#text'}}";
         } else {
             $albumId = $track->album->mbid;
         }
@@ -221,5 +192,34 @@ class LastfmSource extends AbstractStreamSource
     protected function getSourceId($item): string
     {
         return $this->getAlbumId($item, true);
+    }
+
+    /**
+     * @param $item
+     * @param string|null $musicbrainzId
+     *
+     * @return object
+     */
+    private function getAlbum($item, ?string $musicbrainzId = null)
+    {
+        $albumId = $this->getAlbumId($item);
+
+        if (!empty($this->albumInfo[$albumId])) {
+            return $this->albumInfo[$albumId];
+        }
+
+        if ($musicbrainzId) {
+            try {
+                return $this->albumInfo[$albumId] = $this->client->getAlbumInfoById($musicbrainzId);
+            } catch (LastfmBadResponseException $exception) {
+                if (LastfmBadResponseException::CODE_INVALID_PARAMETERS === $exception->getCode()) {
+                    return $this->getAlbum($item); // try fetching by name
+                }
+
+                throw $exception;
+            }
+        }
+
+        return $this->albumInfo[$albumId] = $this->client->getAlbumInfoByName($item->artist->{'#text'}, $item->album->{'#text'});
     }
 }
