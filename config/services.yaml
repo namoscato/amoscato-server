@@ -9,6 +9,7 @@ parameters:
   github_username: namoscato
   goodreads_api_uri: https://www.goodreads.com/
   goodreads_user_id: 16453252
+  instagram_api_uri: https://api.instagram.com/v1/
   lastfm_api_uri: http://ws.audioscrobbler.com/2.0/
   lastfm_user: namoscato
   strava_activity_uri: https://www.strava.com/activities/
@@ -145,6 +146,11 @@ services:
     arguments:
     - base_uri: '%goodreads_api_uri%'
 
+  integration.client.instagram:
+    class: Amoscato\Client\Client
+    arguments:
+    - base_uri: '%instagram_api_uri%'
+
   integration.client.lastfm:
     class: Amoscato\Client\Client
     arguments:
@@ -192,6 +198,11 @@ services:
     arguments:
     - '@integration.client.goodreads'
     - '%env(AMOSCATO_GOODREADS_API_KEY)%'
+
+  Amoscato\Integration\Client\InstagramClient:
+    arguments:
+    - '@integration.client.instagram'
+    - '%env(AMOSCATO_INSTAGRAM_ACCESS_TOKEN)%'
 
   Amoscato\Integration\Client\LastfmClient:
     arguments:
