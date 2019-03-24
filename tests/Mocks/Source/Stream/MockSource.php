@@ -1,40 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Mocks\Source\Stream;
 
 use Amoscato\Source\Stream\AbstractStreamSource;
 use Amoscato\Console\Helper\PageIterator;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class MockSource extends AbstractStreamSource
 {
-    public function getType()
+    public function getType(): string
     {
         return 'mockType';
     }
 
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 100;
     }
 
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): iterable
     {
         return $this->mockExtract($perPage, $iterator->current());
     }
 
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item)
     {
         return $this->mockTransform($item);
     }
 
     public function mockTransform($item)
     {
-        return null;
+        return $item;
     }
 
-    public function mockExtract($limit, $iterator)
+    public function mockExtract($limit, $iterator): array
     {
-        return null;
+        return [];
     }
 }

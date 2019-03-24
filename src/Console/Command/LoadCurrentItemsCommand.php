@@ -1,15 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Console\Command;
 
+use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Ftp\FtpClient;
+use Amoscato\Source\Current\CurrentSourceInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Traversable;
+use Webmozart\Assert\Assert;
 
 class LoadCurrentItemsCommand extends Command
 {
-    /** @var \Amoscato\Source\SourceInterface[] */
+    /** @var CurrentSourceInterface[] */
     private $currentSources;
 
     /** @var FtpClient */
@@ -17,17 +23,22 @@ class LoadCurrentItemsCommand extends Command
 
     /**
      * @param FtpClient $ftpClient
-     * @param \Traversable $currentSources
+     * @param Traversable $currentSources
      */
-    public function __construct(FtpClient $ftpClient, \Traversable $currentSources)
+    public function __construct(FtpClient $ftpClient, Traversable $currentSources)
     {
+        Assert::allIsInstanceOf($currentSources, CurrentSourceInterface::class);
+
         parent::__construct();
 
         $this->ftpClient = $ftpClient;
         $this->currentSources = $currentSources;
     }
 
-    protected function configure()
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure(): void
     {
         $this
             ->setName('amoscato:current:load')
@@ -39,8 +50,7 @@ class LoadCurrentItemsCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var \Amoscato\Console\Output\ConsoleOutput $output */
-
+        $output = OutputDecorator::create($output);
         $result = [];
 
         foreach ($this->currentSources as $source) {

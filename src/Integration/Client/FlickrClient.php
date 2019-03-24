@@ -1,18 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Integration\Client;
+
+use Psr\Http\Message\ResponseInterface;
 
 class FlickrClient extends Client
 {
-    const METHOD_PEOPLE_GET_PUBLIC_PHOTOS = 'flickr.people.getPublicPhotos';
+    private const METHOD_PEOPLE_GET_PUBLIC_PHOTOS = 'flickr.people.getPublicPhotos';
 
     /**
      * @see https://www.flickr.com/services/api/flickr.people.getPublicPhotos.html
+     *
      * @param string $userId
      * @param array $args optional
+     *
      * @return array
      */
-    public function getPublicPhotos($userId, array $args = [])
+    public function getPublicPhotos($userId, array $args = []): array
     {
         $args['user_id'] = $userId;
 
@@ -21,7 +27,7 @@ class FlickrClient extends Client
             $args
         );
 
-        $body = json_decode($response->getBody());
+        $body = \GuzzleHttp\json_decode($response->getBody());
 
         return $body->photos->photo;
     }
@@ -29,9 +35,10 @@ class FlickrClient extends Client
     /**
      * @param string $method
      * @param array $args optional
-     * @return \Psr\Http\Message\ResponseInterface
+     *
+     * @return ResponseInterface
      */
-    private function get($method, array $args = [])
+    private function get($method, array $args = []): ResponseInterface
     {
         return $this->client->get(
             '',
@@ -42,9 +49,9 @@ class FlickrClient extends Client
                         'api_key' => $this->apiKey,
                         'format' => 'json',
                         'method' => $method,
-                        'nojsoncallback' => 1
+                        'nojsoncallback' => 1,
                     ]
-                )
+                ),
             ]
         );
     }

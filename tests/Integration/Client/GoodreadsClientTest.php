@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\GoodreadsClient;
 use GuzzleHttp\Client;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 
-class GoodreadsClientTest extends TestCase
+class GoodreadsClientTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -23,14 +26,9 @@ class GoodreadsClientTest extends TestCase
             sprintf('%s[createCrawler]', GoodreadsClient::class),
             [
                 $this->client,
-                'key'
+                'key',
             ]
         );
-    }
-
-    protected function tearDown()
-    {
-        m::close();
     }
 
     public function test_getCurrentlyReadingBooks()
@@ -45,13 +43,13 @@ class GoodreadsClientTest extends TestCase
                         'key' => 'key',
                         'v' => 2,
                         'shelf' => 'currently-reading',
-                    ]
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => 'body'
+                        'getBody' => 'body',
                     ]
                 )
             );
@@ -61,20 +59,20 @@ class GoodreadsClientTest extends TestCase
             ->with('body')
             ->andReturn(
                 m::mock(
-                    'Symfony\Component\DomCrawler\Crawler',
-                    function($mock) {
-                        /** @var m\Mock $mock */
+                    Crawler::class,
+                    function ($mock) {
+                        /* @var m\Mock $mock */
 
                         $mock
                             ->shouldReceive('filter')
                             ->with('GoodreadsResponse reviews review')
-                            ->andReturn('books');
+                            ->andReturn(['books']);
                     }
                 )
             );
 
         $this->assertSame(
-            'books',
+            ['books'],
             $this->goodreadsClient->getCurrentlyReadingBooks(1)
         );
     }
@@ -91,13 +89,13 @@ class GoodreadsClientTest extends TestCase
                         'key' => 'key',
                         'v' => 2,
                         'shelf' => 'read',
-                    ]
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => 'body'
+                        'getBody' => 'body',
                     ]
                 )
             );
@@ -107,20 +105,20 @@ class GoodreadsClientTest extends TestCase
             ->with('body')
             ->andReturn(
                 m::mock(
-                    'Symfony\Component\DomCrawler\Crawler',
-                    function($mock) {
-                        /** @var m\Mock $mock */
+                    Crawler::class,
+                    function ($mock) {
+                        /* @var m\Mock $mock */
 
                         $mock
                             ->shouldReceive('filter')
                             ->with('GoodreadsResponse reviews review')
-                            ->andReturn('books');
+                            ->andReturn(['books']);
                     }
                 )
             );
 
         $this->assertSame(
-            'books',
+            ['books'],
             $this->goodreadsClient->getReadBooks(1)
         );
     }

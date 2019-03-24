@@ -1,18 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Source\Stream\GoodreadsSource;
-use Amoscato\Integration\Client\GoodreadsClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\GoodreadsClient;
+use Amoscato\Source\Stream\GoodreadsSource;
+use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class GoodreadsSourceTest extends TestCase
+class GoodreadsSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -23,20 +26,20 @@ class GoodreadsSourceTest extends TestCase
     /** @var GoodreadsSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
-    
+
     protected function setUp()
     {
         $this->client = m::mock(GoodreadsClient::class);
-        
+
         $this->source = m::mock(
             sprintf('%s[getStreamStatementProvider,createCrawler,getImageSize]', GoodreadsSource::class),
             [
                 m::mock(PDOFactory::class),
                 m::mock(FtpClient::class),
                 $this->client,
-                10
+                10,
             ]
         );
 
@@ -46,19 +49,7 @@ class GoodreadsSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeln' => null,
-                'writeVerbose' => null,
-            ]
-        );
-    }
-
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -68,8 +59,8 @@ class GoodreadsSourceTest extends TestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('goodreads')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -77,7 +68,7 @@ class GoodreadsSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '10'
+                                'source_id' => '10',
                             ]
                         );
                 })
@@ -91,13 +82,13 @@ class GoodreadsSourceTest extends TestCase
                 [
                     'page' => 1,
                     'per_page' => 100,
-                    'sort' => 'date_read'
+                    'sort' => 'date_read',
                 ]
             )
             ->andReturn(
                 [
                     'item1',
-                    'item2'
+                    'item2',
                 ]
             )
             ->shouldReceive('getReadBooks')
@@ -110,8 +101,8 @@ class GoodreadsSourceTest extends TestCase
             ->andReturn(
                 m::mock(
                     Crawler::class,
-                    function($mock) {
-                        /** @var m\Mock $mock */
+                    function ($mock) {
+                        /* @var m\Mock $mock */
 
                         $mock
                             ->shouldReceive('filter')
@@ -119,7 +110,7 @@ class GoodreadsSourceTest extends TestCase
                             ->andReturn(
                                 m::mock(
                                     [
-                                        'text' => 1
+                                        'text' => '1',
                                     ]
                                 )
                             );
@@ -130,8 +121,8 @@ class GoodreadsSourceTest extends TestCase
                             ->andReturn(
                                 m::mock(
                                     Crawler::class,
-                                    function($mock) {
-                                        /** @var m\Mock $mock */
+                                    function ($mock) {
+                                        /* @var m\Mock $mock */
 
                                         $mock
                                             ->shouldReceive('filter')
@@ -139,7 +130,7 @@ class GoodreadsSourceTest extends TestCase
                                             ->andReturn(
                                                 m::mock(
                                                     [
-                                                        'text' => 'goodreads.com/123m/456.jpg'
+                                                        'text' => 'goodreads.com/123m/456.jpg',
                                                     ]
                                                 )
                                             );
@@ -150,7 +141,7 @@ class GoodreadsSourceTest extends TestCase
                                             ->andReturn(
                                                 m::mock(
                                                     [
-                                                        'text' => 'title1'
+                                                        'text' => 'title1',
                                                     ]
                                                 )
                                             );
@@ -161,7 +152,7 @@ class GoodreadsSourceTest extends TestCase
                                             ->andReturn(
                                                 m::mock(
                                                     [
-                                                        'text' => 'link1'
+                                                        'text' => 'link1',
                                                     ]
                                                 )
                                             );
@@ -175,7 +166,7 @@ class GoodreadsSourceTest extends TestCase
                             ->andReturn(
                                 m::mock(
                                     [
-                                        'text' => '2016-05-15 19:37:06 EST'
+                                        'text' => '2016-05-15 19:37:06 EST',
                                     ]
                                 )
                             );
@@ -190,7 +181,7 @@ class GoodreadsSourceTest extends TestCase
             ->andReturn(
                 [
                     100,
-                    300
+                    300,
                 ]
             );
 
@@ -201,8 +192,8 @@ class GoodreadsSourceTest extends TestCase
             ->andReturn(
                 m::mock(
                     Crawler::class,
-                    function($mock) {
-                        /** @var m\Mock $mock */
+                    function ($mock) {
+                        /* @var m\Mock $mock */
 
                         $mock
                             ->shouldReceive('filter')
@@ -210,7 +201,7 @@ class GoodreadsSourceTest extends TestCase
                             ->andReturn(
                                 m::mock(
                                     [
-                                        'text' => 2
+                                        'text' => '2',
                                     ]
                                 )
                             );
@@ -221,8 +212,8 @@ class GoodreadsSourceTest extends TestCase
                             ->andReturn(
                                 m::mock(
                                     Crawler::class,
-                                    function($mock) {
-                                        /** @var m\Mock $mock */
+                                    function ($mock) {
+                                        /* @var m\Mock $mock */
 
                                         $mock
                                             ->shouldReceive('filter')
@@ -230,7 +221,7 @@ class GoodreadsSourceTest extends TestCase
                                             ->andReturn(
                                                 m::mock(
                                                     [
-                                                        'text' => 'goodreads.com/nophoto/123.jpg'
+                                                        'text' => 'goodreads.com/nophoto/123.jpg',
                                                     ]
                                                 )
                                             );
@@ -241,7 +232,7 @@ class GoodreadsSourceTest extends TestCase
                                             ->andReturn(
                                                 m::mock(
                                                     [
-                                                        'text' => 'title2'
+                                                        'text' => 'title2',
                                                     ]
                                                 )
                                             );
@@ -252,7 +243,7 @@ class GoodreadsSourceTest extends TestCase
                                             ->andReturn(
                                                 m::mock(
                                                     [
-                                                        'text' => 'link2'
+                                                        'text' => 'link2',
                                                     ]
                                                 )
                                             );
@@ -266,7 +257,7 @@ class GoodreadsSourceTest extends TestCase
                             ->andReturn(
                                 m::mock(
                                     [
-                                        'text' => '2016-05-15 19:37:06 EST'
+                                        'text' => '2016-05-15 19:37:06 EST',
                                     ]
                                 )
                             );
@@ -279,15 +270,15 @@ class GoodreadsSourceTest extends TestCase
             ->once()
             ->with(2)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
                             'goodreads',
-                            2,
+                            '2',
                             'title2',
                             'link2',
                             '2016-05-16 00:37:06',
@@ -296,7 +287,7 @@ class GoodreadsSourceTest extends TestCase
                             null,
 
                             'goodreads',
-                            1,
+                            '1',
                             'title1',
                             'link1',
                             '2016-05-16 00:37:06',

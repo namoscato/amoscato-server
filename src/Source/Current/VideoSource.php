@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Current;
 
 use Amoscato\Integration\Client\VimeoClient;
 use Amoscato\Integration\Client\YouTubeClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class VideoSource implements CurrentSourceInterface
 {
@@ -42,7 +44,7 @@ class VideoSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'video';
     }
@@ -50,23 +52,14 @@ class VideoSource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output): ?array
     {
-        $youTubeResponse = $this->youTubeClient->getPlaylistItems(
-            $this->youTubePlaylistId,
-            [
-                'maxResults' => 1
-            ]
-        );
+        $youTubeResponse = $this->youTubeClient->getPlaylistItems($this->youTubePlaylistId, ['maxResults' => 1]);
 
         $youTubeItem = $youTubeResponse->items[0];
         $youTubeDate = Carbon::parse($youTubeItem->snippet->publishedAt);
 
-        $vimeoResponse = $this->vimeoClient->getLikes(
-            [
-                'per_page' => 1
-            ]
-        );
+        $vimeoResponse = $this->vimeoClient->getLikes(['per_page' => 1]);
 
         $vimeoItem = $vimeoResponse->data[0];
         $vimeoDate = Carbon::parse($vimeoItem->metadata->interactions->like->added_time);
@@ -84,7 +77,7 @@ class VideoSource implements CurrentSourceInterface
         return [
             'date' => $date,
             'title' => $title,
-            'url' => $url
+            'url' => $url,
         ];
     }
 }

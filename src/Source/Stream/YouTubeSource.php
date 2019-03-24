@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Integration\Client\YouTubeClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\YouTubeClient;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @property YouTubeClient $client
@@ -43,7 +44,7 @@ class YouTubeSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'youtube';
     }
@@ -51,21 +52,19 @@ class YouTubeSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 50;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         $pageToken = $iterator->current();
 
-        if ($pageToken === 1) {
+        if (1 === $pageToken) {
             $pageToken = null;
         }
 
@@ -73,7 +72,7 @@ class YouTubeSource extends AbstractStreamSource
             $this->playlistId,
             [
                 'maxResults' => $perPage,
-                'pageToken' => $pageToken
+                'pageToken' => $pageToken,
             ]
         );
 
@@ -85,7 +84,7 @@ class YouTubeSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item)
     {
         if (!isset($item->snippet->thumbnails)) {
             return false;
@@ -104,10 +103,9 @@ class YouTubeSource extends AbstractStreamSource
     }
 
     /**
-     * @param object $item
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return $item->snippet->resourceId->videoId;
     }

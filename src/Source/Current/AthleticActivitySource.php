@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Current;
 
 use Amoscato\Integration\Client\StravaClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Carbon\Carbon;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class AthleticActivitySource implements CurrentSourceInterface
 {
@@ -27,7 +29,7 @@ class AthleticActivitySource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'athleticActivity';
     }
@@ -35,7 +37,7 @@ class AthleticActivitySource implements CurrentSourceInterface
     /**
      * {@inheritdoc}
      */
-    public function load(ConsoleOutput $output, $limit = 1)
+    public function load(OutputInterface $output): array
     {
         $activity = $this->stravaClient->getActivities(['per_page' => 1])[0];
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Integration\Exception;
 
 /**
@@ -7,6 +9,8 @@ namespace Amoscato\Integration\Exception;
  */
 class LastfmBadResponseException extends \RuntimeException
 {
+    public const CODE_INVALID_PARAMETERS = 6;
+
     /** @var object */
     private $responseBody;
 

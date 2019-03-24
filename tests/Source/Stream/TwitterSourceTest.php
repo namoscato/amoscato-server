@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
+use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\TwitterClient;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\TwitterSource;
-use Amoscato\Integration\Client\TwitterClient;
-use Amoscato\Console\Output\ConsoleOutput;
-use Amoscato\Database\PDOFactory;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class TwitterSourceTest extends TestCase
+class TwitterSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,13 +25,13 @@ class TwitterSourceTest extends TestCase
     /** @var TwitterSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
-    
+
     protected function setUp()
     {
         $this->client = m::mock(TwitterClient::class);
-        
+
         $this->source = m::mock(
             sprintf('%s[getStreamStatementProvider]', TwitterSource::class),
             [
@@ -36,7 +39,7 @@ class TwitterSourceTest extends TestCase
                 m::mock(FtpClient::class),
                 $this->client,
                 10,
-                'twitter.com/'
+                'twitter.com/',
             ]
         );
 
@@ -46,20 +49,7 @@ class TwitterSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeDebug' => null,
-                'writeln' => null,
-                'writeVerbose' => null
-            ]
-        );
-    }
-
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -68,8 +58,8 @@ class TwitterSourceTest extends TestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('twitter')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -77,7 +67,7 @@ class TwitterSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '10'
+                                'source_id' => '10',
                             ]
                         );
                 })
@@ -96,8 +86,8 @@ class TwitterSourceTest extends TestCase
                     (object) [
                         'id_str' => '1',
                         'text' => 'tweet',
-                        'created_at' => '2016-05-15 19:37:06'
-                    ]
+                        'created_at' => '2016-05-15 19:37:06',
+                    ],
                 ],
                 []
             );
@@ -107,8 +97,8 @@ class TwitterSourceTest extends TestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')

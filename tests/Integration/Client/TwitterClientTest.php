@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\TwitterClient;
 use GuzzleHttp\Client;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class TwitterClientTest extends TestCase
+class TwitterClientTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,11 +24,6 @@ class TwitterClientTest extends TestCase
         $this->twitterClient = new TwitterClient($this->client, 'key');
     }
 
-    protected function tearDown()
-    {
-        m::close();
-    }
-
     public function test_getUserTweets()
     {
         $this->client
@@ -36,27 +33,22 @@ class TwitterClientTest extends TestCase
                 'statuses/user_timeline.json',
                 [
                     'headers' => [
-                        'Authorization' => "Bearer key"
+                        'Authorization' => 'Bearer key',
                     ],
                     'query' => [
                         'contributor_details' => false,
-                        'screen_name' => 1
-                    ]
+                        'screen_name' => 1,
+                    ],
                 ]
             )
             ->andReturn(
                 m::mock(
                     [
-                        'getBody' => '{"key":"value"}'
+                        'getBody' => '["tweets"]',
                     ]
                 )
             );
 
-        $this->assertEquals(
-            (object) [
-                'key' => 'value'
-            ],
-            $this->twitterClient->getUserTweets(1)
-        );
+        $this->assertEquals(['tweets'], $this->twitterClient->getUserTweets(1));
     }
 }

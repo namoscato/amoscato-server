@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Database;
+
+use PDO;
 
 class PDOFactory
 {
@@ -31,11 +35,11 @@ class PDOFactory
     }
 
     /**
-     * @return \PDO
+     * @return PDO
      */
-    public function getInstance()
+    public function getInstance(): PDO
     {
-        return new \PDO(
+        return new PDO(
             $this->dsn,
             $this->username,
             $this->password,

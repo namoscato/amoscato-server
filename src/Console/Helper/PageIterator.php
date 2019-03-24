@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Console\Helper;
 
 use Iterator;
@@ -13,19 +15,19 @@ class PageIterator implements Iterator
 {
     /** @var int */
     private $count = 0;
-    
+
     /** @var int */
     private $limit;
-    
+
     /** @var int */
     private $pageIndex = 1;
-    
+
     /** @var int */
     private $previousCount = 0;
-    
+
     /** @var bool */
     private $isValid = true;
-    
+
     /** @var array */
     private $pageValues = [];
 
@@ -38,27 +40,21 @@ class PageIterator implements Iterator
     }
 
     /**
-     * Return the current element
+     * Return the current element.
      *
-     * @return mixed Can return any type.
+     * @return mixed can return any type
      */
     public function current()
     {
-        if (isset($this->pageValues[$this->pageIndex])) {
-            return $this->pageValues[$this->pageIndex];
-        }
-
-        return $this->pageIndex;
+        return $this->pageValues[$this->pageIndex] ?? $this->pageIndex;
     }
 
     /**
-     * Move forward to next element
-     *
-     * @return void Any returned value is ignored.
+     * Move forward to next element.
      */
-    public function next()
+    public function next(): void
     {
-        $this->pageIndex++;
+        ++$this->pageIndex;
 
         if ($this->previousCount === $this->count) {
             $this->isValid = false;
@@ -68,9 +64,9 @@ class PageIterator implements Iterator
     }
 
     /**
-     * Return the key of the current element
+     * Return the key of the current element.
      *
-     * @return mixed scalar on success, or null on failure.
+     * @return mixed scalar on success, or null on failure
      */
     public function key()
     {
@@ -78,61 +74,57 @@ class PageIterator implements Iterator
     }
 
     /**
-     * Checks if current position is valid
+     * Checks if current position is valid.
      *
-     * @return boolean Returns true on success or false on failure.
+     * @return bool returns true on success or false on failure
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->isValid && $this->count < $this->limit;
     }
 
     /**
-     * Rewind the Iterator to the first element
-     *
-     * @return void Any returned value is ignored.
+     * Rewind the Iterator to the first element.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->pageIndex = 1;
     }
 
     /**
-     * Increments the internal count
-     *
-     * @return void
+     * Increments the internal count.
      */
-    public function incrementCount()
+    public function incrementCount(): void
     {
-        $this->count++;
+        ++$this->count;
     }
 
     /**
-     * Returns the internal count
+     * Returns the internal count.
      *
      * @return int
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->count;
     }
 
     /**
-     * Sets the next page value
+     * Sets the next page value.
      *
      * @param mixed $value
      */
-    public function setNextPageValue($value)
+    public function setNextPageValue($value): void
     {
         $this->pageValues[$this->pageIndex + 1] = $value;
     }
 
     /**
-     * Sets the valid property
+     * Sets the valid property.
      *
      * @param bool $isValid
      */
-    public function setIsValid($isValid)
+    public function setIsValid($isValid): void
     {
         $this->isValid = $isValid;
     }

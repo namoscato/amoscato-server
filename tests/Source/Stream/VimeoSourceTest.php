@@ -1,17 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
+use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\VimeoClient;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\VimeoSource;
-use Amoscato\Integration\Client\VimeoClient;
-use Amoscato\Console\Output\ConsoleOutput;
-use Amoscato\Database\PDOFactory;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class VimeoSourceTest extends TestCase
+class VimeoSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -22,13 +25,13 @@ class VimeoSourceTest extends TestCase
     /** @var VimeoSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
     {
         $this->client = m::mock(VimeoClient::class);
-        
+
         $this->source = m::mock(
             sprintf('%s[getStreamStatementProvider]', VimeoSource::class),
             [
@@ -44,13 +47,7 @@ class VimeoSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeln' => null,
-                'writeVerbose' => null
-            ]
-        );
+        $this->output = new NullOutput();
     }
 
     protected function tearDown()
@@ -65,8 +62,8 @@ class VimeoSourceTest extends TestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('vimeo')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -74,7 +71,7 @@ class VimeoSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '10'
+                                'source_id' => '10',
                             ]
                         );
                 })
@@ -85,13 +82,13 @@ class VimeoSourceTest extends TestCase
             ->with(
                 [
                     'page' => 1,
-                    'per_page' => 50
+                    'per_page' => 50,
                 ]
             )
             ->andReturn(
                 (object) [
                     'paging' => (object) [
-                        'next' => 2
+                        'next' => 2,
                     ],
                     'data' => [
                         (object) [
@@ -101,9 +98,9 @@ class VimeoSourceTest extends TestCase
                             'metadata' => (object) [
                                 'interactions' => (object) [
                                     'like' => (object) [
-                                        'added_time' => '2013-03-15 09:50:30'
-                                    ]
-                                ]
+                                        'added_time' => '2013-03-15 09:50:30',
+                                    ],
+                                ],
                             ],
                             'pictures' => (object) [
                                 'sizes' => [
@@ -112,12 +109,12 @@ class VimeoSourceTest extends TestCase
                                     (object) [
                                         'link' => 'img.jpg',
                                         'width' => 300,
-                                        'height' => 100
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
+                                        'height' => 100,
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
                 ]
             );
 
@@ -127,15 +124,15 @@ class VimeoSourceTest extends TestCase
             ->with(
                 [
                     'page' => 2,
-                    'per_page' => 50
+                    'per_page' => 50,
                 ]
             )
             ->andReturn(
                 (object) [
                     'paging' => (object) [
-                        'next' => null
+                        'next' => null,
                     ],
-                    'data' => []
+                    'data' => [],
                 ]
             );
 
@@ -144,8 +141,8 @@ class VimeoSourceTest extends TestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')

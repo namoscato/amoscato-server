@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Current;
 
-use Amoscato\Source\Current\AthleticActivitySource;
 use Amoscato\Integration\Client\StravaClient;
-use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Source\Current\AthleticActivitySource;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
-class AthleticActivitySourceTest extends TestCase
+class AthleticActivitySourceTest extends MockeryTestCase
 {
     /** @var AthleticActivitySource */
     private $target;
@@ -16,7 +19,7 @@ class AthleticActivitySourceTest extends TestCase
     /** @var m\Mock */
     private $stravaClient;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
@@ -28,7 +31,7 @@ class AthleticActivitySourceTest extends TestCase
             'strava.com/'
         );
 
-        $this->output = m::mock(ConsoleOutput::class);
+        $this->output = new NullOutput();
     }
 
     public function test_load()
@@ -38,13 +41,13 @@ class AthleticActivitySourceTest extends TestCase
             ->shouldReceive('getActivities')
             ->with(['per_page' => 1])
             ->andReturn([
-                (object)[
+                (object) [
                     'start_date' => '2018-05-22 12:00:00Z',
                     'distance' => 10000,
                     'moving_time' => 60,
                     'type' => 'Run',
                     'id' => 123,
-                ]
+                ],
             ]);
 
         $this->assertEquals(

@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Integration\Client;
 
 class StravaClient extends Client
 {
     /**
      * @see http://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
+     *
      * @param array $args optional
+     *
      * @return object
      */
     public function getActivities(array $args = [])
@@ -17,6 +21,7 @@ class StravaClient extends Client
     /**
      * @param string $uri
      * @param array $args
+     *
      * @return object
      */
     private function get($uri, array $args = [])

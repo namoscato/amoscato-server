@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Integration\Client\UntappdClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\UntappdClient;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @property UntappdClient $client
@@ -37,7 +38,7 @@ class UntappdSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'untappd';
     }
@@ -45,23 +46,21 @@ class UntappdSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 50;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         $response = $this->client->getUserBadges(
             $this->username,
             [
                 'offset' => $iterator->current() - 1,
-                'limit' => $perPage
+                'limit' => $perPage,
             ]
         );
 
@@ -71,11 +70,9 @@ class UntappdSource extends AbstractStreamSource
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item): array
     {
         return [
             $item->badge_name,
@@ -83,15 +80,14 @@ class UntappdSource extends AbstractStreamSource
             Carbon::parse($item->created_at)->toDateTimeString(),
             $item->media->badge_image_lg,
             400,
-            400
+            400,
         ];
     }
 
     /**
-     * @param object $item
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return (string) $item->user_badge_id;
     }

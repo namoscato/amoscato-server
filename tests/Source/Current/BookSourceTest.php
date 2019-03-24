@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Current;
 
-use Amoscato\Source\Current\BookSource;
 use Amoscato\Integration\Client\GoodreadsClient;
-use Amoscato\Console\Output\ConsoleOutput;
+use Amoscato\Source\Current\BookSource;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
-class BookSourceTest extends TestCase
+class BookSourceTest extends MockeryTestCase
 {
     /** @var BookSource */
     private $target;
@@ -17,7 +20,7 @@ class BookSourceTest extends TestCase
     /** @var m\Mock */
     private $client;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
@@ -26,12 +29,7 @@ class BookSourceTest extends TestCase
 
         $this->target = new BookSource($this->client, 1);
 
-        $this->output = m::mock(ConsoleOutput::class);
-    }
-
-    protected function tearDown()
-    {
-        m::close();
+        $this->output = new NullOutput();
     }
 
     public function test_load_emptyResult()
@@ -42,14 +40,14 @@ class BookSourceTest extends TestCase
             ->with(
                 1,
                 [
-                    'per_page' => 1
+                    'per_page' => 1,
                 ]
             )
             ->andReturn(
                 m::mock(
                     Crawler::class,
                     [
-                        'count' => 0
+                        'count' => 0,
                     ]
                 )
             );
@@ -72,8 +70,8 @@ class BookSourceTest extends TestCase
                         'count' => 1,
                         'first' => m::mock(
                             Crawler::class,
-                            function($mock) {
-                                /** @var m\Mock $mock */
+                            function ($mock) {
+                                /* @var m\Mock $mock */
 
                                 $mock
                                     ->shouldReceive('filter')
@@ -93,8 +91,8 @@ class BookSourceTest extends TestCase
                                     ->andReturn(
                                         m::mock(
                                             Crawler::class,
-                                            function($mock) {
-                                                /** @var m\Mock $mock */
+                                            function ($mock) {
+                                                /* @var m\Mock $mock */
 
                                                 $mock
                                                     ->shouldReceive('filter')
@@ -103,7 +101,7 @@ class BookSourceTest extends TestCase
                                                         m::mock(
                                                             Crawler::class,
                                                             [
-                                                                'first->filter->text' => 'AUTHOR'
+                                                                'first->filter->text' => 'AUTHOR',
                                                             ]
                                                         )
                                                     );
@@ -115,7 +113,7 @@ class BookSourceTest extends TestCase
                                                         m::mock(
                                                             Crawler::class,
                                                             [
-                                                                'text' => 'TITLE'
+                                                                'text' => 'TITLE',
                                                             ]
                                                         )
                                                     );
@@ -127,7 +125,7 @@ class BookSourceTest extends TestCase
                                                         m::mock(
                                                             Crawler::class,
                                                             [
-                                                                'text' => 'LINK'
+                                                                'text' => 'LINK',
                                                             ]
                                                         )
                                                     );
@@ -135,7 +133,7 @@ class BookSourceTest extends TestCase
                                         )
                                     );
                             }
-                        )
+                        ),
                     ]
                 )
             );
@@ -145,7 +143,7 @@ class BookSourceTest extends TestCase
                 'author' => 'AUTHOR',
                 'date' => '2018-05-13 12:00:00',
                 'title' => 'TITLE',
-                'url' => 'LINK'
+                'url' => 'LINK',
             ],
             $this->target->load($this->output)
         );

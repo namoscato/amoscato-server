@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Integration\Client;
 
 class YouTubeClient extends Client
 {
     /**
      * @see https://developers.google.com/youtube/v3/docs/playlistItems/list
+     *
      * @param string $playlistId
      * @param array $args optional
+     *
      * @return object
      */
     public function getPlaylistItems($playlistId, array $args = [])
@@ -20,12 +24,12 @@ class YouTubeClient extends Client
                     [
                         'key' => $this->apiKey,
                         'part' => 'snippet',
-                        'playlistId' => $playlistId
+                        'playlistId' => $playlistId,
                     ]
-                )
+                ),
             ]
         );
 
-        return json_decode($response->getBody());
+        return \GuzzleHttp\json_decode($response->getBody());
     }
 }

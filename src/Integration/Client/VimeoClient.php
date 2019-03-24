@@ -1,12 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Integration\Client;
 
 class VimeoClient extends Client
 {
     /**
      * @see https://developer.vimeo.com/api/endpoints/me#/likes
+     *
      * @param array $args optional
+     *
      * @return object
      */
     public function getLikes(array $args = [])
@@ -15,17 +19,17 @@ class VimeoClient extends Client
             'me/likes',
             [
                 'headers' => [
-                    'Authorization' => "bearer {$this->apiKey}"
+                    'Authorization' => "bearer {$this->apiKey}",
                 ],
                 'query' => array_merge(
                     $args,
                     [
-                        'sort' => 'date'
+                        'sort' => 'date',
                     ]
-                )
+                ),
             ]
         );
 
-        return json_decode($response->getBody());
+        return \GuzzleHttp\json_decode($response->getBody());
     }
 }

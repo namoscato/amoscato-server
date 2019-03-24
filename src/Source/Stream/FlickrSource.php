@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Integration\Client\FlickrClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\FlickrClient;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @property FlickrClient $client
@@ -43,7 +44,7 @@ class FlickrSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'flickr';
     }
@@ -51,34 +52,30 @@ class FlickrSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 500;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         return $this->client->getPublicPhotos(
             $this->userId,
             [
                 'extras' => 'url_m,path_alias,date_upload',
                 'page' => $iterator->current(),
-                'per_page' => $perPage
+                'per_page' => $perPage,
             ]
         );
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item): array
     {
         return [
             $item->title,
@@ -86,7 +83,7 @@ class FlickrSource extends AbstractStreamSource
             Carbon::createFromTimestampUTC($item->dateupload)->toDateTimeString(),
             $item->url_m,
             $item->width_m,
-            $item->height_m
+            $item->height_m,
         ];
     }
 }

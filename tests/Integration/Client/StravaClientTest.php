@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\StravaClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class StravaClientTest extends TestCase
+class StravaClientTest extends MockeryTestCase
 {
     /** @var StravaClient */
     private $target;
@@ -45,7 +47,7 @@ class StravaClientTest extends TestCase
             ));
 
         $this->assertEquals(
-            (object)['foo' => 'bar'],
+            (object) ['foo' => 'bar'],
             $this->target->getActivities(['page' => 1])
         );
     }

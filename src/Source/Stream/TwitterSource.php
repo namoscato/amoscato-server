@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Amoscato\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Integration\Client\TwitterClient;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\TwitterClient;
 use Carbon\Carbon;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @property TwitterClient $client
@@ -43,7 +44,7 @@ class TwitterSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return 'twitter';
     }
@@ -51,32 +52,28 @@ class TwitterSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    protected function getMaxPerPage()
+    protected function getMaxPerPage(): int
     {
         return 200;
     }
 
     /**
-     * @param int $perPage
-     * @param PageIterator $iterator
-     * @return array
+     * {@inheritdoc}
      */
-    protected function extract($perPage, PageIterator $iterator)
+    protected function extract($perPage, PageIterator $iterator): array
     {
         return $this->client->getUserTweets(
             $this->screenName,
             [
-                'count' => $perPage
+                'count' => $perPage,
             ]
         );
     }
 
     /**
-     * @param object $item
-     * @param OutputInterface $output
-     * @return array
+     * {@inheritdoc}
      */
-    protected function transform($item, OutputInterface $output)
+    protected function transform($item)
     {
         return [
             $item->text,
@@ -89,10 +86,9 @@ class TwitterSource extends AbstractStreamSource
     }
 
     /**
-     * @param object $item
-     * @return string
+     * {@inheritdoc}
      */
-    protected function getSourceId($item)
+    protected function getSourceId($item): string
     {
         return $item->id_str;
     }

@@ -1,15 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\Source\Stream;
 
-use Amoscato\Ftp\FtpClient;
-use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use Amoscato\Source\Stream\LastfmSource;
-use Amoscato\Integration\Client\LastfmClient;
-use Amoscato\Console\Output\ConsoleOutput;
 use Amoscato\Database\PDOFactory;
+use Amoscato\Ftp\FtpClient;
+use Amoscato\Integration\Client\LastfmClient;
+use Amoscato\Source\Stream\LastfmSource;
+use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class LastfmSourceTest extends TestCase
 {
@@ -22,7 +25,7 @@ class LastfmSourceTest extends TestCase
     /** @var LastfmSource */
     private $source;
 
-    /** @var m\Mock */
+    /** @var OutputInterface */
     private $output;
 
     protected function setUp()
@@ -35,7 +38,7 @@ class LastfmSourceTest extends TestCase
                 m::mock(PDOFactory::class),
                 m::mock(FtpClient::class),
                 $this->client,
-                'user'
+                'user',
             ]
         );
 
@@ -45,21 +48,14 @@ class LastfmSourceTest extends TestCase
             ->shouldReceive('getStreamStatementProvider')
             ->andReturn($this->statementProvider);
 
-        $this->output = m::mock(
-            ConsoleOutput::class,
-            [
-                'writeDebug' => null,
-                'writeln' => null,
-                'writeVerbose' => null
-            ]
-        );
+        $this->output = new NullOutput();
 
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('lastfm')
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
 
@@ -67,7 +63,7 @@ class LastfmSourceTest extends TestCase
                         ->shouldReceive('fetch')
                         ->andReturn(
                             [
-                                'source_id' => '3e1c011ebbbde3ecaaa7704b0e543fb5' // mbid_2-tB
+                                'source_id' => '3e1c011ebbbde3ecaaa7704b0e543fb5', // mbid_2-tB
                             ]
                         );
                 })
@@ -88,7 +84,7 @@ class LastfmSourceTest extends TestCase
                 'user',
                 [
                     'limit' => 200,
-                    'page' => 1
+                    'page' => 1,
                 ]
             )
             ->andReturn([]);
@@ -108,47 +104,47 @@ class LastfmSourceTest extends TestCase
                 'user',
                 [
                     'limit' => 200,
-                    'page' => 1
+                    'page' => 1,
                 ]
             )
             ->andReturn(
                 [
                     (object) [ // Currently playing track
                         'album' => (object) [
-                            'mbid' => 1
-                        ]
+                            'mbid' => '1',
+                        ],
                     ],
                     (object) [
                         'date' => (object) [
-                            'uts' => '1463341026'
+                            'uts' => '1463341026',
                         ],
                         'album' => (object) [
-                            'mbid' => 2,
-                            '#text' => 'album two'
+                            'mbid' => '2',
+                            '#text' => 'album two',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist two'
+                            '#text' => 'artist two',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
                             (object) [
-                                '#text' => 'image2.jpg'
-                            ]
-                        ]
+                                '#text' => 'image2.jpg',
+                            ],
+                        ],
                     ],
                     (object) [ // Adjacent track on the same album
                         'date' => (object) [
-                            'uts' => '1463341006'
+                            'uts' => '1463341006',
                         ],
                         'album' => (object) [
                             'mbid' => '',
-                            '#text' => 'album three'
+                            '#text' => 'album three',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist three'
-                        ]
+                            '#text' => 'artist three',
+                        ],
                     ],
                 ]
             )
@@ -157,50 +153,50 @@ class LastfmSourceTest extends TestCase
                 'user',
                 [
                     'limit' => 200,
-                    'page' => 2
+                    'page' => 2,
                 ]
             )
             ->andReturn(
                 [
                     (object) [ // Album with no image
                         'date' => (object) [
-                            'uts' => '1463341016'
+                            'uts' => '1463341016',
                         ],
                         'album' => (object) [
                             'mbid' => '',
-                            '#text' => 'album three'
+                            '#text' => 'album three',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist three'
+                            '#text' => 'artist three',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
                             (object) [
-                                '#text' => ''
-                            ]
-                        ]
+                                '#text' => '',
+                            ],
+                        ],
                     ],
                     (object) [ // Last track (will not get inserted at the moment)
                         'date' => (object) [
-                            'uts' => '1463340996'
+                            'uts' => '1463340996',
                         ],
                         'album' => (object) [
-                            'mbid' => 2,
-                            '#text' => 'album two'
+                            'mbid' => '2',
+                            '#text' => 'album two',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist two'
+                            '#text' => 'artist two',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
                             (object) [
-                                '#text' => 'image2.jpg'
-                            ]
-                        ]
+                                '#text' => 'image2.jpg',
+                            ],
+                        ],
                     ],
                 ]
             )
@@ -213,7 +209,7 @@ class LastfmSourceTest extends TestCase
             ->with(2)
             ->andReturn(
                 (object) [
-                    'url' => 'lastfm.com/album2'
+                    'url' => 'lastfm.com/album2',
                 ]
             );
 
@@ -233,15 +229,15 @@ class LastfmSourceTest extends TestCase
             ->once()
             ->with(2)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
                         ->once()
                         ->with(m::mustBe([
                             'lastfm',
-                            '74e8f4f589902bfac377ae294b9169f6',
+                            '8b8be0260861856ac48f29c4825cee8b',
                             '"album three" by artist three',
                             null,
                             '2016-05-15 19:36:56',
@@ -259,7 +255,6 @@ class LastfmSourceTest extends TestCase
                             300,
                         ]))
                         ->andReturn(true);
-
                 })
             );
 
@@ -274,63 +269,63 @@ class LastfmSourceTest extends TestCase
                 [
                     (object) [
                         'date' => (object) [
-                            'uts' => '1363341030'
+                            'uts' => '1363341030',
                         ],
                         'album' => (object) [
                             'mbid' => 'mbid_1',
-                            '#text' => 'album one'
+                            '#text' => 'album one',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist one'
+                            '#text' => 'artist one',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
                             (object) [
-                                '#text' => 'image1.jpg'
-                            ]
-                        ]
+                                '#text' => 'image1.jpg',
+                            ],
+                        ],
                     ],
                     (object) [
                         'date' => (object) [
-                            'uts' => '1363341020'
+                            'uts' => '1363341020',
                         ],
                         'album' => (object) [
                             'mbid' => 'mbid_2',
-                            '#text' => 'album two'
+                            '#text' => 'album two',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist two'
+                            '#text' => 'artist two',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
                             (object) [
-                                '#text' => 'image2.jpg'
-                            ]
-                        ]
+                                '#text' => 'image2.jpg',
+                            ],
+                        ],
                     ],
                     (object) [
                         'date' => (object) [
-                            'uts' => '1363341010'
+                            'uts' => '1363341010',
                         ],
                         'album' => (object) [
                             'mbid' => 'mbid_3',
-                            '#text' => 'album three'
+                            '#text' => 'album three',
                         ],
                         'artist' => (object) [
-                            '#text' => 'artist three'
+                            '#text' => 'artist three',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
                             (object) [
-                                '#text' => 'image3.jpg'
-                            ]
-                        ]
+                                '#text' => 'image3.jpg',
+                            ],
+                        ],
                     ],
                 ]
             );
@@ -346,8 +341,8 @@ class LastfmSourceTest extends TestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function($mock) {
-                    /** @var m\Mock $mock */
+                m::mock('PDOStatement', function ($mock) {
+                    /* @var m\Mock $mock */
 
                     $mock
                         ->shouldReceive('execute')
