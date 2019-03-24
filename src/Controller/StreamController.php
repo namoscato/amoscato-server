@@ -18,7 +18,7 @@ class StreamController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function getStreamAction(StreamAggregator $streamAggregator)
+    public function getStreamAction(StreamAggregator $streamAggregator): JsonResponse
     {
         return new JsonResponse(
             $streamAggregator->aggregate(),

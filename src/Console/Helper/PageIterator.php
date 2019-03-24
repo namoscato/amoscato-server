@@ -46,17 +46,13 @@ class PageIterator implements Iterator
      */
     public function current()
     {
-        if (isset($this->pageValues[$this->pageIndex])) {
-            return $this->pageValues[$this->pageIndex];
-        }
-
-        return $this->pageIndex;
+        return $this->pageValues[$this->pageIndex] ?? $this->pageIndex;
     }
 
     /**
      * Move forward to next element.
      */
-    public function next()
+    public function next(): void
     {
         ++$this->pageIndex;
 
@@ -82,7 +78,7 @@ class PageIterator implements Iterator
      *
      * @return bool returns true on success or false on failure
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->isValid && $this->count < $this->limit;
     }
@@ -90,7 +86,7 @@ class PageIterator implements Iterator
     /**
      * Rewind the Iterator to the first element.
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->pageIndex = 1;
     }
@@ -98,7 +94,7 @@ class PageIterator implements Iterator
     /**
      * Increments the internal count.
      */
-    public function incrementCount()
+    public function incrementCount(): void
     {
         ++$this->count;
     }
@@ -108,7 +104,7 @@ class PageIterator implements Iterator
      *
      * @return int
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->count;
     }
@@ -118,7 +114,7 @@ class PageIterator implements Iterator
      *
      * @param mixed $value
      */
-    public function setNextPageValue($value)
+    public function setNextPageValue($value): void
     {
         $this->pageValues[$this->pageIndex + 1] = $value;
     }
@@ -128,7 +124,7 @@ class PageIterator implements Iterator
      *
      * @param bool $isValid
      */
-    public function setIsValid($isValid)
+    public function setIsValid($isValid): void
     {
         $this->isValid = $isValid;
     }
