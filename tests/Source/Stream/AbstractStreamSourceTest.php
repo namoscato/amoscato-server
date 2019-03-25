@@ -8,8 +8,10 @@ use Amoscato\Database\PDOFactory;
 use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\Client;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
+use ArrayObject;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use PDOStatement;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tests\Mocks\Source\Stream\MockSource;
@@ -22,7 +24,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
     /** @var m\Mock */
     private $statementProvider;
 
-    /** @var m\Mock */
+    /** @var MockSource */
     private $source;
 
     /** @var OutputInterface */
@@ -242,6 +244,67 @@ class AbstractStreamSourceTest extends MockeryTestCase
                         ]));
                 })
             );
+
+        $this->source->load($this->output, 100);
+    }
+
+    public function test_load_with_multiple_transformed_items(): void
+    {
+        $this
+            ->source
+            ->shouldReceive('mockExtract')
+            ->andReturn([
+                (object) ['id' => 5001],
+                (object) ['id' => 5000],
+            ]);
+
+        $this->source
+            ->shouldReceive('mockTransform')
+            ->andReturn(new ArrayObject([
+                [
+                    1,
+                    2,
+                    3,
+                    4,
+                ],
+                [
+                    5,
+                    6,
+                    7,
+                    8,
+                ],
+            ]));
+
+        $this
+            ->statementProvider
+            ->shouldReceive('insertRows')
+            ->once()
+            ->with(2)
+            ->andReturn(m::mock(
+                PDOStatement::class,
+                function ($mock) {
+                    /* @var m\Mock $mock */
+
+                    $mock
+                        ->shouldReceive('execute')
+                        ->once()
+                        ->with([
+                            'mockType',
+                            '5001_1',
+                            5,
+                            6,
+                            7,
+                            8,
+
+                            'mockType',
+                            '5001',
+                            1,
+                            2,
+                            3,
+                            4,
+                        ]);
+                }
+            ));
 
         $this->source->load($this->output, 100);
     }

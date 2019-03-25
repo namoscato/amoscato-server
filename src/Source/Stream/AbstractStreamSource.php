@@ -11,6 +11,7 @@ use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\Client;
 use Amoscato\Source\AbstractSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
+use ArrayObject;
 use PDO;
 use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -106,26 +107,35 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
                     break 2;
                 }
 
-                $transformedItem = $this->transform($item);
+                $transformedItems = $this->transform($item);
 
-                if (false === $transformedItem) { // Skip select items
+                if (false === $transformedItems) { // Skip select items
                     continue;
                 }
 
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $values = array_merge(
-                    [
-                        $this->getType(),
-                        $sourceId,
-                    ],
-                    $transformedItem,
-                    $values
-                );
+                if (!$transformedItems instanceof ArrayObject) {
+                    $transformedItems = [$transformedItems];
+                }
 
-                $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
+                $count = 0;
 
-                /* @noinspection DisconnectedForeachInstructionInspection */
-                $iterator->incrementCount();
+                foreach ($transformedItems as $transformedItem) {
+                    /* @noinspection SlowArrayOperationsInLoopInspection */
+                    $values = array_merge(
+                        [
+                            $this->getType(),
+                            $count > 0 ? "{$sourceId}_{$count}" : $sourceId,
+                        ],
+                        $transformedItem,
+                        $values
+                    );
+
+                    $output->writeVerbose("Transforming {$this->getType()} item: {$values[2]}");
+
+                    /* @noinspection DisconnectedForeachInstructionInspection */
+                    $iterator->incrementCount();
+                    ++$count;
+                }
             }
 
             $iterator->next();
