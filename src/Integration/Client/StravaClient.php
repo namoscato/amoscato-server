@@ -4,8 +4,42 @@ declare(strict_types=1);
 
 namespace Amoscato\Integration\Client;
 
-class StravaClient extends Client
+use Amoscato\Integration\Client\Middleware\StravaAuthentication;
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\HandlerStack;
+
+class StravaClient
 {
+    /**
+     * @var GuzzleClient
+     */
+    private $client;
+
+    /**
+     * @param string $baseUri
+     * @param StravaAuthentication $authentication
+     *
+     * @return StravaClient
+     */
+    public static function create(string $baseUri, StravaAuthentication $authentication): self
+    {
+        $handlerStack = HandlerStack::create();
+        $handlerStack->push($authentication, 'authentication');
+
+        return new self(new GuzzleClient([
+            'base_uri' => $baseUri,
+            'handler' => $handlerStack,
+        ]));
+    }
+
+    /**
+     * @param GuzzleClient $client
+     */
+    public function __construct(GuzzleClient $client)
+    {
+        $this->client = $client;
+    }
+
     /**
      * @see http://developers.strava.com/docs/reference/#api-Activities-getLoggedInAthleteActivities
      *
@@ -15,7 +49,7 @@ class StravaClient extends Client
      */
     public function getActivities(array $args = [])
     {
-        return $this->get('athlete/activities', $args);
+        return $this->get('api/v3/athlete/activities', $args);
     }
 
     /**
@@ -28,10 +62,7 @@ class StravaClient extends Client
     {
         $response = $this->client->get(
             $uri,
-            [
-                'headers' => ['Authorization' => "Bearer {$this->apiKey}"],
-                'query' => $args,
-            ]
+            ['query' => $args]
         );
 
         return \GuzzleHttp\json_decode($response->getBody());
