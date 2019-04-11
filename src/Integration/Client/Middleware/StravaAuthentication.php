@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class StravaAuthentication
 {
     /** @var string Cache key that temporarily stores Strava access token */
-    private const CACHE_ACCESS_TOKEN_KEY = 'strava.accessToken';
+    public const CACHE_ACCESS_TOKEN_KEY = 'strava.accessToken';
 
     /**
      * @var Client

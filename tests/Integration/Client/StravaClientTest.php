@@ -6,49 +6,48 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\StravaClient;
 use GuzzleHttp\Client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Http\Message\RequestInterface;
 
 class StravaClientTest extends MockeryTestCase
 {
     /** @var StravaClient */
     private $target;
 
-    /** @var m\Mock */
-    private $client;
+    private $requestHistory;
 
-    protected function setUp()
+    protected function setUp(): void
     {
-        $this->client = m::mock(Client::class);
+        $stack = HandlerStack::create(new MockHandler([
+            new Response(200, [], \GuzzleHttp\json_encode(['foo' => 'bar'])),
+        ]));
 
-        $this->target = new StravaClient(
-            $this->client,
-            'TOKEN'
-        );
+        $this->requestHistory = [];
+        $stack->push(Middleware::history($this->requestHistory));
+
+        $this->target = new StravaClient(new Client(['handler' => $stack]));
     }
 
-    public function test_getActivities()
+    public function test_getActivities(): void
     {
-        $this
-            ->client
-            ->shouldReceive('get')
-            ->with(
-                'athlete/activities',
-                [
-                    'headers' => ['Authorization' => 'Bearer TOKEN'],
-                    'query' => ['page' => 1],
-                ]
-            )
-            ->andReturn(new Response(
-                200,
-                [],
-                \GuzzleHttp\json_encode(['foo' => 'bar'])
-            ));
-
         $this->assertEquals(
             (object) ['foo' => 'bar'],
             $this->target->getActivities(['page' => 1])
         );
+
+        $this->assertCount(1, $this->requestHistory);
+
+        /** @var RequestInterface $request */
+        $request = $this->requestHistory[0]['request'];
+
+        $this->assertEquals('GET', $request->getMethod());
+        $this->assertEquals('api/v3/athlete/activities', $request->getUri()->getPath());
+
+        parse_str($request->getUri()->getQuery(), $query);
+        $this->assertEquals(['page' => 1], $query);
     }
 }
