@@ -94,7 +94,7 @@ class StravaAuthenticationTest extends MockeryTestCase
 
         $this->assertEquals('POST', $oauthRequest->getMethod());
 
-        parse_str($oauthRequest->getBody(), $formParams);
+        parse_str($oauthRequest->getBody()->getContents(), $formParams);
         $this->assertEquals(
             [
                 'client_id' => 'CLIENT',
