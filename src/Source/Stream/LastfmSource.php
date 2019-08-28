@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class LastfmSource extends AbstractStreamSource
 {
     /** @var array */
-    private $albumInfo;
+    private $albumIdUrlMap = [];
 
     /** @var string */
     private $user;
@@ -38,7 +38,6 @@ class LastfmSource extends AbstractStreamSource
     ) {
         parent::__construct($databaseFactory, $ftpClient, $client);
 
-        $this->albumInfo = [];
         $this->user = $user;
     }
 
@@ -77,8 +76,6 @@ class LastfmSource extends AbstractStreamSource
      */
     protected function transform($item)
     {
-        $album = $this->getAlbum($item, $item->album->mbid ?? null);
-
         $imageUrl = null;
         $imageWidth = null;
         $imageHeight = null;
@@ -91,7 +88,7 @@ class LastfmSource extends AbstractStreamSource
 
         return [
             "\"{$item->album->{'#text'}}\" by {$item->artist->{'#text'}}",
-            $album->url ?? null,
+            $this->getAlbumUrl($item, $item->album->mbid ?? null),
             Carbon::createFromTimestampUTC($item->date->uts)->toDateTimeString(),
             $imageUrl,
             $imageWidth,
@@ -198,28 +195,28 @@ class LastfmSource extends AbstractStreamSource
      * @param $item
      * @param string|null $musicbrainzId
      *
-     * @return object
+     * @return string|null
      */
-    private function getAlbum($item, ?string $musicbrainzId = null)
+    private function getAlbumUrl($item, ?string $musicbrainzId = null): ?string
     {
         $albumId = $this->getAlbumId($item);
 
-        if (!empty($this->albumInfo[$albumId])) {
-            return $this->albumInfo[$albumId];
+        if (array_key_exists($albumId, $this->albumIdUrlMap)) {
+            return $this->albumIdUrlMap[$albumId];
         }
 
-        if ($musicbrainzId) {
-            try {
-                return $this->albumInfo[$albumId] = $this->client->getAlbumInfoById($musicbrainzId);
-            } catch (LastfmBadResponseException $exception) {
-                if (LastfmBadResponseException::CODE_INVALID_PARAMETERS === $exception->getCode()) {
-                    return $this->getAlbum($item); // try fetching by name
-                }
+        try {
+            $album = $musicbrainzId ?
+                $this->client->getAlbumInfoById($musicbrainzId) :
+                $this->client->getAlbumInfoByName($item->artist->{'#text'}, $item->album->{'#text'});
 
-                throw $exception;
+            return $this->albumIdUrlMap[$albumId] = $album->url ?? null;
+        } catch (LastfmBadResponseException $exception) {
+            if ($musicbrainzId && LastfmBadResponseException::CODE_INVALID_PARAMETERS === $exception->getCode()) {
+                return $this->getAlbumUrl($item); // try fetching by name
             }
-        }
 
-        return $this->albumInfo[$albumId] = $this->client->getAlbumInfoByName($item->artist->{'#text'}, $item->album->{'#text'});
+            return null;
+        }
     }
 }

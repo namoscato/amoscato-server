@@ -10,11 +10,11 @@ use Amoscato\Integration\Client\LastfmClient;
 use Amoscato\Source\Stream\LastfmSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class LastfmSourceTest extends TestCase
+class LastfmSourceTest extends MockeryTestCase
 {
     /** @var m\Mock */
     private $client;
@@ -28,7 +28,7 @@ class LastfmSourceTest extends TestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(LastfmClient::class);
 
@@ -70,13 +70,7 @@ class LastfmSourceTest extends TestCase
             );
     }
 
-    protected function tearDown()
-    {
-        $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
-    }
-
-    public function test_load_with_empty_values()
+    public function test_load_with_empty_values(): void
     {
         $this->client
             ->shouldReceive('getRecentTracks')
@@ -96,7 +90,7 @@ class LastfmSourceTest extends TestCase
         $this->assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_items()
+    public function test_load_with_items(): void
     {
         $this->client
             ->shouldReceive('getRecentTracks')
@@ -261,7 +255,7 @@ class LastfmSourceTest extends TestCase
         $this->assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_previous_items()
+    public function test_load_with_previous_items(): void
     {
         $this->client
             ->shouldReceive('getRecentTracks')
