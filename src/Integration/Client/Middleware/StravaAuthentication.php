@@ -7,12 +7,16 @@ namespace Amoscato\Integration\Client\Middleware;
 use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\PromiseInterface;
+use Psr\Cache\InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\SimpleCache\CacheInterface;
-use Psr\SimpleCache\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 
+/**
+ * @see http://developers.strava.com/docs/authentication/
+ */
 class StravaAuthentication
 {
     /** @var string Cache key that temporarily stores Strava access token */
@@ -121,28 +125,28 @@ class StravaAuthentication
      */
     private function getAccessToken(bool $refresh = false): string
     {
-        if (!$refresh && null !== $accessToken = $this->cache->get(self::CACHE_ACCESS_TOKEN_KEY)) {
-            return $accessToken;
+        if ($refresh) {
+            $this->cache->delete(self::CACHE_ACCESS_TOKEN_KEY);
         }
 
-        $response = $this->client->post(
-            'oauth/token',
-            [
-                'form_params' => [
-                    'client_id' => $this->clientId,
-                    'client_secret' => $this->clientSecret,
-                    'grant_type' => 'refresh_token',
-                    'refresh_token' => $this->refreshToken,
-                ],
-            ]
-        );
+        return $this->cache->get(self::CACHE_ACCESS_TOKEN_KEY, function (ItemInterface $item) {
+            $response = $this->client->post(
+                'oauth/token',
+                [
+                    'form_params' => [
+                        'client_id' => $this->clientId,
+                        'client_secret' => $this->clientSecret,
+                        'grant_type' => 'refresh_token',
+                        'refresh_token' => $this->refreshToken,
+                    ],
+                ]
+            );
 
-        $response = \GuzzleHttp\json_decode($response->getBody(), true);
+            $response = \GuzzleHttp\json_decode($response->getBody(), true);
 
-        $accessToken = $response['access_token'];
+            $item->expiresAfter($response['expires_in']);
 
-        $this->cache->set(self::CACHE_ACCESS_TOKEN_KEY, $accessToken, $response['expires_in']);
-
-        return $accessToken;
+            return $response['access_token'];
+        });
     }
 }
