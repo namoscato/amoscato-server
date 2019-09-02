@@ -11,16 +11,17 @@
         "guzzlehttp/guzzle": "^6.3",
         "nesbot/carbon": "^2.9",
         "predis/predis": "^1.1",
+        "psr/simple-cache": "^1.0",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/apache-pack": "^1.0",
-        "symfony/cache": "4.2.*",
-        "symfony/console": "4.2.*",
-        "symfony/css-selector": "4.2.*",
-        "symfony/dom-crawler": "4.2.*",
-        "symfony/dotenv": "4.2.*",
+        "symfony/cache": "^4.2",
+        "symfony/console": "^4.2",
+        "symfony/css-selector": "^4.2",
+        "symfony/dom-crawler": "^4.2",
+        "symfony/dotenv": "^4.2",
         "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*",
+        "symfony/framework-bundle": "^4.2",
+        "symfony/yaml": "^4.2",
         "webmozart/assert": "^1.4"
     },
     "config": {
@@ -66,13 +67,13 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "4.3.*"
         }
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",
         "mockery/mockery": "^1.2",
-        "symfony/phpunit-bridge": "4.2.*",
-        "symfony/web-server-bundle": "4.2.*"
+        "symfony/phpunit-bridge": "^4.2",
+        "symfony/web-server-bundle": "^4.2"
     }
 }

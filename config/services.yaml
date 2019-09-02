@@ -54,12 +54,6 @@ services:
     - 'pgsql:host=%env(AMOSCATO_DATABASE_HOST)%;port=%env(AMOSCATO_DATABASE_PORT)%;dbname=%env(AMOSCATO_DATABASE_NAME)%'
     - '%env(AMOSCATO_DATABASE_USER)%'
     - '%env(AMOSCATO_DATABASE_PASSWORD)%'
-
-  Predis\Client:
-    - '%env(REDIS_URL)%'
-
-  Symfony\Component\Cache\Simple\RedisCache:
-    - '@Predis\Client'
   #endregion
 
   #region FTP
