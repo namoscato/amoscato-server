@@ -1,0 +1,25 @@
+name: PHP CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: [7.3]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use PHP ${{ matrix.php-version }}
+      uses: shivammathur/setup-php@v1
+      with:
+        php-version: ${{ matrix.php-versions }}
+    - name: Composer install
+      run: composer install --optimize-autoloader --no-interaction
+    - name: PHPUnit
+      run: bin/phpunit
+    - name: PHP CS Fixer
+      run: composer cs -- --dry-run
