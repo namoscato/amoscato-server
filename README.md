@@ -1,4 +1,5 @@
-# Amoscato Server [![Build Status](https://travis-ci.org/namoscato/amoscato-server.svg?branch=master)](https://travis-ci.org/namoscato/amoscato-server)
+# Amoscato Server [![Actions Status](https://github.com/namoscato/amoscato-server/workflows/PHP%20CI/badge.svg)](https://github.com/namoscato/amoscato-server/actions)
+
 
 Server-side processes behind [amoscato.com](https://amoscato.com/) built with [Symfony](https://symfony.com/).
 
