@@ -1,6 +1,0 @@
-language: php
-php: 7.1
-install: composer install --optimize-autoloader --no-interaction --prefer-dist
-script:
-- bin/phpunit
-- composer cs -- --dry-run
