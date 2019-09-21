@@ -16,7 +16,7 @@ jobs:
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@master
       with:
-        php-version: ${{ matrix.php-versions }}
+        php-version: ${{ matrix.php-version }}
     - name: Composer install
       run: composer install --optimize-autoloader --no-interaction
     - name: PHPUnit
