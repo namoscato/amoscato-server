@@ -21,9 +21,6 @@ class LoadStreamItemsCommand extends Command
     /** @var StreamSourceInterface[] */
     private $streamSources = [];
 
-    /**
-     * @param Traversable $streamSources
-     */
     public function __construct(Traversable $streamSources)
     {
         Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);

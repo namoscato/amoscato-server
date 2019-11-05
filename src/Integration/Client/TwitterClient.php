@@ -11,8 +11,6 @@ class TwitterClient extends Client
      *
      * @param string $screenName
      * @param array $args optional
-     *
-     * @return array
      */
     public function getUserTweets($screenName, array $args = []): array
     {

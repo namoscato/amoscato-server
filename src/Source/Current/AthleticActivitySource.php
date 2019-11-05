@@ -17,7 +17,6 @@ class AthleticActivitySource implements CurrentSourceInterface
     private $activityUri;
 
     /**
-     * @param StravaClient $stravaClient
      * @param string $activityUri
      */
     public function __construct(StravaClient $stravaClient, $activityUri)

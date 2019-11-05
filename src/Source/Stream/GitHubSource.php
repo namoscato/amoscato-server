@@ -22,9 +22,6 @@ class GitHubSource extends AbstractStreamSource
     private $username;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param GitHubClient $client
      * @param string $username
      */
     public function __construct(

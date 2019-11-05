@@ -50,8 +50,6 @@ class LastfmClient extends Client
      *
      * @param string $user
      * @param array $args optional
-     *
-     * @return array
      */
     public function getRecentTracks($user, array $args = []): array
     {

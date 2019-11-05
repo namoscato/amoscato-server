@@ -6,8 +6,8 @@ namespace Tests\Source\Current;
 
 use Amoscato\Integration\Client\GoodreadsClient;
 use Amoscato\Source\Current\BookSource;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DomCrawler\Crawler;

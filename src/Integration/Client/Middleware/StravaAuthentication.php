@@ -47,13 +47,6 @@ class StravaAuthentication
      */
     private $clientSecret;
 
-    /**
-     * @param Client $client
-     * @param CacheInterface $cache
-     * @param string $clientId
-     * @param string $clientSecret
-     * @param string $refreshToken
-     */
     public function __construct(
         Client $client,
         CacheInterface $cache,
@@ -68,11 +61,6 @@ class StravaAuthentication
         $this->refreshToken = $refreshToken;
     }
 
-    /**
-     * @param callable $nextHandler
-     *
-     * @return Closure
-     */
     public function __invoke(callable $nextHandler): Closure
     {
         return function (RequestInterface $request, array $options) use ($nextHandler) {
@@ -82,12 +70,6 @@ class StravaAuthentication
 
     /**
      * Adds the authorization header to the request, refreshing it if it is invalid.
-     *
-     * @param callable $nextHandler
-     * @param RequestInterface $request
-     * @param array $options
-     *
-     * @return PromiseInterface
      *
      * @throws InvalidArgumentException
      */
@@ -118,8 +100,6 @@ class StravaAuthentication
      * Returns the access token used for authorization, refreshed from cache if it is expired.
      *
      * @param bool $refresh force refreshes the access token
-     *
-     * @return string
      *
      * @throws InvalidArgumentException
      */

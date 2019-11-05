@@ -21,10 +21,6 @@ class LoadCurrentItemsCommand extends Command
     /** @var FtpClient */
     private $ftpClient;
 
-    /**
-     * @param FtpClient $ftpClient
-     * @param Traversable $currentSources
-     */
     public function __construct(FtpClient $ftpClient, Traversable $currentSources)
     {
         Assert::allIsInstanceOf($currentSources, CurrentSourceInterface::class);

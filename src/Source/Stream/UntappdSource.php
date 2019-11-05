@@ -19,9 +19,6 @@ class UntappdSource extends AbstractStreamSource
     private $username;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param UntappdClient $client
      * @param string $username
      */
     public function __construct(

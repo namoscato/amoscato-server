@@ -9,8 +9,8 @@ use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\UntappdClient;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\UntappdSource;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 use Symfony\Component\Console\Output\NullOutput;
 
 class UntappdSourceTest extends MockeryTestCase

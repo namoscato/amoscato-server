@@ -10,7 +10,6 @@ class GoodreadsClient extends Client
 {
     /**
      * @param $userId
-     * @param array $args
      *
      * @return Crawler
      */
@@ -32,8 +31,6 @@ class GoodreadsClient extends Client
 
     /**
      * @param string $node
-     *
-     * @return Crawler
      */
     public function createCrawler($node): Crawler
     {
@@ -45,7 +42,6 @@ class GoodreadsClient extends Client
      *
      * @param string $shelf
      * @param int $userId
-     * @param array $args
      *
      * @return Crawler
      */

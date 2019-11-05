@@ -6,8 +6,8 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\TwitterClient;
 use GuzzleHttp\Client;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 
 class TwitterClientTest extends MockeryTestCase
 {

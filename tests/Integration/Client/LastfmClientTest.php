@@ -7,8 +7,8 @@ namespace Tests\Integration\Client;
 use Amoscato\Integration\Client\LastfmClient;
 use Amoscato\Integration\Exception\LastfmBadResponseException;
 use GuzzleHttp\Client;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 
 class LastfmClientTest extends MockeryTestCase
 {

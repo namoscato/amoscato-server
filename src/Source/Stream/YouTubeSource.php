@@ -22,9 +22,6 @@ class YouTubeSource extends AbstractStreamSource
     private $videoUri;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param YouTubeClient $client
      * @param string $playlistId
      * @param string $videoUri
      */

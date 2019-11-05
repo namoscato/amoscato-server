@@ -9,9 +9,6 @@ class StreamStatementProvider
     /** @var \PDO */
     private $database;
 
-    /**
-     * @param \PDO $database
-     */
     public function __construct(\PDO $database)
     {
         $this->database = $database;

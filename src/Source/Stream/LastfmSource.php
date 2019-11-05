@@ -25,9 +25,6 @@ class LastfmSource extends AbstractStreamSource
     private $user;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param LastfmClient $client
      * @param string $user
      */
     public function __construct(
@@ -165,8 +162,6 @@ class LastfmSource extends AbstractStreamSource
     /**
      * @param object $track
      * @param bool $isUnique optional
-     *
-     * @return string
      */
     private function getAlbumId($track, $isUnique = false): string
     {
@@ -193,9 +188,6 @@ class LastfmSource extends AbstractStreamSource
 
     /**
      * @param $item
-     * @param string|null $musicbrainzId
-     *
-     * @return string|null
      */
     private function getAlbumUrl($item, ?string $musicbrainzId = null): ?string
     {

@@ -38,7 +38,6 @@ class FtpClient
     }
 
     /**
-     * @param OutputInterface $output
      * @param string $data
      * @param string $fileName
      * @param string $directory

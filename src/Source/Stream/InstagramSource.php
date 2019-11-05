@@ -16,11 +16,6 @@ use Carbon\Carbon;
  */
 class InstagramSource extends AbstractStreamSource
 {
-    /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param InstagramClient $client
-     */
     public function __construct(
         PDOFactory $databaseFactory,
         FtpClient $ftpClient,

@@ -15,11 +15,6 @@ use Carbon\Carbon;
  */
 class VimeoSource extends AbstractStreamSource
 {
-    /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param VimeoClient $client
-     */
     public function __construct(
         PDOFactory $databaseFactory,
         FtpClient $ftpClient,

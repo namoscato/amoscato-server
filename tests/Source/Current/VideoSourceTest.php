@@ -7,8 +7,8 @@ namespace Tests\Source\Current;
 use Amoscato\Integration\Client\VimeoClient;
 use Amoscato\Integration\Client\YouTubeClient;
 use Amoscato\Source\Current\VideoSource;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -44,10 +44,6 @@ class VideoSourceTest extends MockeryTestCase
 
     /**
      * @dataProvider getLoadTests
-     *
-     * @param string $youTubeDate
-     * @param string $vimeoDate
-     * @param array $expected
      */
     public function testLoad(string $youTubeDate, string $vimeoDate, array $expected): void
     {
