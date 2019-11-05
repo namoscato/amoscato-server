@@ -101,8 +101,6 @@ class PageIterator implements Iterator
 
     /**
      * Returns the internal count.
-     *
-     * @return int
      */
     public function getCount(): int
     {

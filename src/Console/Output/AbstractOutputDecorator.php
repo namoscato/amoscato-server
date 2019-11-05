@@ -13,8 +13,6 @@ abstract class AbstractOutputDecorator implements OutputInterface
     protected $output;
 
     /**
-     * @param OutputInterface $output
-     *
      * @return AbstractOutputDecorator
      */
     public static function create(OutputInterface $output): self
@@ -26,9 +24,6 @@ abstract class AbstractOutputDecorator implements OutputInterface
         return new static($output);
     }
 
-    /**
-     * @param OutputInterface $output
-     */
     public function __construct(OutputInterface $output)
     {
         $this->output = $output;

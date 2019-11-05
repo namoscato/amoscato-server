@@ -19,10 +19,6 @@ class StreamAggregator
     /** @var StreamSourceInterface[] */
     private $streamSources;
 
-    /**
-     * @param PDOFactory $pdoFactory
-     * @param Traversable $streamSources
-     */
     public function __construct(PDOFactory $pdoFactory, Traversable $streamSources)
     {
         Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
@@ -33,8 +29,6 @@ class StreamAggregator
 
     /**
      * @param float $size optional
-     *
-     * @return array
      */
     public function aggregate($size = self::DEFAULT_SIZE): array
     {
@@ -66,9 +60,6 @@ class StreamAggregator
         return $result;
     }
 
-    /**
-     * @return StreamStatementProvider
-     */
     public function getStreamStatementProvider(): StreamStatementProvider
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());
@@ -99,9 +90,6 @@ class StreamAggregator
      *
      * @param string[] $weightedTypeHash
      * @param int $size
-     * @param StreamSourceInterface $source
-     *
-     * @return float
      */
     public static function getSourceLimit(array &$weightedTypeHash, $size, StreamSourceInterface $source): float
     {

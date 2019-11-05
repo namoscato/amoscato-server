@@ -22,9 +22,6 @@ class TwitterSource extends AbstractStreamSource
     private $statusUri;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param TwitterClient $client
      * @param string $screenName
      * @param string $statusUri
      */

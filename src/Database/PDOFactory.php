@@ -34,9 +34,6 @@ class PDOFactory
         $this->options = $options;
     }
 
-    /**
-     * @return PDO
-     */
     public function getInstance(): PDO
     {
         return new PDO(

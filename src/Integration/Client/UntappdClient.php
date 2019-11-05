@@ -12,7 +12,6 @@ class UntappdClient extends Client
     private $clientId;
 
     /**
-     * @param GuzzleClient $client
      * @param string $apiKey
      * @param string $clientId
      */
@@ -26,8 +25,6 @@ class UntappdClient extends Client
     /**
      * @param string $username
      * @param int $userBadgeId
-     *
-     * @return string
      */
     public function getBadgeUrl($username, $userBadgeId): string
     {
@@ -37,8 +34,6 @@ class UntappdClient extends Client
     /**
      * @param string $username
      * @param int $checkinId
-     *
-     * @return string
      */
     public function getCheckinUrl($username, $checkinId): string
     {
@@ -48,8 +43,6 @@ class UntappdClient extends Client
     /**
      * @param string $username
      * @param string $path
-     *
-     * @return string
      */
     public function getUserUrl($username, $path = ''): string
     {
@@ -60,7 +53,6 @@ class UntappdClient extends Client
      * @see https://untappd.com/api/docs#userbadges
      *
      * @param string $username
-     * @param array $args
      *
      * @return object
      */
@@ -84,7 +76,6 @@ class UntappdClient extends Client
 
     /**
      * @param string $uri
-     * @param array $args
      *
      * @return object
      */

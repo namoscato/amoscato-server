@@ -9,8 +9,6 @@ class InstagramClient extends Client
     /**
      * @see https://www.instagram.com/developer/endpoints/users/#get_users_media_recent_self
      *
-     * @param array $query
-     *
      * @return object
      */
     public function getMostRecentMedia(array $query = [])
@@ -20,7 +18,6 @@ class InstagramClient extends Client
 
     /**
      * @param string $uri
-     * @param array $query
      *
      * @return object
      */

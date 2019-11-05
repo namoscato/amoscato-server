@@ -15,7 +15,6 @@ abstract class Client
     protected $client;
 
     /**
-     * @param GuzzleClient $client
      * @param string $apiKey
      */
     public function __construct(GuzzleClient $client, $apiKey)

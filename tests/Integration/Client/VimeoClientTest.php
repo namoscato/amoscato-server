@@ -6,8 +6,8 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\VimeoClient;
 use GuzzleHttp\Client;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 
 class VimeoClientTest extends MockeryTestCase
 {

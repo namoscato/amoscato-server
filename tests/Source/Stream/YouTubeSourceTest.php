@@ -9,8 +9,8 @@ use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\YouTubeClient;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\YouTubeSource;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 

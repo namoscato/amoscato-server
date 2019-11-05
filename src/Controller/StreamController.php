@@ -13,10 +13,6 @@ class StreamController extends AbstractController
 {
     /**
      * @Route("/stream")
-     *
-     * @param StreamAggregator $streamAggregator
-     *
-     * @return JsonResponse
      */
     public function getStreamAction(StreamAggregator $streamAggregator): JsonResponse
     {

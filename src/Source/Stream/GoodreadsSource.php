@@ -21,9 +21,6 @@ class GoodreadsSource extends AbstractStreamSource
     private $userId;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param GoodreadsClient $client
      * @param string $userId
      */
     public function __construct(
@@ -70,8 +67,6 @@ class GoodreadsSource extends AbstractStreamSource
 
     /**
      * @param DOMElement $item
-     *
-     * @return array
      */
     protected function transform($item): array
     {
@@ -112,8 +107,6 @@ class GoodreadsSource extends AbstractStreamSource
 
     /**
      * @param DOMElement $item
-     *
-     * @return string
      */
     protected function getSourceId($item): string
     {
@@ -124,8 +117,6 @@ class GoodreadsSource extends AbstractStreamSource
 
     /**
      * @param DOMElement $node
-     *
-     * @return Crawler
      */
     public function createCrawler($node): Crawler
     {
@@ -134,8 +125,6 @@ class GoodreadsSource extends AbstractStreamSource
 
     /**
      * @param string $filename
-     *
-     * @return array
      */
     public function getImageSize($filename): array
     {

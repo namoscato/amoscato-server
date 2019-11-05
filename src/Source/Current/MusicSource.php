@@ -17,7 +17,6 @@ class MusicSource implements CurrentSourceInterface
     private $user;
 
     /**
-     * @param LastfmClient $client
      * @param string $user
      */
     public function __construct(LastfmClient $client, $user)

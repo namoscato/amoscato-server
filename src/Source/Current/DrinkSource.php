@@ -17,7 +17,6 @@ class DrinkSource implements CurrentSourceInterface
     private $username;
 
     /**
-     * @param UntappdClient $client
      * @param string $username
      */
     public function __construct(UntappdClient $client, $username)

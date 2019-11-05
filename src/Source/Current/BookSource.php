@@ -17,7 +17,6 @@ class BookSource implements CurrentSourceInterface
     private $userId;
 
     /**
-     * @param GoodreadsClient $client
      * @param string $userId
      */
     public function __construct(GoodreadsClient $client, $userId)

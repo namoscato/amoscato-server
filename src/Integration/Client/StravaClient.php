@@ -16,9 +16,6 @@ class StravaClient
     private $client;
 
     /**
-     * @param string $baseUri
-     * @param StravaAuthentication $authentication
-     *
      * @return StravaClient
      */
     public static function create(string $baseUri, StravaAuthentication $authentication): self
@@ -32,9 +29,6 @@ class StravaClient
         ]));
     }
 
-    /**
-     * @param GuzzleClient $client
-     */
     public function __construct(GuzzleClient $client)
     {
         $this->client = $client;
@@ -54,7 +48,6 @@ class StravaClient
 
     /**
      * @param string $uri
-     * @param array $args
      *
      * @return object
      */

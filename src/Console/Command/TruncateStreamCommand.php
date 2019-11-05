@@ -24,10 +24,6 @@ class TruncateStreamCommand extends Command
     /** @var StreamSourceInterface[] */
     private $streamSources;
 
-    /**
-     * @param PDOFactory $pdoFactory
-     * @param Traversable $streamSources
-     */
     public function __construct(PDOFactory $pdoFactory, Traversable $streamSources)
     {
         Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
@@ -78,9 +74,6 @@ class TruncateStreamCommand extends Command
         }
     }
 
-    /**
-     * @return StreamStatementProvider
-     */
     public function getStreamStatementProvider(): StreamStatementProvider
     {
         return new StreamStatementProvider($this->databaseFactory->getInstance());

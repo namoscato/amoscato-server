@@ -15,8 +15,6 @@ class FlickrClient extends Client
      *
      * @param string $userId
      * @param array $args optional
-     *
-     * @return array
      */
     public function getPublicPhotos($userId, array $args = []): array
     {
@@ -35,8 +33,6 @@ class FlickrClient extends Client
     /**
      * @param string $method
      * @param array $args optional
-     *
-     * @return ResponseInterface
      */
     private function get($method, array $args = []): ResponseInterface
     {

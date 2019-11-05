@@ -24,10 +24,8 @@ class VideoSource implements CurrentSourceInterface
     private $youTubeVideoUri;
 
     /**
-     * @param YouTubeClient $youTubeClient
      * @param string $youTubePlaylistId
      * @param string $youTubeVideoUri
-     * @param VimeoClient $vimeoClient
      */
     public function __construct(
         YouTubeClient $youTubeClient,

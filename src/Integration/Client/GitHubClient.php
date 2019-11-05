@@ -15,7 +15,6 @@ class GitHubClient extends Client
     private $clientId;
 
     /**
-     * @param GuzzleClient $client
      * @param string $apiKey
      * @param string $clientId
      */
@@ -31,8 +30,6 @@ class GitHubClient extends Client
      *
      * @param string $username
      * @param array $args optional
-     *
-     * @return array
      */
     public function getUserEvents($username, array $args = []): array
     {

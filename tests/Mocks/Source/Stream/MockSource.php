@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Mocks\Source\Stream;
 
-use Amoscato\Source\Stream\AbstractStreamSource;
 use Amoscato\Console\Helper\PageIterator;
+use Amoscato\Source\Stream\AbstractStreamSource;
 
 class MockSource extends AbstractStreamSource
 {

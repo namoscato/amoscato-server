@@ -22,9 +22,6 @@ class FlickrSource extends AbstractStreamSource
     private $photoUri;
 
     /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param FlickrClient $client
      * @param string $userId
      * @param string $photoUri
      */

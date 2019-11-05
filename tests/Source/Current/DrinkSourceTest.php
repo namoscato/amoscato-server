@@ -6,8 +6,8 @@ namespace Tests\Source\Current;
 
 use Amoscato\Integration\Client\UntappdClient;
 use Amoscato\Source\Current\DrinkSource;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -19,10 +19,6 @@ class CacheStreamCommand extends Command
     /** @var FtpClient */
     private $ftpClient;
 
-    /**
-     * @param StreamAggregator $streamAggregator
-     * @param FtpClient $ftpClient
-     */
     public function __construct(StreamAggregator $streamAggregator, FtpClient $ftpClient)
     {
         parent::__construct();

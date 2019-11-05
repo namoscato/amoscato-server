@@ -30,11 +30,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /** @var int */
     protected $weight = 1;
 
-    /**
-     * @param PDOFactory $databaseFactory
-     * @param FtpClient $ftpClient
-     * @param Client $client
-     */
     public function __construct(PDOFactory $databaseFactory, FtpClient $ftpClient, Client $client)
     {
         parent::__construct($client);
@@ -45,8 +40,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
     /**
      * Returns the maximum number of items per page.
-     *
-     * @return int
      */
     abstract protected function getMaxPerPage(): int;
 
@@ -54,9 +47,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
      * Extracts data for the specified page.
      *
      * @param int $perPage
-     * @param PageIterator $iterator
-     *
-     * @return iterable
      */
     abstract protected function extract($perPage, PageIterator $iterator): iterable;
 
@@ -75,9 +65,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
         $this->weight = $weight;
     }
 
-    /**
-     * @return int
-     */
     public function getWeight(): int
     {
         return $this->weight;
@@ -144,9 +131,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
         return $this->insertValues($output, $iterator->getCount(), $values);
     }
 
-    /**
-     * @return string|null
-     */
     protected function getLatestSourceId(): ?string
     {
         $statement = $this
@@ -166,17 +150,12 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
     /**
      * @param object $item
-     *
-     * @return string
      */
     protected function getSourceId($item): string
     {
         return (string) $item->id;
     }
 
-    /**
-     * @return StreamStatementProvider
-     */
     public function getStreamStatementProvider(): StreamStatementProvider
     {
         if (null === $this->statementProvider) {
@@ -187,11 +166,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     }
 
     /**
-     * @param OutputDecorator $output
      * @param int $count
-     * @param array $values
-     *
-     * @return bool
      */
     protected function insertValues(OutputDecorator $output, $count, array $values): bool
     {
@@ -218,10 +193,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     }
 
     /**
-     * @param OutputInterface $output
      * @param string $url
-     *
-     * @return string
      */
     public function cachePhoto(OutputInterface $output, $url): string
     {
@@ -242,8 +214,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
     /**
      * @param int $limit
-     *
-     * @return int
      */
     protected function getPerPage($limit): int
     {
