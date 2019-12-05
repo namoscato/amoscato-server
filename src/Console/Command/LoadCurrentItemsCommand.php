@@ -44,7 +44,7 @@ class LoadCurrentItemsCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = OutputDecorator::create($output);
         $result = [];
@@ -60,5 +60,7 @@ class LoadCurrentItemsCommand extends Command
         } else {
             $this->ftpClient->upload($output, json_encode($result), 'current.json');
         }
+
+        return 0;
     }
 }

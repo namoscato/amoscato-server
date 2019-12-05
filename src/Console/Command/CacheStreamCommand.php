@@ -47,12 +47,14 @@ class CacheStreamCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->ftpClient->upload(
             $output,
             json_encode($this->streamAggregator->aggregate((float) $input->getOption('size'))),
             'stream.json'
         );
+
+        return 0;
     }
 }
