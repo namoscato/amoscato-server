@@ -47,6 +47,9 @@
     "nesbot/carbon": {
         "version": "2.9.1"
     },
+    "php": {
+        "version": "7.3"
+    },
     "php-cs-fixer/diff": {
         "version": "v1.3.0"
     },
@@ -57,6 +60,9 @@
         "version": "1.0.1"
     },
     "psr/container": {
+        "version": "1.0.0"
+    },
+    "psr/event-dispatcher": {
         "version": "1.0.0"
     },
     "psr/http-message": {
@@ -70,6 +76,18 @@
     },
     "ralouphie/getallheaders": {
         "version": "2.0.5"
+    },
+    "sebastian/comparator": {
+        "version": "3.0.2"
+    },
+    "sebastian/diff": {
+        "version": "3.0.2"
+    },
+    "sebastian/exporter": {
+        "version": "3.1.2"
+    },
+    "sebastian/recursion-context": {
+        "version": "3.0.0"
     },
     "sensio/framework-extra-bundle": {
         "version": "5.2",
@@ -108,9 +126,6 @@
         "version": "v1.0.2"
     },
     "symfony/css-selector": {
-        "version": "v4.2.1"
-    },
-    "symfony/debug": {
         "version": "v4.2.1"
     },
     "symfony/dependency-injection": {
@@ -208,15 +223,6 @@
     },
     "symfony/var-exporter": {
         "version": "v4.2.1"
-    },
-    "symfony/web-server-bundle": {
-        "version": "3.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "3.3",
-            "ref": "dae9b39fd6717970be7601101ce5aa960bf53d9a"
-        }
     },
     "symfony/yaml": {
         "version": "v4.2.1"

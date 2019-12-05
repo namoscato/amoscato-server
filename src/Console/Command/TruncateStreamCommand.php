@@ -51,7 +51,7 @@ class TruncateStreamCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = OutputDecorator::create($output);
         $size = $input->getOption('size');
@@ -72,6 +72,8 @@ class TruncateStreamCommand extends Command
             $output->writeln("Truncating {$type} sources before {$createdAt}");
             $statementProvider->deleteOldItems($type, $createdAt);
         }
+
+        return 0;
     }
 
     public function getStreamStatementProvider(): StreamStatementProvider

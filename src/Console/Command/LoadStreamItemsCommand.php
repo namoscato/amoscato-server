@@ -57,7 +57,7 @@ class LoadStreamItemsCommand extends Command
      *
      * @throws InvalidArgumentException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = OutputDecorator::create($output);
         $sources = $input->getArgument('sources');
@@ -83,5 +83,7 @@ class LoadStreamItemsCommand extends Command
             $output->writeln("Extracting {$limit} {$type} source...");
             $source->load($output, $limit);
         }
+
+        return 0;
     }
 }
