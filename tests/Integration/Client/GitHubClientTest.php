@@ -39,7 +39,6 @@ class GitHubClientTest extends MockeryTestCase
             )
             ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['data'])));
 
-
         $this->assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
     }
 
