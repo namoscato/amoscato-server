@@ -6,6 +6,7 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\GitHubClient;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -17,14 +18,14 @@ class GitHubClientTest extends MockeryTestCase
     /** @var GitHubClient */
     private $gitHubClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
         $this->gitHubClient = new GitHubClient($this->client, 'secret', 'id');
     }
 
-    public function test_getUserEvents()
+    public function test_getUserEvents(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -32,44 +33,26 @@ class GitHubClientTest extends MockeryTestCase
             ->with(
                 'users/1/events',
                 [
-                    'query' => [
-                        'client_id' => 'id',
-                        'client_secret' => 'secret',
-                    ],
+                    'auth' => ['id', 'secret'],
+                    'query' => [],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '["data"]',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['data'])));
+
 
         $this->assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
     }
 
-    public function test_getCommit()
+    public function test_getCommit(): void
     {
         $this->client
             ->shouldReceive('get')
             ->once()
             ->with(
                 'github.com',
-                [
-                    'query' => [
-                        'client_id' => 'id',
-                        'client_secret' => 'secret',
-                    ],
-                ]
+                m::type('array')
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"key":"data"}',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['key' => 'data'])));
 
         $this->assertEquals(
             (object) [

@@ -62,13 +62,8 @@ class GitHubClient extends Client
         $response = $this->client->get(
             $uri,
             [
-                'query' => array_merge(
-                    $args,
-                    [
-                        'client_id' => $this->clientId,
-                        'client_secret' => $this->apiKey,
-                    ]
-                ),
+                'auth' => [$this->clientId, $this->apiKey],
+                'query' => $args,
             ]
         );
 
