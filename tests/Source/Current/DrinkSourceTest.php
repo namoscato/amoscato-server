@@ -22,7 +22,7 @@ class DrinkSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(UntappdClient::class);
 
@@ -31,7 +31,7 @@ class DrinkSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this
             ->client
@@ -43,19 +43,19 @@ class DrinkSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
-                    'checkins' => (object) [
+                (object)[
+                    'checkins' => (object)[
                         'items' => [
-                            (object) [
+                            (object)[
                                 'checkin_id' => 'id',
                                 'created_at' => '2018-05-13 12:00:00',
-                                'brewery' => (object) [
+                                'brewery' => (object)[
                                     'brewery_name' => 'brewery',
                                 ],
-                                'beer' => (object) [
+                                'beer' => (object)[
                                     'beer_name' => 'beer',
                                 ],
-                                'venue' => (object) [
+                                'venue' => (object)[
                                     'venue_name' => 'venue',
                                 ],
                             ],

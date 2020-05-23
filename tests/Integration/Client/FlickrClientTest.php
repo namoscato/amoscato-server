@@ -18,14 +18,14 @@ class FlickrClientTest extends MockeryTestCase
     /** @var FlickrClient */
     private $flickrClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
         $this->flickrClient = new FlickrClient($this->client, 'key');
     }
 
-    public function test_getPublicPhotos()
+    public function test_getPublicPhotos(): void
     {
         $this->client
             ->shouldReceive('get')

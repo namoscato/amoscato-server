@@ -54,7 +54,7 @@ class GitHubClientTest extends MockeryTestCase
             ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['key' => 'data'])));
 
         $this->assertEquals(
-            (object) [
+            (object)[
                 'key' => 'data',
             ],
             $this->gitHubClient->getCommit('github.com')

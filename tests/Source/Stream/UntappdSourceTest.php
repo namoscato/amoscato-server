@@ -27,7 +27,7 @@ class UntappdSourceTest extends MockeryTestCase
     /** @var m\Mock */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(UntappdClient::class);
 
@@ -50,13 +50,13 @@ class UntappdSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('untappd')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -82,13 +82,13 @@ class UntappdSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
+                (object)[
                     'items' => [
-                        (object) [
+                        (object)[
                             'badge_name' => 'badge',
                             'user_badge_id' => 'id',
                             'created_at' => '2018-05-13 12:00:00',
-                            'media' => (object) [
+                            'media' => (object)[
                                 'badge_image_lg' => 'img.jpg',
                             ],
                         ],
@@ -107,7 +107,7 @@ class UntappdSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
+                (object)[
                     'items' => [],
                 ]
             );
@@ -126,7 +126,7 @@ class UntappdSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

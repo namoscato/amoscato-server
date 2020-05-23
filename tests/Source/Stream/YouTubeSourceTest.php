@@ -28,7 +28,7 @@ class YouTubeSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(YouTubeClient::class);
 
@@ -52,13 +52,13 @@ class YouTubeSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('youtube')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -84,29 +84,29 @@ class YouTubeSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
+                (object)[
                     'nextPageToken' => 'next1',
                     'items' => [
-                        (object) [
-                            'snippet' => (object) [
+                        (object)[
+                            'snippet' => (object)[
                                 'publishedAt' => '2018-05-13 12:00:00',
                                 'title' => 'video title',
-                                'thumbnails' => (object) [
-                                    'medium' => (object) [
+                                'thumbnails' => (object)[
+                                    'medium' => (object)[
                                         'url' => 'img.jpg',
                                         'width' => 100,
                                         'height' => 300,
                                     ],
                                 ],
-                                'resourceId' => (object) [
+                                'resourceId' => (object)[
                                     'videoId' => '123',
                                 ],
                             ],
                         ],
-                        (object) [
-                            'snippet' => (object) [
+                        (object)[
+                            'snippet' => (object)[
                                 'title' => 'video title',
-                                'resourceId' => (object) [
+                                'resourceId' => (object)[
                                     'videoId' => '123',
                                 ],
                             ],
@@ -127,7 +127,7 @@ class YouTubeSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
+                (object)[
                     'nextPageToken' => 'next2',
                     'items' => [],
                 ]
@@ -138,7 +138,7 @@ class YouTubeSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

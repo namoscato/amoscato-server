@@ -37,7 +37,7 @@ class InstagramClientTest extends MockeryTestCase
     public function testGetMostRecentMedia(): void
     {
         $this->assertEquals(
-            (object) ['foo' => 'bar'],
+            (object)['foo' => 'bar'],
             $this->target->getMostRecentMedia(['page' => 1])
         );
 

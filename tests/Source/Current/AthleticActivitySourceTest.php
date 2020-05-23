@@ -22,7 +22,7 @@ class AthleticActivitySourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->stravaClient = m::mock(StravaClient::class);
 
@@ -34,14 +34,14 @@ class AthleticActivitySourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this
             ->stravaClient
             ->shouldReceive('getActivities')
             ->with(['per_page' => 1])
             ->andReturn([
-                (object) [
+                (object)[
                     'start_date' => '2018-05-22 12:00:00Z',
                     'distance' => 10000,
                     'moving_time' => 60,

@@ -6,6 +6,8 @@ namespace Tests\Source\Stream\Query;
 
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
+use PDO;
+use PDOStatement;
 use PHPUnit\Framework\TestCase;
 
 class StreamStatementProviderTest extends TestCase
@@ -16,19 +18,14 @@ class StreamStatementProviderTest extends TestCase
     /** @var StreamStatementProvider */
     private $target;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->database = m::mock('PDO');
 
         $this->target = new StreamStatementProvider($this->database);
     }
 
-    protected function tearDown()
-    {
-        m::close();
-    }
-
-    public function test_insertRows()
+    public function test_insertRows(): void
     {
         $sql = <<<SQL
 INSERT INTO stream (
@@ -63,7 +60,7 @@ SQL;
         );
     }
 
-    public function test_selectLatestSourceId()
+    public function test_selectLatestSourceId(): void
     {
         $sql = <<<SQL
 SELECT source_id
@@ -74,7 +71,7 @@ LIMIT :limit;
 SQL;
 
         $statement = m::mock('PDOStatement',
-            function ($mock) {
+            static function ($mock) {
                 /* @var m\Mock $mock */
 
                 $mock
@@ -109,7 +106,7 @@ SQL;
         );
     }
 
-    public function test_selectStreamRows()
+    public function test_selectStreamRows(): void
     {
         $sql = <<<SQL
 SELECT *
@@ -120,7 +117,7 @@ LIMIT :limit;
 SQL;
 
         $statement = m::mock('PDOStatement',
-            function ($mock) {
+            static function ($mock) {
                 /* @var m\Mock $mock */
 
                 $mock
@@ -155,14 +152,14 @@ SQL;
         );
     }
 
-    public function test_selectCreatedDateAtOffset()
+    public function test_selectCreatedDateAtOffset(): void
     {
         $this
             ->database
             ->shouldReceive('prepare')
             ->andReturn(m::mock(
-                \PDOStatement::class,
-                function ($stmt) {
+                PDOStatement::class,
+                static function ($stmt) {
                     /* @var m\Mock $stmt */
 
                     $stmt
@@ -173,7 +170,7 @@ SQL;
                     $stmt
                         ->shouldReceive('bindParam')
                         ->once()
-                        ->with(':offset', 10, \PDO::PARAM_INT);
+                        ->with(':offset', 10, PDO::PARAM_INT);
 
                     $stmt
                         ->shouldReceive('execute')
@@ -188,14 +185,14 @@ SQL;
         $this->assertEquals('DATE', $this->target->selectCreatedDateAtOffset('TYPE', 10));
     }
 
-    public function test_deleteOldItems()
+    public function test_deleteOldItems(): void
     {
         $this
             ->database
             ->shouldReceive('prepare')
             ->andReturn(m::mock(
-                \PDOStatement::class,
-                function ($stmt) {
+                PDOStatement::class,
+                static function ($stmt) {
                     /* @var m\Mock $stmt */
 
                     $stmt

@@ -23,7 +23,7 @@ class BookSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(GoodreadsClient::class);
 
@@ -32,7 +32,7 @@ class BookSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load_emptyResult()
+    public function test_load_emptyResult(): void
     {
         $this
             ->client
@@ -58,7 +58,7 @@ class BookSourceTest extends MockeryTestCase
         );
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this
             ->client
@@ -70,7 +70,7 @@ class BookSourceTest extends MockeryTestCase
                         'count' => 1,
                         'first' => m::mock(
                             Crawler::class,
-                            function ($mock) {
+                            static function ($mock) {
                                 /* @var m\Mock $mock */
 
                                 $mock
@@ -91,7 +91,7 @@ class BookSourceTest extends MockeryTestCase
                                     ->andReturn(
                                         m::mock(
                                             Crawler::class,
-                                            function ($mock) {
+                                            static function ($mock) {
                                                 /* @var m\Mock $mock */
 
                                                 $mock

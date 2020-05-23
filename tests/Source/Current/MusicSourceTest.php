@@ -22,7 +22,7 @@ class MusicSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(LastfmClient::class);
 
@@ -31,7 +31,7 @@ class MusicSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this
             ->client
@@ -44,19 +44,19 @@ class MusicSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [
-                        'artist' => (object) [
+                    (object)[
+                        'artist' => (object)[
                             '#text' => '',
                         ],
                     ],
-                    (object) [
-                        'album' => (object) [
+                    (object)[
+                        'album' => (object)[
                             '#text' => 'ALBUM',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'ARTIST',
                         ],
-                        'date' => (object) [
+                        'date' => (object)[
                             'uts' => 1526234751,
                         ],
                         'name' => 'NAME',

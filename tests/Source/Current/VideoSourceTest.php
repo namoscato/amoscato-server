@@ -57,13 +57,13 @@ class VideoSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
+                (object)[
                     'items' => [
-                        (object) [
-                            'snippet' => (object) [
+                        (object)[
+                            'snippet' => (object)[
                                 'publishedAt' => $youTubeDate,
                                 'title' => 'yt title',
-                                'resourceId' => (object) [
+                                'resourceId' => (object)[
                                     'videoId' => 'v1',
                                 ],
                             ],
@@ -81,12 +81,12 @@ class VideoSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object) [
+                (object)[
                     'data' => [
-                        (object) [
-                            'metadata' => (object) [
-                                'interactions' => (object) [
-                                    'like' => (object) [
+                        (object)[
+                            'metadata' => (object)[
+                                'interactions' => (object)[
+                                    'like' => (object)[
                                         'added_time' => $vimeoDate,
                                     ],
                                 ],

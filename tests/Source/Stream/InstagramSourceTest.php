@@ -67,14 +67,14 @@ class InstagramSourceTest extends MockeryTestCase
 
         $this->client
             ->shouldReceive('getMostRecentMedia')
-            ->andReturn((object) [
+            ->andReturn((object)[
                 'data' => [
-                    (object) [
+                    (object)[
                         'id' => '1',
-                        'caption' => (object) ['text' => 'CAPTION'],
-                        'location' => (object) ['name' => 'LOCATION'],
-                        'images' => (object) [
-                            'low_resolution' => (object) [
+                        'caption' => (object)['text' => 'CAPTION'],
+                        'location' => (object)['name' => 'LOCATION'],
+                        'images' => (object)[
+                            'low_resolution' => (object)[
                                 'url' => 'img1.jpg',
                                 'width' => 'w1',
                                 'height' => 'h1',
@@ -83,29 +83,29 @@ class InstagramSourceTest extends MockeryTestCase
                         'link' => 'instagram.com/1',
                         'created_time' => Carbon::create(2019, 3, 24, 12, 0, 0, 'UTC')->timestamp,
                     ],
-                    (object) [
+                    (object)[
                         'id' => '2',
-                        'location' => (object) ['name' => 'LOCATION'],
-                        'images' => (object) [
-                            'low_resolution' => (object) [
+                        'location' => (object)['name' => 'LOCATION'],
+                        'images' => (object)[
+                            'low_resolution' => (object)[
                                 'url' => 'img2.jpg',
                                 'width' => 'w',
                                 'height' => 'h',
                             ],
                         ],
                         'carousel_media' => [
-                            (object) [
-                                'images' => (object) [
-                                    'low_resolution' => (object) [
+                            (object)[
+                                'images' => (object)[
+                                    'low_resolution' => (object)[
                                         'url' => 'img3.jpg',
                                         'width' => 'w3',
                                         'height' => 'h3',
                                     ],
                                 ],
                             ],
-                            (object) [
-                                'images' => (object) [
-                                    'low_resolution' => (object) [
+                            (object)[
+                                'images' => (object)[
+                                    'low_resolution' => (object)[
                                         'url' => 'img4.jpg',
                                         'width' => 'w4',
                                         'height' => 'h4',
@@ -126,7 +126,7 @@ class InstagramSourceTest extends MockeryTestCase
             ->with(3)
             ->andReturn(m::mock(
                 PDOStatement::class,
-                function ($mock) {
+                static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

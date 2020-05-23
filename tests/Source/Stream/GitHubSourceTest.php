@@ -31,7 +31,7 @@ class GitHubSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(GitHubClient::class);
 
@@ -57,7 +57,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('github')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -73,7 +73,7 @@ class GitHubSourceTest extends MockeryTestCase
             );
     }
 
-    public function test_load_with_empty_values()
+    public function test_load_with_empty_values(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -89,10 +89,10 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->never();
 
-        $this->assertTrue($this->source->load($this->output), 100);
+        $this->assertTrue($this->source->load($this->output));
     }
 
-    public function test_load_with_items()
+    public function test_load_with_items(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -104,11 +104,11 @@ class GitHubSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [
+                    (object)[
                         'type' => 'PushEvent',
-                        'payload' => (object) [
+                        'payload' => (object)[
                             'commits' => [
-                                (object) [
+                                (object)[
                                     'sha' => '4',
                                     'url' => 'api.github.com/4',
                                     'message' => 'message 4',
@@ -116,19 +116,19 @@ class GitHubSourceTest extends MockeryTestCase
                             ],
                         ],
                     ],
-                    (object) [
+                    (object)[
                         'type' => 'AnotherEvent',
                     ],
-                    (object) [
+                    (object)[
                         'type' => 'PushEvent',
-                        'payload' => (object) [
+                        'payload' => (object)[
                             'commits' => [
-                                (object) [
+                                (object)[
                                     'sha' => '2',
                                     'url' => 'api.github.com/2',
                                     'message' => "message 2\nwith newlines",
                                 ],
-                                (object) [
+                                (object)[
                                     'sha' => '3',
                                     'url' => 'api.github.com/3',
                                     'message' => 'message 3',
@@ -147,21 +147,21 @@ class GitHubSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [
+                    (object)[
                         'type' => 'PushEvent',
-                        'payload' => (object) [
+                        'payload' => (object)[
                             'commits' => [
-                                (object) [
+                                (object)[
                                     'sha' => '0',
                                     'url' => 'api.github.com/0',
                                     'message' => 'message 0',
                                 ],
-                                (object) [
+                                (object)[
                                     'sha' => '1',
                                     'url' => 'api.github.com/1',
                                     'message' => 'message 1',
                                 ],
-                                (object) [
+                                (object)[
                                     'sha' => '2',
                                     'url' => 'api.github.com/2',
                                     'message' => "message 2\nwith newlines",
@@ -189,12 +189,12 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('getCommit')
             ->with('api.github.com/1')
             ->andReturn(
-                (object) [
-                    'author' => (object) [
+                (object)[
+                    'author' => (object)[
                         'login' => 'username',
                     ],
-                    'commit' => (object) [
-                        'author' => (object) [
+                    'commit' => (object)[
+                        'author' => (object)[
                             'date' => '2016-05-17 21:00:00',
                         ],
                     ],
@@ -206,12 +206,12 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('getCommit')
             ->with('api.github.com/2')
             ->andReturn(
-                (object) [
-                    'author' => (object) [
+                (object)[
+                    'author' => (object)[
                         'login' => 'username',
                     ],
-                    'commit' => (object) [
-                        'author' => (object) [
+                    'commit' => (object)[
+                        'author' => (object)[
                             'date' => '2016-05-17 22:00:00',
                         ],
                     ],
@@ -223,8 +223,8 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('getCommit')
             ->with('api.github.com/3')
             ->andReturn(
-                (object) [
-                    'author' => (object) [
+                (object)[
+                    'author' => (object)[
                         'login' => 'another user',
                     ],
                 ]
@@ -234,12 +234,12 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('getCommit')
             ->with('api.github.com/4')
             ->andReturn(
-                (object) [
-                    'author' => (object) [
+                (object)[
+                    'author' => (object)[
                         'login' => 'username',
                     ],
-                    'commit' => (object) [
-                        'author' => (object) [
+                    'commit' => (object)[
+                        'author' => (object)[
                             'date' => '2016-05-17 23:00:00',
                         ],
                     ],
@@ -251,7 +251,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->with(3)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -291,27 +291,27 @@ class GitHubSourceTest extends MockeryTestCase
         $this->assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_previous_items()
+    public function test_load_with_previous_items(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
             ->andReturn(
                 [
-                    (object) [
+                    (object)[
                         'type' => 'PushEvent',
-                        'payload' => (object) [
+                        'payload' => (object)[
                             'commits' => [
-                                (object) [
+                                (object)[
                                     'sha' => '99',
                                     'url' => 'api.github.com/99',
                                     'message' => 'message 99',
                                 ],
-                                (object) [
+                                (object)[
                                     'sha' => '100',
                                     'url' => 'api.github.com/100',
                                     'message' => 'message 100',
                                 ],
-                                (object) [
+                                (object)[
                                     'sha' => '101',
                                     'url' => 'api.github.com/101',
                                     'message' => 'message 101',
@@ -326,12 +326,12 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('getCommit')
             ->with('api.github.com/101')
             ->andReturn(
-                (object) [
-                    'author' => (object) [
+                (object)[
+                    'author' => (object)[
                         'login' => 'username',
                     ],
-                    'commit' => (object) [
-                        'author' => (object) [
+                    'commit' => (object)[
+                        'author' => (object)[
                             'date' => '2016-05-17 23:00:00',
                         ],
                     ],
@@ -343,7 +343,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -364,20 +364,20 @@ class GitHubSourceTest extends MockeryTestCase
         $this->source->load($this->output, 100);
     }
 
-    public function test_load_with_max_event_pages()
+    public function test_load_with_max_event_pages(): void
     {
         $count = 0;
 
         $this->client
             ->shouldReceive('getUserEvents')
-            ->andReturnUsing(function () use (&$count) {
+            ->andReturnUsing(static function () use (&$count) {
                 return [
-                    (object) [
+                    (object)[
                         'type' => 'PushEvent',
-                        'payload' => (object) [
+                        'payload' => (object)[
                             'commits' => [
-                                (object) [
-                                    'sha' => (string) ++$count,
+                                (object)[
+                                    'sha' => (string)++$count,
                                     'url' => "api.github.com/{$count}",
                                     'message' => "message {$count}",
                                 ],
@@ -390,12 +390,12 @@ class GitHubSourceTest extends MockeryTestCase
         $this->client
             ->shouldReceive('getCommit')
             ->andReturn(
-                (object) [
-                    'author' => (object) [
+                (object)[
+                    'author' => (object)[
                         'login' => 'username',
                     ],
-                    'commit' => (object) [
-                        'author' => (object) [
+                    'commit' => (object)[
+                        'author' => (object)[
                             'date' => '2016-05-17 23:00:00',
                         ],
                     ],
@@ -408,7 +408,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->once()
             ->with(10)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

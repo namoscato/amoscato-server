@@ -28,7 +28,7 @@ class TwitterSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(TwitterClient::class);
 
@@ -52,13 +52,13 @@ class TwitterSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('twitter')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -83,7 +83,7 @@ class TwitterSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [
+                    (object)[
                         'id_str' => '1',
                         'text' => 'tweet',
                         'created_at' => '2016-05-15 19:37:06',
@@ -97,7 +97,7 @@ class TwitterSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

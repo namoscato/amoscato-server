@@ -54,7 +54,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('lastfm')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -103,40 +103,40 @@ class LastfmSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [ // Currently playing track
-                        'album' => (object) [
+                    (object)[ // Currently playing track
+                        'album' => (object)[
                             'mbid' => '1',
                         ],
                     ],
-                    (object) [
-                        'date' => (object) [
+                    (object)[
+                        'date' => (object)[
                             'uts' => '1463341026',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => '2',
                             '#text' => 'album two',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist two',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
-                            (object) [
+                            (object)[
                                 '#text' => 'image2.jpg',
                             ],
                         ],
                     ],
-                    (object) [ // Adjacent track on the same album
-                        'date' => (object) [
+                    (object)[ // Adjacent track on the same album
+                        'date' => (object)[
                             'uts' => '1463341006',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => '',
                             '#text' => 'album three',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist three',
                         ],
                     ],
@@ -152,42 +152,42 @@ class LastfmSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [ // Album with no image
-                        'date' => (object) [
+                    (object)[ // Album with no image
+                        'date' => (object)[
                             'uts' => '1463341016',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => '',
                             '#text' => 'album three',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist three',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
-                            (object) [
+                            (object)[
                                 '#text' => '',
                             ],
                         ],
                     ],
-                    (object) [ // Last track (will not get inserted at the moment)
-                        'date' => (object) [
+                    (object)[ // Last track (will not get inserted at the moment)
+                        'date' => (object)[
                             'uts' => '1463340996',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => '2',
                             '#text' => 'album two',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist two',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
-                            (object) [
+                            (object)[
                                 '#text' => 'image2.jpg',
                             ],
                         ],
@@ -202,7 +202,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->once()
             ->with(2)
             ->andReturn(
-                (object) [
+                (object)[
                     'url' => 'lastfm.com/album2',
                 ]
             );
@@ -215,7 +215,7 @@ class LastfmSourceTest extends MockeryTestCase
                 'album three'
             )
             ->andReturn(
-                (object) []
+                (object)[]
             );
 
         $this->statementProvider
@@ -223,7 +223,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->once()
             ->with(2)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -261,62 +261,62 @@ class LastfmSourceTest extends MockeryTestCase
             ->shouldReceive('getRecentTracks')
             ->andReturn(
                 [
-                    (object) [
-                        'date' => (object) [
+                    (object)[
+                        'date' => (object)[
                             'uts' => '1363341030',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => 'mbid_1',
                             '#text' => 'album one',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist one',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
-                            (object) [
+                            (object)[
                                 '#text' => 'image1.jpg',
                             ],
                         ],
                     ],
-                    (object) [
-                        'date' => (object) [
+                    (object)[
+                        'date' => (object)[
                             'uts' => '1363341020',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => 'mbid_2',
                             '#text' => 'album two',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist two',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
-                            (object) [
+                            (object)[
                                 '#text' => 'image2.jpg',
                             ],
                         ],
                     ],
-                    (object) [
-                        'date' => (object) [
+                    (object)[
+                        'date' => (object)[
                             'uts' => '1363341010',
                         ],
-                        'album' => (object) [
+                        'album' => (object)[
                             'mbid' => 'mbid_3',
                             '#text' => 'album three',
                         ],
-                        'artist' => (object) [
+                        'artist' => (object)[
                             '#text' => 'artist three',
                         ],
                         'image' => [
                             0,
                             1,
                             2,
-                            (object) [
+                            (object)[
                                 '#text' => 'image3.jpg',
                             ],
                         ],
@@ -327,7 +327,7 @@ class LastfmSourceTest extends MockeryTestCase
         $this->client
             ->shouldReceive('getAlbumInfoById')
             ->andReturn(
-                (object) []
+                (object)[]
             );
 
         $this->statementProvider
@@ -335,7 +335,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

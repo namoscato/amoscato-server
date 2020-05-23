@@ -17,14 +17,14 @@ class VimeoClientTest extends MockeryTestCase
     /** @var VimeoClient */
     private $vimeoClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
         $this->vimeoClient = new VimeoClient($this->client, 'token');
     }
 
-    public function test_getPublicPhotos()
+    public function test_getPublicPhotos(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -49,7 +49,7 @@ class VimeoClientTest extends MockeryTestCase
             );
 
         $this->assertEquals(
-            (object) [
+            (object)[
                 'videos' => 'data',
             ],
             $this->vimeoClient->getLikes()

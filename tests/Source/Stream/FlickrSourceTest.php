@@ -28,7 +28,7 @@ class FlickrSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(FlickrClient::class);
 
@@ -52,13 +52,13 @@ class FlickrSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('flickr')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -85,7 +85,7 @@ class FlickrSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object) [
+                    (object)[
                         'id' => 1,
                         'url_m' => 'img.jpg',
                         'width_m' => 'w',
@@ -104,7 +104,7 @@ class FlickrSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
