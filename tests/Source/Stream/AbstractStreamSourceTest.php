@@ -94,13 +94,13 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->with(100, 1)
             ->andReturn(
                 [
-                    (object)[
+                    (object) [
                         'id' => 1,
                     ],
-                    (object)[
+                    (object) [
                         'id' => 2,
                     ],
-                    (object)[
+                    (object) [
                         'id' => 3,
                     ],
                 ]
@@ -109,13 +109,13 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->with(100, 2)
             ->andReturn(
                 [
-                    (object)[
+                    (object) [
                         'id' => 4,
                     ],
-                    (object)[
+                    (object) [
                         'id' => 5,
                     ],
-                    (object)[
+                    (object) [
                         'id' => 6,
                     ],
                 ]
@@ -200,13 +200,13 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->with(100, 1)
             ->andReturn(
                 [
-                    (object)[
+                    (object) [
                         'id' => 5001,
                     ],
-                    (object)[
+                    (object) [
                         'id' => 5000,
                     ],
-                    (object)[
+                    (object) [
                         'id' => 4999,
                     ],
                 ]
@@ -254,8 +254,8 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->source
             ->shouldReceive('mockExtract')
             ->andReturn([
-                (object)['id' => 5001],
-                (object)['id' => 5000],
+                (object) ['id' => 5001],
+                (object) ['id' => 5000],
             ]);
 
         $this->source

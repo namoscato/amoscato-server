@@ -88,7 +88,7 @@ class LastfmClientTest extends MockeryTestCase
             ->andReturn(m::mock(['getBody' => '{"no_album":"value"}']));
 
         $this->assertEquals(
-            (object)[
+            (object) [
                 'no_album' => 'value',
             ],
             $this->flickrClient->getAlbumInfoByName('foo', 'bar')

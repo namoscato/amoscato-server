@@ -85,27 +85,27 @@ class VimeoSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object)[
-                    'paging' => (object)[
+                (object) [
+                    'paging' => (object) [
                         'next' => 2,
                     ],
                     'data' => [
-                        (object)[
+                        (object) [
                             'uri' => '/videos/123',
                             'name' => 'video1',
                             'link' => 'link1',
-                            'metadata' => (object)[
-                                'interactions' => (object)[
-                                    'like' => (object)[
+                            'metadata' => (object) [
+                                'interactions' => (object) [
+                                    'like' => (object) [
                                         'added_time' => '2013-03-15 09:50:30',
                                     ],
                                 ],
                             ],
-                            'pictures' => (object)[
+                            'pictures' => (object) [
                                 'sizes' => [
                                     0,
                                     1,
-                                    (object)[
+                                    (object) [
                                         'link' => 'img.jpg',
                                         'width' => 300,
                                         'height' => 100,
@@ -127,8 +127,8 @@ class VimeoSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object)[
-                    'paging' => (object)[
+                (object) [
+                    'paging' => (object) [
                         'next' => null,
                     ],
                     'data' => [],

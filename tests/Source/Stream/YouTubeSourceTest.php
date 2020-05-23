@@ -84,29 +84,29 @@ class YouTubeSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object)[
+                (object) [
                     'nextPageToken' => 'next1',
                     'items' => [
-                        (object)[
-                            'snippet' => (object)[
+                        (object) [
+                            'snippet' => (object) [
                                 'publishedAt' => '2018-05-13 12:00:00',
                                 'title' => 'video title',
-                                'thumbnails' => (object)[
-                                    'medium' => (object)[
+                                'thumbnails' => (object) [
+                                    'medium' => (object) [
                                         'url' => 'img.jpg',
                                         'width' => 100,
                                         'height' => 300,
                                     ],
                                 ],
-                                'resourceId' => (object)[
+                                'resourceId' => (object) [
                                     'videoId' => '123',
                                 ],
                             ],
                         ],
-                        (object)[
-                            'snippet' => (object)[
+                        (object) [
+                            'snippet' => (object) [
                                 'title' => 'video title',
-                                'resourceId' => (object)[
+                                'resourceId' => (object) [
                                     'videoId' => '123',
                                 ],
                             ],
@@ -127,7 +127,7 @@ class YouTubeSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object)[
+                (object) [
                     'nextPageToken' => 'next2',
                     'items' => [],
                 ]

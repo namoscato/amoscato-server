@@ -82,13 +82,13 @@ class UntappdSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object)[
+                (object) [
                     'items' => [
-                        (object)[
+                        (object) [
                             'badge_name' => 'badge',
                             'user_badge_id' => 'id',
                             'created_at' => '2018-05-13 12:00:00',
-                            'media' => (object)[
+                            'media' => (object) [
                                 'badge_image_lg' => 'img.jpg',
                             ],
                         ],
@@ -107,7 +107,7 @@ class UntappdSourceTest extends MockeryTestCase
                 ]
             )
             ->andReturn(
-                (object)[
+                (object) [
                     'items' => [],
                 ]
             );

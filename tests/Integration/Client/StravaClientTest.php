@@ -35,7 +35,7 @@ class StravaClientTest extends MockeryTestCase
     public function test_getActivities(): void
     {
         $this->assertEquals(
-            (object)['foo' => 'bar'],
+            (object) ['foo' => 'bar'],
             $this->target->getActivities(['page' => 1])
         );
 

@@ -83,7 +83,7 @@ class TwitterSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object)[
+                    (object) [
                         'id_str' => '1',
                         'text' => 'tweet',
                         'created_at' => '2016-05-15 19:37:06',

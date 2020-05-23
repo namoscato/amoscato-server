@@ -41,7 +41,7 @@ class AthleticActivitySourceTest extends MockeryTestCase
             ->shouldReceive('getActivities')
             ->with(['per_page' => 1])
             ->andReturn([
-                (object)[
+                (object) [
                     'start_date' => '2018-05-22 12:00:00Z',
                     'distance' => 10000,
                     'moving_time' => 60,

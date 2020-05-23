@@ -49,7 +49,7 @@ class VimeoClientTest extends MockeryTestCase
             );
 
         $this->assertEquals(
-            (object)[
+            (object) [
                 'videos' => 'data',
             ],
             $this->vimeoClient->getLikes()

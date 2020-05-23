@@ -44,19 +44,19 @@ class MusicSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object)[
-                        'artist' => (object)[
+                    (object) [
+                        'artist' => (object) [
                             '#text' => '',
                         ],
                     ],
-                    (object)[
-                        'album' => (object)[
+                    (object) [
+                        'album' => (object) [
                             '#text' => 'ALBUM',
                         ],
-                        'artist' => (object)[
+                        'artist' => (object) [
                             '#text' => 'ARTIST',
                         ],
-                        'date' => (object)[
+                        'date' => (object) [
                             'uts' => 1526234751,
                         ],
                         'name' => 'NAME',

@@ -48,7 +48,7 @@ class YouTubeClientTest extends MockeryTestCase
             );
 
         $this->assertEquals(
-            (object)[
+            (object) [
                 'key' => 'value',
             ],
             $this->youtubeClient->getPlaylistItems(1)

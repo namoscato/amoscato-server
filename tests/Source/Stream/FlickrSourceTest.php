@@ -85,7 +85,7 @@ class FlickrSourceTest extends MockeryTestCase
             )
             ->andReturn(
                 [
-                    (object)[
+                    (object) [
                         'id' => 1,
                         'url_m' => 'img.jpg',
                         'width_m' => 'w',
