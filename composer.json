@@ -5,6 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^7.3.0",
+        "ext-PDO": "*",
         "ext-ctype": "*",
         "ext-ftp": "*",
         "ext-iconv": "*",

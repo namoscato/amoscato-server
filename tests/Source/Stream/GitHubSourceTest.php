@@ -31,7 +31,7 @@ class GitHubSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(GitHubClient::class);
 
@@ -57,7 +57,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('github')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -73,7 +73,7 @@ class GitHubSourceTest extends MockeryTestCase
             );
     }
 
-    public function test_load_with_empty_values()
+    public function test_load_with_empty_values(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -89,10 +89,10 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->never();
 
-        $this->assertTrue($this->source->load($this->output), 100);
+        $this->assertTrue($this->source->load($this->output));
     }
 
-    public function test_load_with_items()
+    public function test_load_with_items(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -251,7 +251,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->with(3)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -291,7 +291,7 @@ class GitHubSourceTest extends MockeryTestCase
         $this->assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_previous_items()
+    public function test_load_with_previous_items(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -343,7 +343,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -364,13 +364,13 @@ class GitHubSourceTest extends MockeryTestCase
         $this->source->load($this->output, 100);
     }
 
-    public function test_load_with_max_event_pages()
+    public function test_load_with_max_event_pages(): void
     {
         $count = 0;
 
         $this->client
             ->shouldReceive('getUserEvents')
-            ->andReturnUsing(function () use (&$count) {
+            ->andReturnUsing(static function () use (&$count) {
                 return [
                     (object) [
                         'type' => 'PushEvent',
@@ -408,7 +408,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->once()
             ->with(10)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

@@ -17,14 +17,14 @@ class TwitterClientTest extends MockeryTestCase
     /** @var TwitterClient */
     private $twitterClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
         $this->twitterClient = new TwitterClient($this->client, 'key');
     }
 
-    public function test_getUserTweets()
+    public function test_getUserTweets(): void
     {
         $this->client
             ->shouldReceive('get')

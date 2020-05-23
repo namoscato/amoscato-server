@@ -22,7 +22,7 @@ class DrinkSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(UntappdClient::class);
 
@@ -31,7 +31,7 @@ class DrinkSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this
             ->client

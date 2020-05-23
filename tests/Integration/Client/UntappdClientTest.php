@@ -17,14 +17,14 @@ class UntappdClientTest extends MockeryTestCase
     /** @var UntappdClient */
     private $untappdClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
         $this->untappdClient = new UntappdClient($this->client, 'key', 'client');
     }
 
-    public function test_getBadgeUrl()
+    public function test_getBadgeUrl(): void
     {
         $this->assertSame(
             'https://untappd.com/user/username/badges/id',
@@ -32,7 +32,7 @@ class UntappdClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getCheckinUrl()
+    public function test_getCheckinUrl(): void
     {
         $this->assertSame(
             'https://untappd.com/user/username/checkin/id',
@@ -40,7 +40,7 @@ class UntappdClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getUserBadges()
+    public function test_getUserBadges(): void
     {
         $this
             ->client
@@ -74,7 +74,7 @@ class UntappdClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getUserCheckins()
+    public function test_getUserCheckins(): void
     {
         $this
             ->client

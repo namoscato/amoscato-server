@@ -17,14 +17,14 @@ class YouTubeClientTest extends MockeryTestCase
     /** @var YouTubeClient */
     private $youtubeClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
         $this->youtubeClient = new YouTubeClient($this->client, 'key');
     }
 
-    public function test_getPublicPhotos()
+    public function test_getPublicPhotos(): void
     {
         $this->client
             ->shouldReceive('get')

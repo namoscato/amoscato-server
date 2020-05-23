@@ -126,7 +126,7 @@ class InstagramSourceTest extends MockeryTestCase
             ->with(3)
             ->andReturn(m::mock(
                 PDOStatement::class,
-                function ($mock) {
+                static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

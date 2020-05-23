@@ -28,7 +28,7 @@ class VimeoSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(VimeoClient::class);
 
@@ -50,19 +50,18 @@ class VimeoSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
-        m::close();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')
             ->with('vimeo')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -141,7 +140,7 @@ class VimeoSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

@@ -22,7 +22,7 @@ class MusicSourceTest extends MockeryTestCase
     /** @var OutputInterface */
     private $output;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(LastfmClient::class);
 
@@ -31,7 +31,7 @@ class MusicSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load()
+    public function test_load(): void
     {
         $this
             ->client

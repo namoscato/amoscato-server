@@ -18,7 +18,7 @@ class GoodreadsClientTest extends MockeryTestCase
     /** @var GoodreadsClient */
     private $goodreadsClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->client = m::mock(Client::class);
 
@@ -31,7 +31,7 @@ class GoodreadsClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getCurrentlyReadingBooks()
+    public function test_getCurrentlyReadingBooks(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -60,7 +60,7 @@ class GoodreadsClientTest extends MockeryTestCase
             ->andReturn(
                 m::mock(
                     Crawler::class,
-                    function ($mock) {
+                    static function ($mock) {
                         /* @var m\Mock $mock */
 
                         $mock
@@ -77,7 +77,7 @@ class GoodreadsClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getReadBooks()
+    public function test_getReadBooks(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -106,7 +106,7 @@ class GoodreadsClientTest extends MockeryTestCase
             ->andReturn(
                 m::mock(
                     Crawler::class,
-                    function ($mock) {
+                    static function ($mock) {
                         /* @var m\Mock $mock */
 
                         $mock

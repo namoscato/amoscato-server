@@ -55,7 +55,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('mockType')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -73,7 +73,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             );
     }
 
-    public function test_load_with_empty_values()
+    public function test_load_with_empty_values(): void
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -87,7 +87,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
         $this->assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_items()
+    public function test_load_with_items(): void
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -126,7 +126,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
 
         $this->source
             ->shouldReceive('mockTransform')
-            ->andReturnUsing(function ($item) {
+            ->andReturnUsing(static function ($item) {
                 if (6 === $item->id) {
                     return false;
                 }
@@ -144,7 +144,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->once()
             ->with(5)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -193,7 +193,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
         $this->assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_previous_items()
+    public function test_load_with_previous_items(): void
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -228,7 +228,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -282,7 +282,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->with(2)
             ->andReturn(m::mock(
                 PDOStatement::class,
-                function ($mock) {
+                static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock

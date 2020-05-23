@@ -54,7 +54,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->shouldReceive('selectLatestSourceId')
             ->with('lastfm')
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock->shouldReceive('execute');
@@ -223,7 +223,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->once()
             ->with(2)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
@@ -335,7 +335,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->once()
             ->with(1)
             ->andReturn(
-                m::mock('PDOStatement', function ($mock) {
+                m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
                     $mock
