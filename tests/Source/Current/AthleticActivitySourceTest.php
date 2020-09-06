@@ -50,7 +50,7 @@ class AthleticActivitySourceTest extends MockeryTestCase
                 ],
             ]);
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'date' => '2018-05-22 12:00:00',
                 'miles' => 6.21371,

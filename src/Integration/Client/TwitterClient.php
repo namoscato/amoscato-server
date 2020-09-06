@@ -30,6 +30,6 @@ class TwitterClient extends Client
             ]
         );
 
-        return \GuzzleHttp\json_decode($response->getBody());
+        return \GuzzleHttp\json_decode((string) $response->getBody());
     }
 }

@@ -7,8 +7,9 @@ namespace Tests\Integration\Client;
 use Amoscato\Integration\Client\LastfmClient;
 use Amoscato\Integration\Exception\LastfmBadResponseException;
 use GuzzleHttp\Client;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class LastfmClientTest extends MockeryTestCase
 {
@@ -41,15 +42,9 @@ class LastfmClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"album":"data"}',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['album' => 'data'])));
 
-        $this->assertSame('data', $this->flickrClient->getAlbumInfoById(1));
+        self::assertSame('data', $this->flickrClient->getAlbumInfoById(1));
     }
 
     public function test_getAlbumInfoByName_success(): void
@@ -69,15 +64,9 @@ class LastfmClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"album":"data"}',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['album' => 'data'])));
 
-        $this->assertSame('data', $this->flickrClient->getAlbumInfoByName('foo', 'bar'));
+        self::assertSame('data', $this->flickrClient->getAlbumInfoByName('foo', 'bar'));
     }
 
     public function test_getAlbumInfoByName_error(): void
@@ -85,9 +74,9 @@ class LastfmClientTest extends MockeryTestCase
         $this
             ->client
             ->shouldReceive('get')
-            ->andReturn(m::mock(['getBody' => '{"no_album":"value"}']));
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['no_album' => 'value'])));
 
-        $this->assertEquals(
+        self::assertEquals(
             (object) [
                 'no_album' => 'value',
             ],
@@ -112,15 +101,17 @@ class LastfmClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"recenttracks":{"track":["data"]}}',
-                    ]
-                )
+            ->andReturn(new Response(
+                200,
+                [],
+                \GuzzleHttp\json_encode([
+                    'recenttracks' => [
+                        'track' => ['data'],
+                    ],
+                ]))
             );
 
-        $this->assertSame(['data'], $this->flickrClient->getRecentTracks(1));
+        self::assertSame(['data'], $this->flickrClient->getRecentTracks(1));
     }
 
     public function test_getRecentTracks_exception(): void
@@ -132,13 +123,15 @@ class LastfmClientTest extends MockeryTestCase
         $this
             ->client
             ->shouldReceive('get')
-            ->andReturn(m::mock([
-                'getBody' => \GuzzleHttp\json_encode([
+            ->andReturn(new Response(
+                200,
+                [],
+                \GuzzleHttp\json_encode([
                     'error' => 1,
                     'message' => 'foo',
-                ]),
-            ]));
+                ]))
+            );
 
-        $this->assertSame('data', $this->flickrClient->getRecentTracks(1));
+        self::assertSame('data', $this->flickrClient->getRecentTracks(1));
     }
 }

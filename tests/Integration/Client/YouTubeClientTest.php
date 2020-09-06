@@ -6,8 +6,9 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\YouTubeClient;
 use GuzzleHttp\Client;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class YouTubeClientTest extends MockeryTestCase
 {
@@ -39,15 +40,9 @@ class YouTubeClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"key":"value"}',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['key' => 'value'])));
 
-        $this->assertEquals(
+        self::assertEquals(
             (object) [
                 'key' => 'value',
             ],

@@ -54,7 +54,7 @@ SQL;
             ->with($sql)
             ->andReturn('stmt');
 
-        $this->assertSame(
+        self::assertSame(
             'stmt',
             $this->target->insertRows(2)
         );
@@ -100,7 +100,7 @@ SQL;
             ->with($sql)
             ->andReturn($statement);
 
-        $this->assertSame(
+        self::assertSame(
             $statement,
             $this->target->selectLatestSourceId('TYPE')
         );
@@ -146,7 +146,7 @@ SQL;
             ->with($sql)
             ->andReturn($statement);
 
-        $this->assertSame(
+        self::assertSame(
             $statement,
             $this->target->selectStreamRows('TYPE', 10)
         );
@@ -182,7 +182,7 @@ SQL;
                 }
             ));
 
-        $this->assertEquals('DATE', $this->target->selectCreatedDateAtOffset('TYPE', 10));
+        self::assertEquals('DATE', $this->target->selectCreatedDateAtOffset('TYPE', 10));
     }
 
     public function test_deleteOldItems(): void
@@ -211,6 +211,6 @@ SQL;
                 }
             ));
 
-        $this->assertTrue($this->target->deleteOldItems('TYPE', 'DATE'));
+        self::assertTrue($this->target->deleteOldItems('TYPE', 'DATE'));
     }
 }

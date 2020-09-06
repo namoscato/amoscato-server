@@ -65,7 +65,7 @@ class MusicSourceTest extends MockeryTestCase
                 ]
             );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'album' => 'ALBUM',
                 'artist' => 'ARTIST',

@@ -51,7 +51,7 @@ class FlickrClientTest extends MockeryTestCase
                 )
             );
 
-        $this->assertSame(
+        self::assertSame(
             ['public photos'],
             $this->flickrClient->getPublicPhotos(1)
         );

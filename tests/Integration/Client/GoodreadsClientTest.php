@@ -6,8 +6,9 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\GoodreadsClient;
 use GuzzleHttp\Client;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
 class GoodreadsClientTest extends MockeryTestCase
@@ -46,13 +47,7 @@ class GoodreadsClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => 'body',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], 'body'));
 
         $this->goodreadsClient
             ->shouldReceive('createCrawler')
@@ -71,7 +66,7 @@ class GoodreadsClientTest extends MockeryTestCase
                 )
             );
 
-        $this->assertSame(
+        self::assertSame(
             ['books'],
             $this->goodreadsClient->getCurrentlyReadingBooks(1)
         );
@@ -92,13 +87,7 @@ class GoodreadsClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => 'body',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], 'body'));
 
         $this->goodreadsClient
             ->shouldReceive('createCrawler')
@@ -117,7 +106,7 @@ class GoodreadsClientTest extends MockeryTestCase
                 )
             );
 
-        $this->assertSame(
+        self::assertSame(
             ['books'],
             $this->goodreadsClient->getReadBooks(1)
         );

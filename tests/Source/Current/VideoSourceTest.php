@@ -98,7 +98,7 @@ class VideoSourceTest extends MockeryTestCase
                 ]
             );
 
-        $this->assertSame($expected, $this->target->load($this->output));
+        self::assertSame($expected, $this->target->load($this->output));
     }
 
     public function getLoadTests(): array

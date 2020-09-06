@@ -6,8 +6,9 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\UntappdClient;
 use GuzzleHttp\Client;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use GuzzleHttp\Psr7\Response;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class UntappdClientTest extends MockeryTestCase
 {
@@ -26,7 +27,7 @@ class UntappdClientTest extends MockeryTestCase
 
     public function test_getBadgeUrl(): void
     {
-        $this->assertSame(
+        self::assertSame(
             'https://untappd.com/user/username/badges/id',
             $this->untappdClient->getBadgeUrl('username', 'id')
         );
@@ -34,7 +35,7 @@ class UntappdClientTest extends MockeryTestCase
 
     public function test_getCheckinUrl(): void
     {
-        $this->assertSame(
+        self::assertSame(
             'https://untappd.com/user/username/checkin/id',
             $this->untappdClient->getCheckinUrl('username', 'id')
         );
@@ -55,15 +56,9 @@ class UntappdClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"response":"data"}',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['response' => 'data'])));
 
-        $this->assertSame(
+        self::assertSame(
             'data',
             $this->untappdClient->getUserBadges(
                 'username',
@@ -88,15 +83,9 @@ class UntappdClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '{"response":"data"}',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['response' => 'data'])));
 
-        $this->assertSame(
+        self::assertSame(
             'data',
             $this->untappdClient->getUserCheckins('username')
         );
