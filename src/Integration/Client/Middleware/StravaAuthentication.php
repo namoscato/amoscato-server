@@ -122,7 +122,7 @@ class StravaAuthentication
                 ]
             );
 
-            $response = \GuzzleHttp\json_decode($response->getBody(), true);
+            $response = \GuzzleHttp\json_decode((string) $response->getBody(), true);
 
             $item->expiresAfter($response['expires_in']);
 

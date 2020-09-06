@@ -123,15 +123,15 @@ class StravaAuthenticationTest extends MockeryTestCase
 
         $response->wait();
 
-        $this->assertCount(1, $this->requestHistory);
+        self::assertCount(1, $this->requestHistory);
 
         /** @var RequestInterface $oauthRequest */
         $oauthRequest = $this->requestHistory[0]['request'];
 
-        $this->assertEquals('POST', $oauthRequest->getMethod());
+        self::assertEquals('POST', $oauthRequest->getMethod());
 
         parse_str($oauthRequest->getBody()->getContents(), $formParams);
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'client_id' => 'CLIENT',
                 'client_secret' => 'SECRET',

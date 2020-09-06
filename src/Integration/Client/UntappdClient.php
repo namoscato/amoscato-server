@@ -94,6 +94,6 @@ class UntappdClient extends Client
             ]
         );
 
-        return \GuzzleHttp\json_decode($response->getBody())->response;
+        return \GuzzleHttp\json_decode((string) $response->getBody())->response;
     }
 }

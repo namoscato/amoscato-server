@@ -87,7 +87,7 @@ class LastfmSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->never();
 
-        $this->assertTrue($this->source->load($this->output, 100));
+        self::assertTrue($this->source->load($this->output, 100));
     }
 
     public function test_load_with_items(): void
@@ -252,7 +252,7 @@ class LastfmSourceTest extends MockeryTestCase
                 })
             );
 
-        $this->assertTrue($this->source->load($this->output, 100));
+        self::assertTrue($this->source->load($this->output, 100));
     }
 
     public function test_load_with_previous_items(): void

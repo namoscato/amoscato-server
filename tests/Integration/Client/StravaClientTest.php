@@ -34,20 +34,20 @@ class StravaClientTest extends MockeryTestCase
 
     public function test_getActivities(): void
     {
-        $this->assertEquals(
+        self::assertEquals(
             (object) ['foo' => 'bar'],
             $this->target->getActivities(['page' => 1])
         );
 
-        $this->assertCount(1, $this->requestHistory);
+        self::assertCount(1, $this->requestHistory);
 
         /** @var RequestInterface $request */
         $request = $this->requestHistory[0]['request'];
 
-        $this->assertEquals('GET', $request->getMethod());
-        $this->assertEquals('api/v3/athlete/activities', $request->getUri()->getPath());
+        self::assertEquals('GET', $request->getMethod());
+        self::assertEquals('api/v3/athlete/activities', $request->getUri()->getPath());
 
         parse_str($request->getUri()->getQuery(), $query);
-        $this->assertEquals(['page' => 1], $query);
+        self::assertEquals(['page' => 1], $query);
     }
 }

@@ -58,6 +58,6 @@ class StravaClient
             ['query' => $args]
         );
 
-        return \GuzzleHttp\json_decode($response->getBody());
+        return \GuzzleHttp\json_decode((string) $response->getBody());
     }
 }

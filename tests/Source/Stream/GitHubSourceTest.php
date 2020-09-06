@@ -89,7 +89,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('insertRows')
             ->never();
 
-        $this->assertTrue($this->source->load($this->output));
+        self::assertTrue($this->source->load($this->output));
     }
 
     public function test_load_with_items(): void
@@ -288,7 +288,7 @@ class GitHubSourceTest extends MockeryTestCase
                 })
             );
 
-        $this->assertTrue($this->source->load($this->output, 100));
+        self::assertTrue($this->source->load($this->output, 100));
     }
 
     public function test_load_with_previous_items(): void

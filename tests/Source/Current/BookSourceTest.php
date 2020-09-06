@@ -52,7 +52,7 @@ class BookSourceTest extends MockeryTestCase
                 )
             );
 
-        $this->assertEquals(
+        self::assertEquals(
             null,
             $this->target->load($this->output)
         );
@@ -138,7 +138,7 @@ class BookSourceTest extends MockeryTestCase
                 )
             );
 
-        $this->assertEquals(
+        self::assertEquals(
             [
                 'author' => 'AUTHOR',
                 'date' => '2018-05-13 12:00:00',

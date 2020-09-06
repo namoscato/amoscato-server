@@ -25,6 +25,6 @@ class InstagramClient extends Client
     {
         $query['access_token'] = $this->apiKey;
 
-        return \GuzzleHttp\json_decode($this->client->get($uri, ['query' => $query])->getBody());
+        return \GuzzleHttp\json_decode((string) $this->client->get($uri, ['query' => $query])->getBody());
     }
 }

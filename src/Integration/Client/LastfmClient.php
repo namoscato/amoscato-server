@@ -80,7 +80,7 @@ class LastfmClient extends Client
             ]
         );
 
-        $responseBody = \GuzzleHttp\json_decode($response->getBody());
+        $responseBody = \GuzzleHttp\json_decode((string) $response->getBody());
 
         if (!empty($responseBody->error)) {
             throw new LastfmBadResponseException($responseBody);

@@ -6,6 +6,7 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\TwitterClient;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -41,14 +42,8 @@ class TwitterClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(
-                m::mock(
-                    [
-                        'getBody' => '["tweets"]',
-                    ]
-                )
-            );
+            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['tweets'])));
 
-        $this->assertEquals(['tweets'], $this->twitterClient->getUserTweets(1));
+        self::assertEquals(['tweets'], $this->twitterClient->getUserTweets(1));
     }
 }

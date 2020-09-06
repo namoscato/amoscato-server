@@ -39,7 +39,7 @@ class GitHubClientTest extends MockeryTestCase
             )
             ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['data'])));
 
-        $this->assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
+        self::assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
     }
 
     public function test_getCommit(): void
@@ -53,7 +53,7 @@ class GitHubClientTest extends MockeryTestCase
             )
             ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['key' => 'data'])));
 
-        $this->assertEquals(
+        self::assertEquals(
             (object) [
                 'key' => 'data',
             ],

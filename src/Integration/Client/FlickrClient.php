@@ -25,7 +25,7 @@ class FlickrClient extends Client
             $args
         );
 
-        $body = \GuzzleHttp\json_decode($response->getBody());
+        $body = \GuzzleHttp\json_decode((string) $response->getBody());
 
         return $body->photos->photo;
     }

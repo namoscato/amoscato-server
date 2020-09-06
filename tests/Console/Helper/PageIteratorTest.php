@@ -13,28 +13,28 @@ class PageIteratorTest extends TestCase
     {
         $iterator = new PageIterator(3);
 
-        $this->assertSame(1, $iterator->current());
-        $this->assertSame(1, $iterator->key());
-        $this->assertSame(true, $iterator->valid());
-        $this->assertSame(0, $iterator->getCount());
+        self::assertSame(1, $iterator->current());
+        self::assertSame(1, $iterator->key());
+        self::assertTrue($iterator->valid());
+        self::assertSame(0, $iterator->getCount());
 
         $iterator->incrementCount();
-        $this->assertSame(1, $iterator->getCount());
+        self::assertSame(1, $iterator->getCount());
 
         $iterator->incrementCount();
-        $this->assertSame(2, $iterator->getCount());
+        self::assertSame(2, $iterator->getCount());
 
         $iterator->next();
 
-        $this->assertSame(2, $iterator->current());
-        $this->assertSame(2, $iterator->key());
-        $this->assertSame(true, $iterator->valid());
-        $this->assertSame(2, $iterator->getCount());
+        self::assertSame(2, $iterator->current());
+        self::assertSame(2, $iterator->key());
+        self::assertTrue($iterator->valid());
+        self::assertSame(2, $iterator->getCount());
 
         $iterator->incrementCount();
-        $this->assertSame(3, $iterator->getCount());
+        self::assertSame(3, $iterator->getCount());
 
-        $this->assertSame(false, $iterator->valid());
+        self::assertFalse($iterator->valid());
     }
 
     public function test_valid(): void
@@ -44,11 +44,11 @@ class PageIteratorTest extends TestCase
         $iterator->incrementCount();
         $iterator->next();
 
-        $this->assertSame(true, $iterator->valid());
+        self::assertTrue($iterator->valid());
 
         $iterator->next();
 
-        $this->assertSame(false, $iterator->valid());
+        self::assertFalse($iterator->valid());
     }
 
     public function test_valid_empty(): void
@@ -57,7 +57,7 @@ class PageIteratorTest extends TestCase
 
         $iterator->next();
 
-        $this->assertSame(false, $iterator->valid());
+        self::assertFalse($iterator->valid());
     }
 
     public function test_setNextPageValue(): void
@@ -66,12 +66,12 @@ class PageIteratorTest extends TestCase
 
         $iterator->setNextPageValue('page2');
 
-        $this->assertSame(1, $iterator->current());
+        self::assertSame(1, $iterator->current());
 
         $iterator->incrementCount();
         $iterator->next();
 
-        $this->assertSame('page2', $iterator->current());
+        self::assertSame('page2', $iterator->current());
     }
 
     public function test_rewind(): void
@@ -83,12 +83,12 @@ class PageIteratorTest extends TestCase
         $iterator->incrementCount();
         $iterator->next();
 
-        $this->assertSame(3, $iterator->key());
-        $this->assertSame(3, $iterator->current());
+        self::assertSame(3, $iterator->key());
+        self::assertSame(3, $iterator->current());
 
         $iterator->rewind();
 
-        $this->assertSame(1, $iterator->key());
-        $this->assertSame(1, $iterator->current());
+        self::assertSame(1, $iterator->key());
+        self::assertSame(1, $iterator->current());
     }
 }

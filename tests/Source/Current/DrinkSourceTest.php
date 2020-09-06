@@ -73,7 +73,7 @@ class DrinkSourceTest extends MockeryTestCase
             )
             ->andReturn('url');
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'brewery' => 'brewery',
                 'date' => '2018-05-13 12:00:00',
