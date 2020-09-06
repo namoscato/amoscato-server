@@ -7,8 +7,8 @@ namespace Tests\Integration\Client;
 use Amoscato\Integration\Client\UntappdClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery as m;
 
 class UntappdClientTest extends MockeryTestCase
 {
