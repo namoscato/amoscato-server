@@ -15,7 +15,7 @@ class Kernel extends BaseKernel
 
     private const CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
-    protected function configureContainer(ContainerConfigurator $c): void: void
+    protected function configureContainer(ContainerConfigurator $c): void
     {
         $c->import($this->getProjectDir().'/config/bundles.php');
         $c->parameters()->set('container.dumper.inline_class_loader', true);
@@ -27,7 +27,7 @@ class Kernel extends BaseKernel
         $c->import($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
     }
 
-    protected function configureRoutes(RoutingConfigurator $routes): void: void
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $confDir = $this->getProjectDir().'/config';
 
