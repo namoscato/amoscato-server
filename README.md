@@ -28,7 +28,6 @@ Available sources include:
 * `flickr` - latest photos from [Flickr](https://www.flickr.com/)
 * `github` - latest public commits from [GitHub](https://github.com/)
 * `goodreads` - latest read books from [Goodreads](https://www.goodreads.com/)
-* `instagram` - latest media from [Instagram](https://www.instagram.com) 
 * `lastfm` - latest scrobbles from [Last.fm](http://www.last.fm/)
 * `twitter` - latest tweets from [Twitter](https://twitter.com/)
 * `untappd` - latest badges from [Untappd](https://untappd.com/)
