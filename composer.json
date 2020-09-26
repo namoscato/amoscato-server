@@ -7,6 +7,7 @@
         "php": "^7.3.0",
         "ext-PDO": "*",
         "ext-ctype": "*",
+        "ext-dom": "*",
         "ext-ftp": "*",
         "ext-iconv": "*",
         "guzzlehttp/guzzle": "^7.0",

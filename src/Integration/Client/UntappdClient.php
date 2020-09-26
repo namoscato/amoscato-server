@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amoscato\Integration\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Utils;
 
 class UntappdClient extends Client
 {
@@ -94,6 +95,6 @@ class UntappdClient extends Client
             ]
         );
 
-        return \GuzzleHttp\json_decode((string) $response->getBody())->response;
+        return Utils::jsonDecode((string) $response->getBody())->response;
     }
 }

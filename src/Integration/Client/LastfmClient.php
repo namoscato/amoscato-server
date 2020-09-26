@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amoscato\Integration\Client;
 
 use Amoscato\Integration\Exception\LastfmBadResponseException;
+use GuzzleHttp\Utils;
 
 class LastfmClient extends Client
 {
@@ -80,7 +81,7 @@ class LastfmClient extends Client
             ]
         );
 
-        $responseBody = \GuzzleHttp\json_decode((string) $response->getBody());
+        $responseBody = Utils::jsonDecode((string) $response->getBody());
 
         if (!empty($responseBody->error)) {
             throw new LastfmBadResponseException($responseBody);

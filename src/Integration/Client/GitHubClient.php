@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amoscato\Integration\Client;
 
 use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Utils;
 
 class GitHubClient extends Client
 {
@@ -67,6 +68,6 @@ class GitHubClient extends Client
             ]
         );
 
-        return \GuzzleHttp\json_decode((string) $response->getBody());
+        return Utils::jsonDecode((string) $response->getBody());
     }
 }

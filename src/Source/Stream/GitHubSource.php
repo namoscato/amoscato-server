@@ -100,7 +100,7 @@ class GitHubSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output, $limit = 1): bool
+    public function load(OutputInterface $output, int $limit = 1): bool
     {
         $output = OutputDecorator::create($output);
 

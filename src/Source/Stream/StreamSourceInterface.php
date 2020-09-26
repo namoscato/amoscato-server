@@ -11,8 +11,5 @@ interface StreamSourceInterface extends SourceInterface
 {
     public function getWeight(): int;
 
-    /**
-     * @param int $limit
-     */
-    public function load(OutputInterface $output, $limit = 1): bool;
+    public function load(OutputInterface $output, int $limit = 1): bool;
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Amoscato\Integration\Client;
 
+use GuzzleHttp\Utils;
 use Psr\Http\Message\ResponseInterface;
 
 class FlickrClient extends Client
@@ -25,7 +26,7 @@ class FlickrClient extends Client
             $args
         );
 
-        $body = \GuzzleHttp\json_decode((string) $response->getBody());
+        $body = Utils::jsonDecode((string) $response->getBody());
 
         return $body->photos->photo;
     }

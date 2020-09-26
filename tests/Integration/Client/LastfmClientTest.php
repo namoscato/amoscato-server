@@ -8,6 +8,7 @@ use Amoscato\Integration\Client\LastfmClient;
 use Amoscato\Integration\Exception\LastfmBadResponseException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -42,7 +43,7 @@ class LastfmClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['album' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['album' => 'data'])));
 
         self::assertSame('data', $this->flickrClient->getAlbumInfoById(1));
     }
@@ -64,7 +65,7 @@ class LastfmClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['album' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['album' => 'data'])));
 
         self::assertSame('data', $this->flickrClient->getAlbumInfoByName('foo', 'bar'));
     }
@@ -74,7 +75,7 @@ class LastfmClientTest extends MockeryTestCase
         $this
             ->client
             ->shouldReceive('get')
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['no_album' => 'value'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['no_album' => 'value'])));
 
         self::assertEquals(
             (object) [
@@ -104,7 +105,7 @@ class LastfmClientTest extends MockeryTestCase
             ->andReturn(new Response(
                 200,
                 [],
-                \GuzzleHttp\json_encode([
+                    Utils::jsonEncode([
                     'recenttracks' => [
                         'track' => ['data'],
                     ],
@@ -126,7 +127,7 @@ class LastfmClientTest extends MockeryTestCase
             ->andReturn(new Response(
                 200,
                 [],
-                \GuzzleHttp\json_encode([
+                    Utils::jsonEncode([
                     'error' => 1,
                     'message' => 'foo',
                 ]))

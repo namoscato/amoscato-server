@@ -13,6 +13,7 @@ use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Psr\Http\Message\RequestInterface;
@@ -78,7 +79,7 @@ class StravaAuthenticationTest extends MockeryTestCase
                         ->append(new Response(
                             200,
                             [],
-                            \GuzzleHttp\json_encode([
+                            Utils::jsonEncode([
                                 'access_token' => 'another bar',
                                 'expires_in' => 3600,
                             ])

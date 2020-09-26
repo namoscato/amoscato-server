@@ -7,6 +7,7 @@ namespace Tests\Integration\Client;
 use Amoscato\Integration\Client\VimeoClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -41,7 +42,7 @@ class VimeoClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['videos' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['videos' => 'data'])));
 
         self::assertEquals(
             (object) [

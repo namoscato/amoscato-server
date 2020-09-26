@@ -60,7 +60,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * @param int $weight
      */
-    public function setWeight($weight)
+    public function setWeight($weight): void
     {
         $this->weight = $weight;
     }
@@ -73,7 +73,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output, $limit = 1): bool
+    public function load(OutputInterface $output, int $limit = 1): bool
     {
         $output = OutputDecorator::create($output);
 
