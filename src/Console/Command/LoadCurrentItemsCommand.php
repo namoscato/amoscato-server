@@ -7,6 +7,7 @@ namespace Amoscato\Console\Command;
 use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Ftp\FtpClient;
 use Amoscato\Source\Current\CurrentSourceInterface;
+use GuzzleHttp\Utils;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -58,7 +59,7 @@ class LoadCurrentItemsCommand extends Command
         if ('dev' === $input->getOption('env')) {
             $output->writeln(var_export($result, true));
         } else {
-            $this->ftpClient->upload($output, json_encode($result), 'current.json');
+            $this->ftpClient->upload($output, Utils::jsonEncode($result), 'current.json');
         }
 
         return 0;

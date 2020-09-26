@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Amoscato\Integration\Client;
 
+use GuzzleHttp\Utils;
+
 class VimeoClient extends Client
 {
     /**
@@ -30,6 +32,6 @@ class VimeoClient extends Client
             ]
         );
 
-        return \GuzzleHttp\json_decode((string) $response->getBody());
+        return Utils::jsonDecode((string) $response->getBody());
     }
 }

@@ -7,6 +7,7 @@ namespace Tests\Integration\Client;
 use Amoscato\Integration\Client\GitHubClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -37,7 +38,7 @@ class GitHubClientTest extends MockeryTestCase
                     'query' => [],
                 ]
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['data'])));
 
         self::assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
     }
@@ -51,7 +52,7 @@ class GitHubClientTest extends MockeryTestCase
                 'github.com',
                 m::type('array')
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['key' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['key' => 'data'])));
 
         self::assertEquals(
             (object) [

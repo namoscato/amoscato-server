@@ -10,6 +10,7 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Http\Message\RequestInterface;
 
@@ -23,7 +24,7 @@ class StravaClientTest extends MockeryTestCase
     protected function setUp(): void
     {
         $stack = HandlerStack::create(new MockHandler([
-            new Response(200, [], \GuzzleHttp\json_encode(['foo' => 'bar'])),
+            new Response(200, [], Utils::jsonEncode(['foo' => 'bar'])),
         ]));
 
         $this->requestHistory = [];

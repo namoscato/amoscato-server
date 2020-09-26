@@ -33,7 +33,7 @@ class LoadStreamItemsCommand extends Command
         }
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('amoscato:stream:load')
@@ -72,7 +72,7 @@ class LoadStreamItemsCommand extends Command
             $sources = &$this->streamSources;
         }
 
-        $limit = $input->getOption('limit');
+        $limit = (int) $input->getOption('limit');
 
         foreach ($sources as $type => $source) {
             if (!$source instanceof StreamSourceInterface) {

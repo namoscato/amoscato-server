@@ -6,6 +6,7 @@ namespace Amoscato\Console\Command;
 
 use Amoscato\Ftp\FtpClient;
 use Amoscato\Source\Stream\StreamAggregator;
+use GuzzleHttp\Utils;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -51,7 +52,7 @@ class CacheStreamCommand extends Command
     {
         $this->ftpClient->upload(
             $output,
-            json_encode($this->streamAggregator->aggregate((float) $input->getOption('size'))),
+            Utils::jsonEncode($this->streamAggregator->aggregate((float) $input->getOption('size'))),
             'stream.json'
         );
 

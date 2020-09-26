@@ -7,6 +7,7 @@ namespace Amoscato\Integration\Client\Middleware;
 use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Utils;
 use Psr\Cache\InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -122,7 +123,7 @@ class StravaAuthentication
                 ]
             );
 
-            $response = \GuzzleHttp\json_decode((string) $response->getBody(), true);
+            $response = Utils::jsonDecode((string) $response->getBody(), true);
 
             $item->expiresAfter($response['expires_in']);
 

@@ -7,6 +7,7 @@ namespace Tests\Integration\Client;
 use Amoscato\Integration\Client\UntappdClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 
@@ -56,7 +57,7 @@ class UntappdClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['response' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['response' => 'data'])));
 
         self::assertSame(
             'data',
@@ -83,7 +84,7 @@ class UntappdClientTest extends MockeryTestCase
                     ],
                 ]
             )
-            ->andReturn(new Response(200, [], \GuzzleHttp\json_encode(['response' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['response' => 'data'])));
 
         self::assertSame(
             'data',

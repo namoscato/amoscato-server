@@ -24,23 +24,17 @@ class LastfmSource extends AbstractStreamSource
     /** @var string */
     private $user;
 
-    /**
-     * @param string $user
-     */
     public function __construct(
         PDOFactory $databaseFactory,
         FtpClient $ftpClient,
         LastfmClient $client,
-        $user
+        string $user
     ) {
         parent::__construct($databaseFactory, $ftpClient, $client);
 
         $this->user = $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'lastfm';
@@ -96,7 +90,7 @@ class LastfmSource extends AbstractStreamSource
     /**
      * {@inheritdoc}
      */
-    public function load(OutputInterface $output, $limit = 1): bool
+    public function load(OutputInterface $output, int $limit = 1): bool
     {
         $output = OutputDecorator::create($output);
 
@@ -159,11 +153,7 @@ class LastfmSource extends AbstractStreamSource
         return $this->insertValues($output, $iterator->getCount(), $values);
     }
 
-    /**
-     * @param object $track
-     * @param bool $isUnique optional
-     */
-    private function getAlbumId($track, $isUnique = false): string
+    private function getAlbumId(object $track, bool $isUnique = false): string
     {
         if (empty($track->album->mbid)) {
             $albumId = "{$track->album->{'#text'}}-{$track->artist->{'#text'}}";
@@ -186,10 +176,7 @@ class LastfmSource extends AbstractStreamSource
         return $this->getAlbumId($item, true);
     }
 
-    /**
-     * @param $item
-     */
-    private function getAlbumUrl($item, ?string $musicbrainzId = null): ?string
+    private function getAlbumUrl(object $item, ?string $musicbrainzId = null): ?string
     {
         $albumId = $this->getAlbumId($item);
 

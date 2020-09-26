@@ -7,6 +7,7 @@ namespace Amoscato\Integration\Client;
 use Amoscato\Integration\Client\Middleware\StravaAuthentication;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Utils;
 
 class StravaClient
 {
@@ -58,6 +59,6 @@ class StravaClient
             ['query' => $args]
         );
 
-        return \GuzzleHttp\json_decode((string) $response->getBody());
+        return Utils::jsonDecode((string) $response->getBody());
     }
 }
