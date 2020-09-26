@@ -19,8 +19,10 @@ class StreamStatementProvider
 
     /**
      * @param int $rowCount
+     *
+     * @return bool|PDOStatement
      */
-    public function insertRows($rowCount): PDOStatement
+    public function insertRows($rowCount)
     {
         $sql = <<<SQL
 INSERT INTO stream (
@@ -55,8 +57,10 @@ SQL;
 
     /**
      * @param string $type
+     *
+     * @return PDOStatement
      */
-    public function selectLatestSourceId($type): PDOStatement
+    public function selectLatestSourceId($type)
     {
         return $this->selectStreamRows($type, 1, 'source_id');
     }
@@ -65,8 +69,10 @@ SQL;
      * @param string $type
      * @param int $limit
      * @param string $select optional
+     *
+     * @return bool|PDOStatement
      */
-    public function selectStreamRows($type, $limit, $select = '*'): PDOStatement
+    public function selectStreamRows($type, $limit, $select = '*')
     {
         $sql = <<<SQL
 SELECT %s
