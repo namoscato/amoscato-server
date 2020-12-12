@@ -27,7 +27,7 @@ class LastfmClientTest extends MockeryTestCase
         $this->flickrClient = new LastfmClient($this->client, 'key');
     }
 
-    public function test_getAlbumInfoById(): void
+    public function testGetAlbumInfoById(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -48,7 +48,7 @@ class LastfmClientTest extends MockeryTestCase
         self::assertSame('data', $this->flickrClient->getAlbumInfoById(1));
     }
 
-    public function test_getAlbumInfoByName_success(): void
+    public function testGetAlbumInfoByNameSuccess(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -70,7 +70,7 @@ class LastfmClientTest extends MockeryTestCase
         self::assertSame('data', $this->flickrClient->getAlbumInfoByName('foo', 'bar'));
     }
 
-    public function test_getAlbumInfoByName_error(): void
+    public function testGetAlbumInfoByNameError(): void
     {
         $this
             ->client
@@ -85,7 +85,7 @@ class LastfmClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getRecentTracks(): void
+    public function testGetRecentTracks(): void
     {
         $this
             ->client
@@ -115,7 +115,7 @@ class LastfmClientTest extends MockeryTestCase
         self::assertSame(['data'], $this->flickrClient->getRecentTracks(1));
     }
 
-    public function test_getRecentTracks_exception(): void
+    public function testGetRecentTracksException(): void
     {
         $this->expectException(LastfmBadResponseException::class);
         $this->expectExceptionMessage('foo');

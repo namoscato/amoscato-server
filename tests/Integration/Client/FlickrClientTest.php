@@ -25,7 +25,7 @@ class FlickrClientTest extends MockeryTestCase
         $this->flickrClient = new FlickrClient($this->client, 'key');
     }
 
-    public function test_getPublicPhotos(): void
+    public function testGetPublicPhotos(): void
     {
         $this->client
             ->shouldReceive('get')

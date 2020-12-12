@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class PageIteratorTest extends TestCase
 {
-    public function test_limit(): void
+    public function testLimit(): void
     {
         $iterator = new PageIterator(3);
 
@@ -37,7 +37,7 @@ class PageIteratorTest extends TestCase
         self::assertFalse($iterator->valid());
     }
 
-    public function test_valid(): void
+    public function testValid(): void
     {
         $iterator = new PageIterator(3);
 
@@ -51,7 +51,7 @@ class PageIteratorTest extends TestCase
         self::assertFalse($iterator->valid());
     }
 
-    public function test_valid_empty(): void
+    public function testValidEmpty(): void
     {
         $iterator = new PageIterator(3);
 
@@ -60,7 +60,7 @@ class PageIteratorTest extends TestCase
         self::assertFalse($iterator->valid());
     }
 
-    public function test_setNextPageValue(): void
+    public function testSetNextPageValue(): void
     {
         $iterator = new PageIterator(3);
 
@@ -74,7 +74,7 @@ class PageIteratorTest extends TestCase
         self::assertSame('page2', $iterator->current());
     }
 
-    public function test_rewind(): void
+    public function testRewind(): void
     {
         $iterator = new PageIterator(3);
 

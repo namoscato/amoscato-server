@@ -55,7 +55,7 @@ class VimeoSourceTest extends MockeryTestCase
         $this->addToAssertionCount(m::getContainer()->mockery_getExpectationCount());
     }
 
-    public function test_load(): void
+    public function testLoad(): void
     {
         $this->statementProvider
             ->shouldReceive('selectLatestSourceId')

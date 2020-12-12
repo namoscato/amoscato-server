@@ -26,7 +26,7 @@ class VimeoClientTest extends MockeryTestCase
         $this->vimeoClient = new VimeoClient($this->client, 'token');
     }
 
-    public function test_getPublicPhotos(): void
+    public function testGetPublicPhotos(): void
     {
         $this->client
             ->shouldReceive('get')

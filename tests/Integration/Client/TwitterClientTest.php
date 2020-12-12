@@ -26,7 +26,7 @@ class TwitterClientTest extends MockeryTestCase
         $this->twitterClient = new TwitterClient($this->client, 'key');
     }
 
-    public function test_getUserTweets(): void
+    public function testGetUserTweets(): void
     {
         $this->client
             ->shouldReceive('get')

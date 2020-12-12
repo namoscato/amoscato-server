@@ -26,7 +26,7 @@ class GitHubClientTest extends MockeryTestCase
         $this->gitHubClient = new GitHubClient($this->client, 'secret', 'id');
     }
 
-    public function test_getUserEvents(): void
+    public function testGetUserEvents(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -43,7 +43,7 @@ class GitHubClientTest extends MockeryTestCase
         self::assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
     }
 
-    public function test_getCommit(): void
+    public function testGetCommit(): void
     {
         $this->client
             ->shouldReceive('get')
