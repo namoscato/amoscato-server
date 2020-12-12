@@ -73,7 +73,7 @@ class GitHubSourceTest extends MockeryTestCase
             );
     }
 
-    public function test_load_with_empty_values(): void
+    public function testLoadWithEmptyValues(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -92,7 +92,7 @@ class GitHubSourceTest extends MockeryTestCase
         self::assertTrue($this->source->load($this->output));
     }
 
-    public function test_load_with_items(): void
+    public function testLoadWithItems(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -291,7 +291,7 @@ class GitHubSourceTest extends MockeryTestCase
         self::assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_previous_items(): void
+    public function testLoadWithPreviousItems(): void
     {
         $this->client
             ->shouldReceive('getUserEvents')
@@ -364,7 +364,7 @@ class GitHubSourceTest extends MockeryTestCase
         $this->source->load($this->output, 100);
     }
 
-    public function test_load_with_max_event_pages(): void
+    public function testLoadWithMaxEventPages(): void
     {
         $count = 0;
 

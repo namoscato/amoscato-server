@@ -73,7 +73,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             );
     }
 
-    public function test_load_with_empty_values(): void
+    public function testLoadWithEmptyValues(): void
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -87,7 +87,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
         self::assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_items(): void
+    public function testLoadWithItems(): void
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -193,7 +193,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
         self::assertTrue($this->source->load($this->output, 100));
     }
 
-    public function test_load_with_previous_items(): void
+    public function testLoadWithPreviousItems(): void
     {
         $this->source
             ->shouldReceive('mockExtract')
@@ -248,7 +248,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
         $this->source->load($this->output, 100);
     }
 
-    public function test_load_with_multiple_transformed_items(): void
+    public function testLoadWithMultipleTransformedItems(): void
     {
         $this
             ->source

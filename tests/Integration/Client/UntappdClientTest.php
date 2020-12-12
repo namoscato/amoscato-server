@@ -26,7 +26,7 @@ class UntappdClientTest extends MockeryTestCase
         $this->untappdClient = new UntappdClient($this->client, 'key', 'client');
     }
 
-    public function test_getBadgeUrl(): void
+    public function testGetBadgeUrl(): void
     {
         self::assertSame(
             'https://untappd.com/user/username/badges/id',
@@ -34,7 +34,7 @@ class UntappdClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getCheckinUrl(): void
+    public function testGetCheckinUrl(): void
     {
         self::assertSame(
             'https://untappd.com/user/username/checkin/id',
@@ -42,7 +42,7 @@ class UntappdClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getUserBadges(): void
+    public function testGetUserBadges(): void
     {
         $this
             ->client
@@ -70,7 +70,7 @@ class UntappdClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getUserCheckins(): void
+    public function testGetUserCheckins(): void
     {
         $this
             ->client

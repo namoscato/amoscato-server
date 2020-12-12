@@ -25,7 +25,7 @@ class StreamStatementProviderTest extends TestCase
         $this->target = new StreamStatementProvider($this->database);
     }
 
-    public function test_insertRows(): void
+    public function testInsertRows(): void
     {
         $sql = <<<SQL
 INSERT INTO stream (
@@ -60,7 +60,7 @@ SQL;
         );
     }
 
-    public function test_selectLatestSourceId(): void
+    public function testSelectLatestSourceId(): void
     {
         $sql = <<<SQL
 SELECT source_id
@@ -106,7 +106,7 @@ SQL;
         );
     }
 
-    public function test_selectStreamRows(): void
+    public function testSelectStreamRows(): void
     {
         $sql = <<<SQL
 SELECT *
@@ -152,7 +152,7 @@ SQL;
         );
     }
 
-    public function test_selectCreatedDateAtOffset(): void
+    public function testSelectCreatedDateAtOffset(): void
     {
         $this
             ->database
@@ -185,7 +185,7 @@ SQL;
         self::assertEquals('DATE', $this->target->selectCreatedDateAtOffset('TYPE', 10));
     }
 
-    public function test_deleteOldItems(): void
+    public function testDeleteOldItems(): void
     {
         $this
             ->database

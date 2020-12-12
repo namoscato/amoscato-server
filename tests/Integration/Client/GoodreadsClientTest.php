@@ -32,7 +32,7 @@ class GoodreadsClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getCurrentlyReadingBooks(): void
+    public function testGetCurrentlyReadingBooks(): void
     {
         $this->client
             ->shouldReceive('get')
@@ -72,7 +72,7 @@ class GoodreadsClientTest extends MockeryTestCase
         );
     }
 
-    public function test_getReadBooks(): void
+    public function testGetReadBooks(): void
     {
         $this->client
             ->shouldReceive('get')

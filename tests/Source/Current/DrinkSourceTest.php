@@ -31,7 +31,7 @@ class DrinkSourceTest extends MockeryTestCase
         $this->output = new NullOutput();
     }
 
-    public function test_load(): void
+    public function testLoad(): void
     {
         $this
             ->client

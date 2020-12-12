@@ -33,7 +33,7 @@ class StravaClientTest extends MockeryTestCase
         $this->target = new StravaClient(new Client(['handler' => $stack]));
     }
 
-    public function test_getActivities(): void
+    public function testGetActivities(): void
     {
         self::assertEquals(
             (object) ['foo' => 'bar'],
