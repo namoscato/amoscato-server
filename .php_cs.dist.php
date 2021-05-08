@@ -5,11 +5,10 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
 ;
 
-return PhpCsFixer\Config::create()
+return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR2' => true,
         '@Symfony' => true,
-        'array_syntax' => ['syntax' => 'short'],
         'phpdoc_align' => ['align' => 'left'],
         'declare_strict_types' => true,
     ])
