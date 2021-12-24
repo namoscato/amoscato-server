@@ -44,7 +44,7 @@ class PageIterator implements Iterator
      *
      * @return mixed can return any type
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->pageValues[$this->pageIndex] ?? $this->pageIndex;
     }
@@ -68,7 +68,7 @@ class PageIterator implements Iterator
      *
      * @return mixed scalar on success, or null on failure
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->pageIndex;
     }
