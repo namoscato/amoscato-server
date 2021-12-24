@@ -1,9 +1,12 @@
 {
+    "composer/pcre": {
+        "version": "1.0.0"
+    },
     "composer/semver": {
-        "version": "3.2.4"
+        "version": "3.2.6"
     },
     "composer/xdebug-handler": {
-        "version": "2.0.1"
+        "version": "2.0.3"
     },
     "doctrine/annotations": {
         "version": "1.13",
