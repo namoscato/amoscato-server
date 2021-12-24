@@ -36,19 +36,19 @@
         ]
     },
     "guzzlehttp/guzzle": {
-        "version": "7.3.0"
+        "version": "7.4.1"
     },
     "guzzlehttp/promises": {
-        "version": "1.4.1"
+        "version": "1.5.1"
     },
     "guzzlehttp/psr7": {
-        "version": "1.8.1"
+        "version": "2.1.0"
     },
     "hamcrest/hamcrest-php": {
         "version": "v2.0.1"
     },
     "mockery/mockery": {
-        "version": "1.4.3"
+        "version": "1.4.4"
     },
     "nesbot/carbon": {
         "version": "2.55.2"
@@ -60,7 +60,7 @@
         "version": "v2.0.2"
     },
     "predis/predis": {
-        "version": "v1.1.7"
+        "version": "v1.1.9"
     },
     "psr/cache": {
         "version": "1.0.1"
@@ -72,6 +72,9 @@
         "version": "1.0.0"
     },
     "psr/http-client": {
+        "version": "1.0.1"
+    },
+    "psr/http-factory": {
         "version": "1.0.1"
     },
     "psr/http-message": {
