@@ -56,11 +56,7 @@ class LoadCurrentItemsCommand extends Command
             $result[$type] = $source->load($output);
         }
 
-        if ('dev' === $input->getOption('env')) {
-            $output->writeln(var_export($result, true));
-        } else {
-            $this->storage->upload($output, Utils::jsonEncode($result), 'current.json');
-        }
+        $this->storage->write( 'current.json', Utils::jsonEncode($result));
 
         return 0;
     }
