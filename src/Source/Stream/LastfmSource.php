@@ -7,7 +7,6 @@ namespace Amoscato\Source\Stream;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\LastfmClient;
 use Amoscato\Integration\Exception\LastfmBadResponseException;
 use Carbon\Carbon;
@@ -26,11 +25,10 @@ class LastfmSource extends AbstractStreamSource
 
     public function __construct(
         PDOFactory $databaseFactory,
-        FtpClient $ftpClient,
         LastfmClient $client,
         string $user
     ) {
-        parent::__construct($databaseFactory, $ftpClient, $client);
+        parent::__construct($databaseFactory, $client);
 
         $this->user = $user;
     }

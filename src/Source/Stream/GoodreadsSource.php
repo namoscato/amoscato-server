@@ -6,7 +6,6 @@ namespace Amoscato\Source\Stream;
 
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\GoodreadsClient;
 use Carbon\Carbon;
 use DOMElement;
@@ -25,11 +24,10 @@ class GoodreadsSource extends AbstractStreamSource
      */
     public function __construct(
         PDOFactory $databaseFactory,
-        FtpClient $ftpClient,
         GoodreadsClient $client,
         $userId
     ) {
-        parent::__construct($databaseFactory, $ftpClient, $client);
+        parent::__construct($databaseFactory, $client);
 
         $this->userId = $userId;
     }

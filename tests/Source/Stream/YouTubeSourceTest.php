@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\YouTubeClient;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Amoscato\Source\Stream\YouTubeSource;
@@ -36,7 +35,6 @@ class YouTubeSourceTest extends MockeryTestCase
             sprintf('%s[getStreamStatementProvider]', YouTubeSource::class),
             [
                 m::mock(PDOFactory::class),
-                m::mock(FtpClient::class),
                 $this->client,
                 10,
                 'youtube.com/',

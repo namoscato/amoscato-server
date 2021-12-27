@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\GoodreadsClient;
 use Amoscato\Source\Stream\GoodreadsSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
@@ -37,7 +36,6 @@ class GoodreadsSourceTest extends MockeryTestCase
             sprintf('%s[getStreamStatementProvider,createCrawler,getImageSize]', GoodreadsSource::class),
             [
                 m::mock(PDOFactory::class),
-                m::mock(FtpClient::class),
                 $this->client,
                 10,
             ]

@@ -69,10 +69,7 @@
     </inspection_tool>
     <inspection_tool class="PhpCSFixerValidationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="CODING_STANDARD" value="Custom" />
-      <option name="CUSTOM_RULESET_PATH" value="$PROJECT_DIR$/.php_cs.dist" />
-    </inspection_tool>
-    <inspection_tool class="PhpDocSignatureInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
-      <option name="ALLOW_MISSING_PARAMETERS" value="true" />
+      <option name="CUSTOM_RULESET_PATH" value="$PROJECT_DIR$/.php-cs-fixer.dist.php" />
     </inspection_tool>
     <inspection_tool class="SecurityAdvisoriesInspection" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="optionConfiguration">

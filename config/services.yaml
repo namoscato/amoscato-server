@@ -8,7 +8,6 @@ parameters:
   flickr_api_uri: https://api.flickr.com/services/rest/
   flickr_photo_uri: https://www.flickr.com/photos/
   flickr_user_id: 91374488@N07
-  ftp_directory: /data
   github_api_uri: https://api.github.com/
   github_client_id: d3acc90fe9b0b0064b6a
   github_username: namoscato
@@ -61,13 +60,16 @@ services:
     - '%env(AMOSCATO_DATABASE_PASSWORD)%'
   #endregion
 
-  #region FTP
-  Amoscato\Ftp\FtpClient:
+  #region storage
+  Aws\S3\S3ClientInterface:
+    class: Aws\S3\S3Client
     arguments:
-    - '%env(AMOSCATO_FTP_HOST)%'
-    - '%env(AMOSCATO_FTP_USER)%'
-    - '%env(AMOSCATO_FTP_PASSWORD)%'
-    - '%ftp_directory%'
+    -
+        version: 'latest'
+        region: 'us-east-2'
+        credentials:
+            key: '%env(AWS_ACCESS_KEY_ID)%'
+            secret: '%env(AWS_SECRET_ACCESS_KEY)%'
   #endregion
 
   #region Current Sources
