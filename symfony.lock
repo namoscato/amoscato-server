@@ -6,10 +6,10 @@
         "version": "3.208.7"
     },
     "composer/semver": {
-        "version": "3.2.6"
+        "version": "3.2.4"
     },
     "composer/xdebug-handler": {
-        "version": "2.0.3"
+        "version": "2.0.1"
     },
     "doctrine/annotations": {
         "version": "1.13",
@@ -39,13 +39,13 @@
         ]
     },
     "guzzlehttp/guzzle": {
-        "version": "7.4.1"
+        "version": "7.3.0"
     },
     "guzzlehttp/promises": {
-        "version": "1.5.1"
+        "version": "1.4.1"
     },
     "guzzlehttp/psr7": {
-        "version": "2.1.0"
+        "version": "1.8.1"
     },
     "hamcrest/hamcrest-php": {
         "version": "v2.0.1"
@@ -73,7 +73,7 @@
         "version": "1.9.0"
     },
     "mockery/mockery": {
-        "version": "1.4.4"
+        "version": "1.4.3"
     },
     "mtdowling/jmespath.php": {
         "version": "2.6.1"
@@ -88,13 +88,13 @@
         "version": "v2.0.2"
     },
     "predis/predis": {
-        "version": "v1.1.9"
+        "version": "v1.1.7"
     },
     "psr/cache": {
-        "version": "1.0.1"
+        "version": "2.0.0"
     },
     "psr/container": {
-        "version": "1.1.1"
+        "version": "1.1.2"
     },
     "psr/event-dispatcher": {
         "version": "1.0.0"
