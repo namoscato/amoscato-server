@@ -6,7 +6,6 @@ namespace Amoscato\Source\Stream;
 
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\YouTubeClient;
 use Carbon\Carbon;
 
@@ -27,12 +26,11 @@ class YouTubeSource extends AbstractStreamSource
      */
     public function __construct(
         PDOFactory $databaseFactory,
-        FtpClient $ftpClient,
         YouTubeClient $client,
         $playlistId,
         $videoUri
     ) {
-        parent::__construct($databaseFactory, $ftpClient, $client);
+        parent::__construct($databaseFactory, $client);
 
         $this->playlistId = $playlistId;
         $this->videoUri = $videoUri;

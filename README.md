@@ -17,7 +17,7 @@ Loads and caches current data from a set of sources:
 
 ### `amoscato:stream:cache [--size=1000]`
 
-Stores the cached result of _size_ stream items to an external server via FTP.
+Stores the cached result of _size_ stream items to S3.
 
 ### `amoscato:stream:load [source ...]`
 

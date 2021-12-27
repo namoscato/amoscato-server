@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\Client;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use ArrayObject;
@@ -38,7 +37,6 @@ class AbstractStreamSourceTest extends MockeryTestCase
             sprintf('%s[getStreamStatementProvider,mockTransform,mockExtract]', MockSource::class),
             [
                 m::mock(PDOFactory::class),
-                m::mock(FtpClient::class),
                 $this->client,
             ]
         );

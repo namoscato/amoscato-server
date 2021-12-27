@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Amoscato\Console\Command;
 
 use Amoscato\Console\Output\OutputDecorator;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Source\Current\CurrentSourceInterface;
 use GuzzleHttp\Utils;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,16 +19,16 @@ class LoadCurrentItemsCommand extends Command
     /** @var CurrentSourceInterface[] */
     private $currentSources;
 
-    /** @var FtpClient */
-    private $ftpClient;
+    /** @var FilesystemOperator */
+    private $storage;
 
-    public function __construct(FtpClient $ftpClient, Traversable $currentSources)
+    public function __construct(FilesystemOperator $cacheStorage, Traversable $currentSources)
     {
         Assert::allIsInstanceOf($currentSources, CurrentSourceInterface::class);
 
         parent::__construct();
 
-        $this->ftpClient = $ftpClient;
+        $this->storage = $cacheStorage;
         $this->currentSources = $currentSources;
     }
 
@@ -59,7 +59,7 @@ class LoadCurrentItemsCommand extends Command
         if ('dev' === $input->getOption('env')) {
             $output->writeln(var_export($result, true));
         } else {
-            $this->ftpClient->upload($output, Utils::jsonEncode($result), 'current.json');
+            $this->storage->upload($output, Utils::jsonEncode($result), 'current.json');
         }
 
         return 0;

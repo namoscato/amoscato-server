@@ -1,0 +1,17 @@
+# Read the documentation at https://github.com/thephpleague/flysystem-bundle/blob/master/docs/1-getting-started.md
+flysystem:
+    storages:
+        cache.storage:
+            adapter: 'aws'
+            options:
+              client: 'Aws\S3\S3ClientInterface'
+              bucket: '%env(AMOSCATO_S3_BUCKET_CACHE)%'
+              prefix: 'www/data'
+
+when@dev:
+    flysystem:
+        storages:
+            cache.storage:
+                adapter: 'local'
+                options:
+                    directory: '%kernel.project_dir%/var/storage/cache'

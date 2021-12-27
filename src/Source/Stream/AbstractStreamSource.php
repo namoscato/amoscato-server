@@ -7,13 +7,11 @@ namespace Amoscato\Source\Stream;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\Client;
 use Amoscato\Source\AbstractSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use ArrayObject;
 use PDO;
-use RuntimeException;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractStreamSource extends AbstractSource implements StreamSourceInterface
@@ -21,21 +19,17 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
     /** @var PDOFactory */
     private $databaseFactory;
 
-    /** @var FtpClient */
-    private $ftpClient;
-
     /** @var StreamStatementProvider */
     protected $statementProvider;
 
     /** @var int */
     protected $weight = 1;
 
-    public function __construct(PDOFactory $databaseFactory, FtpClient $ftpClient, Client $client)
+    public function __construct(PDOFactory $databaseFactory, Client $client)
     {
         parent::__construct($client);
 
         $this->databaseFactory = $databaseFactory;
-        $this->ftpClient = $ftpClient;
     }
 
     /**
@@ -190,26 +184,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
         }
 
         return true;
-    }
-
-    /**
-     * @param string $url
-     */
-    public function cachePhoto(OutputInterface $output, $url): string
-    {
-        if (false === $data = file_get_contents($url)) {
-            throw new RuntimeException("Unable to fetch photo '{$url}'");
-        }
-
-        $path = sprintf(
-            '%s.%s',
-            uniqid("{$this->getType()}_", true),
-            pathinfo(parse_url($url)['path'], PATHINFO_EXTENSION)
-        );
-
-        return $this
-            ->ftpClient
-            ->upload($output, $data, $path, 'img');
     }
 
     /**

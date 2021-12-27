@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Amoscato\Console\Command;
 
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Source\Stream\StreamAggregator;
 use GuzzleHttp\Utils;
+use League\Flysystem\FilesystemOperator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -17,15 +17,15 @@ class CacheStreamCommand extends Command
     /** @var StreamAggregator */
     private $streamAggregator;
 
-    /** @var FtpClient */
-    private $ftpClient;
+    /** @var FilesystemOperator */
+    private $storage;
 
-    public function __construct(StreamAggregator $streamAggregator, FtpClient $ftpClient)
+    public function __construct(StreamAggregator $streamAggregator, FilesystemOperator $cacheStorage)
     {
         parent::__construct();
 
         $this->streamAggregator = $streamAggregator;
-        $this->ftpClient = $ftpClient;
+        $this->storage = $cacheStorage;
     }
 
     /**
@@ -35,7 +35,7 @@ class CacheStreamCommand extends Command
     {
         $this
             ->setName('amoscato:stream:cache')
-            ->setDescription('Caches the stream data via FTP')
+            ->setDescription('Caches the stream data')
             ->addOption(
                 'size',
                 null,
@@ -50,11 +50,9 @@ class CacheStreamCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $this->ftpClient->upload(
-            $output,
-            Utils::jsonEncode($this->streamAggregator->aggregate((float) $input->getOption('size'))),
-            'stream.json'
-        );
+        $stream = $this->streamAggregator->aggregate((float) $input->getOption('size'));
+
+        $this->storage->write('stream.json', Utils::jsonEncode($stream));
 
         return 0;
     }

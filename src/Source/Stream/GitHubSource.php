@@ -7,7 +7,6 @@ namespace Amoscato\Source\Stream;
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\GitHubClient;
 use Carbon\Carbon;
 use GuzzleHttp\Exception\ClientException;
@@ -26,11 +25,10 @@ class GitHubSource extends AbstractStreamSource
      */
     public function __construct(
         PDOFactory $databaseFactory,
-        FtpClient $ftpClient,
         GitHubClient $client,
         $username
     ) {
-        parent::__construct($databaseFactory, $ftpClient, $client);
+        parent::__construct($databaseFactory, $client);
 
         $this->username = $username;
     }

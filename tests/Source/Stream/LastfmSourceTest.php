@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\LastfmClient;
 use Amoscato\Source\Stream\LastfmSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
@@ -36,7 +35,6 @@ class LastfmSourceTest extends MockeryTestCase
             sprintf('%s[getStreamStatementProvider]', LastfmSource::class),
             [
                 m::mock(PDOFactory::class),
-                m::mock(FtpClient::class),
                 $this->client,
                 'user',
             ]

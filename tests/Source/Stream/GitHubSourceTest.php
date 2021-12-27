@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\GitHubClient;
 use Amoscato\Source\Stream\GitHubSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
@@ -39,7 +38,6 @@ class GitHubSourceTest extends MockeryTestCase
             sprintf('%s[getStreamStatementProvider]', GitHubSource::class),
             [
                 m::mock(PDOFactory::class),
-                m::mock(FtpClient::class),
                 $this->client,
                 'username',
             ]

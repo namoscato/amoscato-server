@@ -6,7 +6,6 @@ namespace Amoscato\Source\Stream;
 
 use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
-use Amoscato\Ftp\FtpClient;
 use Amoscato\Integration\Client\VimeoClient;
 use Carbon\Carbon;
 
@@ -17,10 +16,9 @@ class VimeoSource extends AbstractStreamSource
 {
     public function __construct(
         PDOFactory $databaseFactory,
-        FtpClient $ftpClient,
         VimeoClient $client
     ) {
-        parent::__construct($databaseFactory, $ftpClient, $client);
+        parent::__construct($databaseFactory, $client);
     }
 
     /**
