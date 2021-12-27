@@ -22,7 +22,7 @@
         "symfony/css-selector": "^5.0",
         "symfony/dom-crawler": "^5.0",
         "symfony/dotenv": "^5.0",
-        "symfony/flex": "^1.1",
+        "symfony/flex": "^2.0",
         "symfony/framework-bundle": "^5.0",
         "symfony/runtime": "^5.0",
         "symfony/yaml": "^5.0",
