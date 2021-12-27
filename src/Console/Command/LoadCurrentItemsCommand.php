@@ -56,7 +56,7 @@ class LoadCurrentItemsCommand extends Command
             $result[$type] = $source->load($output);
         }
 
-        $this->storage->write( 'current.json', Utils::jsonEncode($result));
+        $this->storage->write('current.json', Utils::jsonEncode($result));
 
         return 0;
     }
