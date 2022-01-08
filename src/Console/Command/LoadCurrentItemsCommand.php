@@ -16,6 +16,8 @@ use Webmozart\Assert\Assert;
 
 class LoadCurrentItemsCommand extends Command
 {
+    private const STORAGE_LOCATION = 'current.json';
+
     /** @var CurrentSourceInterface[] */
     private $currentSources;
 
@@ -48,16 +50,32 @@ class LoadCurrentItemsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = OutputDecorator::create($output);
+
+        $output->writeVerbose(sprintf('Reading old "%s"', self::STORAGE_LOCATION));
+        $oldContents = $this->storage->read(self::STORAGE_LOCATION);
+
+        $output->writeVerbose('Loading new contents');
+        $newContents = $this->loadSourceContents($output);
+
+        if ($oldContents !== $newContents) {
+            $output->writeln(sprintf('Writing to "%s"', self::STORAGE_LOCATION));
+            $this->storage->write(self::STORAGE_LOCATION, $newContents);
+        }
+
+        return 0;
+    }
+
+    private function loadSourceContents(OutputDecorator $output): string
+    {
         $result = [];
 
         foreach ($this->currentSources as $source) {
             $type = $source->getType();
-            $output->writeln("Loading {$type} source...");
+
+            $output->writeVeryVerbose(sprintf('Loading source "%s"', $type));
             $result[$type] = $source->load($output);
         }
 
-        $this->storage->write('current.json', Utils::jsonEncode($result));
-
-        return 0;
+        return Utils::jsonEncode($result);
     }
 }
