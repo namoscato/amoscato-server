@@ -2,7 +2,7 @@ name: stream
 on:
   pull_request:
 jobs:
-  load:
+  truncate:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -12,8 +12,8 @@ jobs:
         php-version: 8.2
     - name: Install dependencies
       run: composer install --no-interaction
-    - name: Load stream
-      run: bin/console amoscato:stream:load -v
+    - name: Load current
+      run: bin/console amoscato:stream:truncate -v
       env:
         SYMFONY_ENV: ${{ secrets.SYMFONY_ENV }}
         APP_ENV: ${{ secrets.APP_ENV }}
