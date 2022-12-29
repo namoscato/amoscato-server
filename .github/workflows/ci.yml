@@ -31,3 +31,5 @@ jobs:
       run: composer install --no-interaction
     - name: Run PHP CS Fixer
       run: composer cs -- --dry-run
+      env:
+        PHP_CS_FIXER_IGNORE_ENV: 1
