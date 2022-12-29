@@ -4,7 +4,6 @@ on:
 jobs:
   load:
     runs-on: ubuntu-latest
-    environment: production
     steps:
     - uses: actions/checkout@v3
     - name: Setup PHP
@@ -15,3 +14,9 @@ jobs:
       run: composer install --no-interaction
     - name: Load stream
       run: bin/console amoscato:stream:load -v
+      env:
+        AMOSCATO_DATABASE_HOST: ${{ secrets.AMOSCATO_DATABASE_HOST }}
+        AMOSCATO_DATABASE_NAME: ${{ secrets.AMOSCATO_DATABASE_NAME }}
+        AMOSCATO_DATABASE_USER: ${{ secrets.AMOSCATO_DATABASE_USER }}
+        AMOSCATO_DATABASE_PASSWORD: ${{ secrets.AMOSCATO_DATABASE_PASSWORD }}
+        AMOSCATO_DATABASE_PORT: ${{ secrets.AMOSCATO_DATABASE_PORT }}
