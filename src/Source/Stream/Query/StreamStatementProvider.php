@@ -93,7 +93,7 @@ SQL;
      * @param string $type
      * @param int $offset
      */
-    public function selectCreatedDateAtOffset($type, $offset): string
+    public function selectCreatedDateAtOffset($type, $offset): string | bool
     {
         $sql = <<<SQL
 SELECT created_at
