@@ -60,7 +60,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                 m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
-                    $mock->shouldReceive('execute');
+                    $mock->shouldReceive('execute')->andReturn(true);
 
                     $mock
                         ->shouldReceive('fetch')
@@ -292,7 +292,8 @@ class GoodreadsSourceTest extends MockeryTestCase
                             'goodreads.com/123l/456.jpg',
                             100,
                             300,
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 

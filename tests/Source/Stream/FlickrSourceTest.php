@@ -59,7 +59,7 @@ class FlickrSourceTest extends MockeryTestCase
                 m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
-                    $mock->shouldReceive('execute');
+                    $mock->shouldReceive('execute')->andReturn(true);
 
                     $mock
                         ->shouldReceive('fetch')
@@ -117,7 +117,8 @@ class FlickrSourceTest extends MockeryTestCase
                             'img.jpg',
                             'w',
                             'h',
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 

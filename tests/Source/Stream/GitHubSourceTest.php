@@ -58,7 +58,7 @@ class GitHubSourceTest extends MockeryTestCase
                 m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
-                    $mock->shouldReceive('execute');
+                    $mock->shouldReceive('execute')->andReturn(true);
 
                     $mock
                         ->shouldReceive('fetch')
@@ -339,6 +339,7 @@ class GitHubSourceTest extends MockeryTestCase
 
         $this->statementProvider
             ->shouldReceive('insertRows')
+            ->once()
             ->with(1)
             ->andReturn(
                 m::mock('PDOStatement', static function ($mock) {
@@ -355,7 +356,8 @@ class GitHubSourceTest extends MockeryTestCase
                             null,
                             null,
                             null,
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 
@@ -411,7 +413,8 @@ class GitHubSourceTest extends MockeryTestCase
 
                     $mock
                         ->shouldReceive('execute')
-                        ->once();
+                        ->once()
+                        ->andReturn(true);
                 })
             );
 

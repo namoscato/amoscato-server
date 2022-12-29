@@ -55,7 +55,7 @@ class LastfmSourceTest extends MockeryTestCase
                 m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
-                    $mock->shouldReceive('execute');
+                    $mock->shouldReceive('execute')->andReturn(true);
 
                     $mock
                         ->shouldReceive('fetch')
@@ -348,7 +348,8 @@ class LastfmSourceTest extends MockeryTestCase
                             'image1.jpg',
                             300,
                             300,
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 

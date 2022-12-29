@@ -59,7 +59,7 @@ class TwitterSourceTest extends MockeryTestCase
                 m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
-                    $mock->shouldReceive('execute');
+                    $mock->shouldReceive('execute')->andReturn(true);
 
                     $mock
                         ->shouldReceive('fetch')
@@ -110,7 +110,8 @@ class TwitterSourceTest extends MockeryTestCase
                             null,
                             null,
                             null,
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 
