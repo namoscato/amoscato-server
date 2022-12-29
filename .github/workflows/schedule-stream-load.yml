@@ -4,16 +4,14 @@ on:
 jobs:
   load:
     runs-on: ubuntu-latest
+    environment: production
     steps:
     - uses: actions/checkout@v3
-
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: 8.2
-
     - name: Install dependencies
       run: composer install --no-interaction
-
     - name: Load stream
       run: bin/console amoscato:stream:load -v
