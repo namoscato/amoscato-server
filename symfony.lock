@@ -145,9 +145,9 @@
         "version": "1.0",
         "recipe": {
             "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
+            "branch": "main",
             "version": "1.0",
-            "ref": "9d254a22efca7264203eea98b866f16f944b2f09"
+            "ref": "efb318193e48384eb5c5aadff15396ed698f8ffc"
         },
         "files": [
             "public/.htaccess"
@@ -208,12 +208,12 @@
         "version": "v5.4.0"
     },
     "symfony/flex": {
-        "version": "1.17",
+        "version": "2.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "1.0",
-            "ref": "c0eeb50665f0f77226616b6038a9b06c03752d8e"
+            "ref": "146251ae39e06a95be0fe3d13c807bcf3938b172"
         },
         "files": [
             ".env"
@@ -223,9 +223,9 @@
         "version": "5.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "5.4",
-            "ref": "d4131812e20853626928e73d3effef44014944c0"
+            "ref": "3cd216a4d007b78d8554d44a5b1c0a446dab24fb"
         },
         "files": [
             "config/packages/cache.yaml",
@@ -296,9 +296,9 @@
         "version": "5.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
+            "branch": "main",
             "version": "5.3",
-            "ref": "44633353926a0382d7dfb0530922c5c0b30fae11"
+            "ref": "85de1d8ae45b284c3c84b668171d2615049e698f"
         },
         "files": [
             "config/packages/routing.yaml",
