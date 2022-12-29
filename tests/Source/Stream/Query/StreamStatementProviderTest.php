@@ -52,10 +52,10 @@ SQL;
             ->shouldReceive('prepare')
             ->once()
             ->with($sql)
-            ->andReturn('stmt');
+            ->andReturn(false);
 
         self::assertSame(
-            'stmt',
+            false,
             $this->target->insertRows(2)
         );
     }

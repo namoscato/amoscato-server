@@ -239,7 +239,8 @@ class AbstractStreamSourceTest extends MockeryTestCase
                             2,
                             3,
                             4,
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 
@@ -300,7 +301,8 @@ class AbstractStreamSourceTest extends MockeryTestCase
                             2,
                             3,
                             4,
-                        ]);
+                        ])
+                        ->andReturn(true);
                 }
             ));
 

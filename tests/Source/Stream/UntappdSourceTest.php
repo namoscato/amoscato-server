@@ -57,7 +57,7 @@ class UntappdSourceTest extends MockeryTestCase
                 m::mock('PDOStatement', static function ($mock) {
                     /* @var m\Mock $mock */
 
-                    $mock->shouldReceive('execute');
+                    $mock->shouldReceive('execute')->andReturn(true);
 
                     $mock
                         ->shouldReceive('fetch')
@@ -139,7 +139,8 @@ class UntappdSourceTest extends MockeryTestCase
                             'img.jpg',
                             400,
                             400,
-                        ]));
+                        ]))
+                        ->andReturn(true);
                 })
             );
 

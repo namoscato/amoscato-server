@@ -148,11 +148,13 @@ class StravaAuthenticationTest extends MockeryTestCase
         $this
             ->cache
             ->shouldReceive('get')
+            ->twice()
             ->andReturn('foo');
 
         $this
             ->cache
-            ->shouldReceive('delete');
+            ->shouldReceive('delete')
+            ->once();
 
         $nextHandler = static function () {
             return new FulfilledPromise(new Response(401)); // ensure we don't get in an infinite loop
