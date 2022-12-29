@@ -6,33 +6,34 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: [8.0, 8.1]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    - name: Use PHP ${{ matrix.php-version }}
+
+    - name: Use PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php-version }}
+        php-version: 8.2
+
     - name: Install dependencies
       run: composer install --no-interaction
+
     - name: Run PHPUnit
       run: bin/phpunit
+
   standard:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php-version: [8.0]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+
     - name: Use PHP ${{ matrix.php-version }}
       uses: shivammathur/setup-php@v2
       with:
-        php-version: ${{ matrix.php-version }}
+        php-version: 8.2
+
     - name: Install dependencies
       run: composer install --no-interaction
+
     - name: Run PHP CS Fixer
       run: composer cs -- --dry-run
