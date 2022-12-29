@@ -1,6 +1,7 @@
 name: current
 on:
-  pull_request:
+  schedule:
+    - cron: '*/10 * * * *'
 jobs:
   load:
     runs-on: ubuntu-latest

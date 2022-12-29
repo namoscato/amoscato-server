@@ -1,6 +1,7 @@
 name: stream
 on:
-  pull_request:
+  schedule:
+    - cron: '0 * * * *'
 jobs:
   load:
     runs-on: ubuntu-latest

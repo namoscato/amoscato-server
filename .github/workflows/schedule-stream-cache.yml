@@ -1,6 +1,7 @@
 name: stream
 on:
-  pull_request:
+  schedule:
+    - cron: '30 * * * *'
 jobs:
   cache:
     runs-on: ubuntu-latest
