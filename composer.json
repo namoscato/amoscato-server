@@ -17,7 +17,7 @@
         "psr/simple-cache": "^3.0",
         "sensio/framework-extra-bundle": "^6.0",
         "symfony/apache-pack": "^1.0",
-        "symfony/cache": "^5.0",
+        "symfony/cache": "^6.2",
         "symfony/console": "^5.0",
         "symfony/css-selector": "^5.0",
         "symfony/dom-crawler": "^5.0",
