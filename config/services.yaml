@@ -46,10 +46,6 @@ services:
   Amoscato\:
     resource: '../src/*'
     exclude: '../src/{DependencyInjection,Resources,Kernel.php}'
-
-  Amoscato\Controller\:
-    resource: '../src/Controller'
-    tags: ['controller.service_arguments']
   #endregion
 
   #region Datastore
