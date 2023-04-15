@@ -7,10 +7,8 @@ namespace Tests\Source\Stream;
 use Amoscato\Database\PDOFactory;
 use Amoscato\Integration\Client\Client;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use ArrayObject;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use PDOStatement;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Tests\Mocks\Source\Stream\MockSource;
@@ -259,7 +257,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
 
         $this->source
             ->shouldReceive('mockTransform')
-            ->andReturn(new ArrayObject([
+            ->andReturn(new \ArrayObject([
                 [
                     1,
                     2,
@@ -280,7 +278,7 @@ class AbstractStreamSourceTest extends MockeryTestCase
             ->once()
             ->with(2)
             ->andReturn(m::mock(
-                PDOStatement::class,
+                \PDOStatement::class,
                 static function ($mock) {
                     /* @var m\Mock $mock */
 

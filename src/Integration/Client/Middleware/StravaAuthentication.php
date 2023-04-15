@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Amoscato\Integration\Client\Middleware;
 
-use Closure;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Utils;
@@ -62,7 +61,7 @@ class StravaAuthentication
         $this->refreshToken = $refreshToken;
     }
 
-    public function __invoke(callable $nextHandler): Closure
+    public function __invoke(callable $nextHandler): \Closure
     {
         return function (RequestInterface $request, array $options) use ($nextHandler) {
             return $this->addAuthorizationHeader($nextHandler, $request, $options);

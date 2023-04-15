@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Amoscato\Database;
 
-use PDO;
-
 class PDOFactory
 {
     /** @var string */
@@ -34,9 +32,9 @@ class PDOFactory
         $this->options = $options;
     }
 
-    public function getInstance(): PDO
+    public function getInstance(): \PDO
     {
-        return new PDO(
+        return new \PDO(
             $this->dsn,
             $this->username,
             $this->password,

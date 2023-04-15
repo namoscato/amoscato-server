@@ -10,8 +10,6 @@ use Amoscato\Database\PDOFactory;
 use Amoscato\Integration\Client\Client;
 use Amoscato\Source\AbstractSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use ArrayObject;
-use PDO;
 use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractStreamSource extends AbstractSource implements StreamSourceInterface
@@ -94,7 +92,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
                     continue;
                 }
 
-                if (!$transformedItems instanceof ArrayObject) {
+                if (!$transformedItems instanceof \ArrayObject) {
                     $transformedItems = [$transformedItems];
                 }
 
@@ -133,7 +131,7 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
 
         $statement->execute();
 
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        $result = $statement->fetch(\PDO::FETCH_ASSOC);
 
         if (!$result) {
             return null;

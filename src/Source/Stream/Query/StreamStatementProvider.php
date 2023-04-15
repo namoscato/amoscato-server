@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Amoscato\Source\Stream\Query;
 
-use PDO;
-use PDOStatement;
-
 class StreamStatementProvider
 {
-    /** @var PDO */
+    /** @var \PDO */
     private $database;
 
-    public function __construct(PDO $database)
+    public function __construct(\PDO $database)
     {
         $this->database = $database;
     }
@@ -20,7 +17,7 @@ class StreamStatementProvider
     /**
      * @param int $rowCount
      *
-     * @return bool|PDOStatement
+     * @return bool|\PDOStatement
      */
     public function insertRows($rowCount)
     {
@@ -58,7 +55,7 @@ SQL;
     /**
      * @param string $type
      *
-     * @return PDOStatement
+     * @return \PDOStatement
      */
     public function selectLatestSourceId($type)
     {
@@ -70,7 +67,7 @@ SQL;
      * @param int $limit
      * @param string $select optional
      *
-     * @return bool|PDOStatement
+     * @return bool|\PDOStatement
      */
     public function selectStreamRows($type, $limit, $select = '*')
     {
@@ -84,7 +81,7 @@ SQL;
         $statement = $this->database->prepare(sprintf($sql, $select));
 
         $statement->bindParam(':type', $type);
-        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':limit', $limit, \PDO::PARAM_INT);
 
         return $statement;
     }
@@ -106,7 +103,7 @@ SQL;
         $stmt = $this->database->prepare($sql);
 
         $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, \PDO::PARAM_INT);
 
         $stmt->execute();
 

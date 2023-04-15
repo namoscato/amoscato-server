@@ -8,7 +8,6 @@ use Amoscato\Console\Helper\PageIterator;
 use Amoscato\Database\PDOFactory;
 use Amoscato\Integration\Client\GoodreadsClient;
 use Carbon\Carbon;
-use DOMElement;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**
@@ -64,7 +63,7 @@ class GoodreadsSource extends AbstractStreamSource
     }
 
     /**
-     * @param DOMElement $item
+     * @param \DOMElement $item
      */
     protected function transform($item): array
     {
@@ -104,7 +103,7 @@ class GoodreadsSource extends AbstractStreamSource
     }
 
     /**
-     * @param DOMElement $item
+     * @param \DOMElement $item
      */
     protected function getSourceId($item): string
     {
@@ -114,7 +113,7 @@ class GoodreadsSource extends AbstractStreamSource
     }
 
     /**
-     * @param DOMElement $node
+     * @param \DOMElement $node
      */
     public function createCrawler($node): Crawler
     {
