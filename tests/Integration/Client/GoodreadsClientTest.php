@@ -49,25 +49,27 @@ class GoodreadsClientTest extends MockeryTestCase
             )
             ->andReturn(new Response(200, [], 'body'));
 
+        $filterResponse = m::mock(Crawler::class);
+
         $this->goodreadsClient
             ->shouldReceive('createCrawler')
             ->with('body')
             ->andReturn(
                 m::mock(
                     Crawler::class,
-                    static function ($mock) {
+                    static function ($mock) use ($filterResponse) {
                         /* @var m\Mock $mock */
 
                         $mock
                             ->shouldReceive('filter')
                             ->with('GoodreadsResponse reviews review')
-                            ->andReturn(['books']);
+                            ->andReturn($filterResponse);
                     }
                 )
             );
 
         self::assertSame(
-            ['books'],
+            $filterResponse,
             $this->goodreadsClient->getCurrentlyReadingBooks(1)
         );
     }
@@ -89,25 +91,27 @@ class GoodreadsClientTest extends MockeryTestCase
             )
             ->andReturn(new Response(200, [], 'body'));
 
+        $filterResponse = m::mock(Crawler::class);
+
         $this->goodreadsClient
             ->shouldReceive('createCrawler')
             ->with('body')
             ->andReturn(
                 m::mock(
                     Crawler::class,
-                    static function ($mock) {
+                    static function ($mock) use ($filterResponse) {
                         /* @var m\Mock $mock */
 
                         $mock
                             ->shouldReceive('filter')
                             ->with('GoodreadsResponse reviews review')
-                            ->andReturn(['books']);
+                            ->andReturn($filterResponse);
                     }
                 )
             );
 
         self::assertSame(
-            ['books'],
+            $filterResponse,
             $this->goodreadsClient->getReadBooks(1)
         );
     }

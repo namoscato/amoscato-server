@@ -8,10 +8,10 @@ use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Source\Current\CurrentSourceInterface;
 use GuzzleHttp\Utils;
 use League\Flysystem\FilesystemOperator;
+use League\Flysystem\UnableToReadFile;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Traversable;
 use Webmozart\Assert\Assert;
 
 class LoadCurrentItemsCommand extends Command
@@ -24,7 +24,7 @@ class LoadCurrentItemsCommand extends Command
     /** @var FilesystemOperator */
     private $storage;
 
-    public function __construct(FilesystemOperator $cacheStorage, Traversable $currentSources)
+    public function __construct(FilesystemOperator $cacheStorage, \Traversable $currentSources)
     {
         Assert::allIsInstanceOf($currentSources, CurrentSourceInterface::class);
 
@@ -51,8 +51,7 @@ class LoadCurrentItemsCommand extends Command
     {
         $output = OutputDecorator::create($output);
 
-        $output->writeVerbose(sprintf('Reading old "%s"', self::STORAGE_LOCATION));
-        $oldContents = $this->storage->read(self::STORAGE_LOCATION);
+        $oldContents = $this->readFile($output, self::STORAGE_LOCATION);
 
         $output->writeVerbose('Loading new contents');
         $newContents = $this->loadSourceContents($output);
@@ -77,5 +76,18 @@ class LoadCurrentItemsCommand extends Command
         }
 
         return Utils::jsonEncode($result);
+    }
+
+    private function readFile(OutputDecorator $output, string $location): string
+    {
+        try {
+            $output->writeVerbose(sprintf('Reading old "%s"', $location));
+
+            return $this->storage->read($location);
+        } catch (UnableToReadFile $e) {
+            $output->writeVeryVerbose(sprintf('File "%s" does not exist', $location));
+
+            return '';
+        }
     }
 }

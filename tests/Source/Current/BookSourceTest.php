@@ -60,90 +60,33 @@ class BookSourceTest extends MockeryTestCase
 
     public function testLoad(): void
     {
+        $currentlyReadingBooks = new Crawler(<<<XML
+        <?xml version="1.0" encoding="UTF-8"?>
+        <review>
+        <book>
+            <title>The Staff Engineer's Path</title>
+            <link>https://www.goodreads.com/book/show/59694859-the-staff-engineer-s-path</link>
+            <authors>
+            <author>
+                <name>Tanya Reilly</name>
+            </author>
+            </authors>
+        </book>
+        <started_at>Sun Jan 29 06:56:22 -0800 2023</started_at>
+        </review>
+        XML);
+
         $this
             ->client
             ->shouldReceive('getCurrentlyReadingBooks')
-            ->andReturn(
-                m::mock(
-                    Crawler::class,
-                    [
-                        'count' => 1,
-                        'first' => m::mock(
-                            Crawler::class,
-                            static function ($mock) {
-                                /* @var m\Mock $mock */
-
-                                $mock
-                                    ->shouldReceive('filter')
-                                    ->with('started_at')
-                                    ->andReturn(
-                                        m::mock(
-                                            Crawler::class,
-                                            [
-                                                'text' => '2018-05-13 12:00:00',
-                                            ]
-                                        )
-                                    );
-
-                                $mock
-                                    ->shouldReceive('filter')
-                                    ->with('book')
-                                    ->andReturn(
-                                        m::mock(
-                                            Crawler::class,
-                                            static function ($mock) {
-                                                /* @var m\Mock $mock */
-
-                                                $mock
-                                                    ->shouldReceive('filter')
-                                                    ->with('authors')
-                                                    ->andReturn(
-                                                        m::mock(
-                                                            Crawler::class,
-                                                            [
-                                                                'first->filter->text' => 'AUTHOR',
-                                                            ]
-                                                        )
-                                                    );
-
-                                                $mock
-                                                    ->shouldReceive('filter')
-                                                    ->with('title')
-                                                    ->andReturn(
-                                                        m::mock(
-                                                            Crawler::class,
-                                                            [
-                                                                'text' => 'TITLE',
-                                                            ]
-                                                        )
-                                                    );
-
-                                                $mock
-                                                    ->shouldReceive('filter')
-                                                    ->with('link')
-                                                    ->andReturn(
-                                                        m::mock(
-                                                            Crawler::class,
-                                                            [
-                                                                'text' => 'LINK',
-                                                            ]
-                                                        )
-                                                    );
-                                            }
-                                        )
-                                    );
-                            }
-                        ),
-                    ]
-                )
-            );
+            ->andReturn($currentlyReadingBooks);
 
         self::assertEquals(
             [
-                'author' => 'AUTHOR',
-                'date' => '2018-05-13 12:00:00',
-                'title' => 'TITLE',
-                'url' => 'LINK',
+                'author' => 'Tanya Reilly',
+                'date' => '2023-01-29 14:56:22',
+                'title' => "The Staff Engineer's Path",
+                'url' => 'https://www.goodreads.com/book/show/59694859-the-staff-engineer-s-path',
             ],
             $this->target->load($this->output)
         );

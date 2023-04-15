@@ -9,8 +9,6 @@ use Symfony\Component\DomCrawler\Crawler;
 class GoodreadsClient extends Client
 {
     /**
-     * @param $userId
-     *
      * @return Crawler
      */
     public function getCurrentlyReadingBooks($userId, array $args = []): iterable

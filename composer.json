@@ -17,15 +17,15 @@
         "psr/simple-cache": "^3.0",
         "sensio/framework-extra-bundle": "^6.0",
         "symfony/apache-pack": "^1.0",
-        "symfony/cache": "^5.0",
-        "symfony/console": "^5.0",
-        "symfony/css-selector": "^5.0",
-        "symfony/dom-crawler": "^5.0",
-        "symfony/dotenv": "^5.0",
+        "symfony/cache": "^6.2",
+        "symfony/console": "^6.2",
+        "symfony/css-selector": "^6.2",
+        "symfony/dom-crawler": "^6.2",
+        "symfony/dotenv": "^6.2",
         "symfony/flex": "^2.0",
-        "symfony/framework-bundle": "^5.0",
-        "symfony/runtime": "^5.0",
-        "symfony/yaml": "^5.0",
+        "symfony/framework-bundle": "^6.2",
+        "symfony/runtime": "^6.2",
+        "symfony/yaml": "^6.2",
         "webmozart/assert": "^1.4"
     },
     "config": {
@@ -75,7 +75,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.4.*"
+            "require": "6.2.*"
         }
     },
     "require-dev": {

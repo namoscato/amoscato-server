@@ -107,6 +107,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                             ->with('id')
                             ->andReturn(
                                 m::mock(
+                                    Crawler::class,
                                     [
                                         'text' => '1',
                                     ]
@@ -127,6 +128,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                                             ->with('image_url')
                                             ->andReturn(
                                                 m::mock(
+                                                    Crawler::class,
                                                     [
                                                         'text' => 'goodreads.com/123m/456.jpg',
                                                     ]
@@ -138,6 +140,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                                             ->with('title')
                                             ->andReturn(
                                                 m::mock(
+                                                    Crawler::class,
                                                     [
                                                         'text' => 'title1',
                                                     ]
@@ -149,6 +152,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                                             ->with('link')
                                             ->andReturn(
                                                 m::mock(
+                                                    Crawler::class,
                                                     [
                                                         'text' => 'link1',
                                                     ]
@@ -163,6 +167,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                             ->with('read_at')
                             ->andReturn(
                                 m::mock(
+                                    Crawler::class,
                                     [
                                         'text' => '2016-05-15 19:37:06 EST',
                                     ]
@@ -198,6 +203,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                             ->with('id')
                             ->andReturn(
                                 m::mock(
+                                    Crawler::class,
                                     [
                                         'text' => '2',
                                     ]
@@ -218,6 +224,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                                             ->with('image_url')
                                             ->andReturn(
                                                 m::mock(
+                                                    Crawler::class,
                                                     [
                                                         'text' => 'goodreads.com/nophoto/123.jpg',
                                                     ]
@@ -229,6 +236,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                                             ->with('title')
                                             ->andReturn(
                                                 m::mock(
+                                                    Crawler::class,
                                                     [
                                                         'text' => 'title2',
                                                     ]
@@ -240,6 +248,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                                             ->with('link')
                                             ->andReturn(
                                                 m::mock(
+                                                    Crawler::class,
                                                     [
                                                         'text' => 'link2',
                                                     ]
@@ -254,6 +263,7 @@ class GoodreadsSourceTest extends MockeryTestCase
                             ->with('read_at')
                             ->andReturn(
                                 m::mock(
+                                    Crawler::class,
                                     [
                                         'text' => '2016-05-15 19:37:06 EST',
                                     ]
