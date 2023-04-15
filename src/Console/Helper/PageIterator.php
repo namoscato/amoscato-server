@@ -11,7 +11,7 @@ use Iterator;
  * that represents the aggregate number of items across
  * multiple pages.
  */
-class PageIterator implements Iterator
+class PageIterator implements \Iterator
 {
     /** @var int */
     private $count = 0;

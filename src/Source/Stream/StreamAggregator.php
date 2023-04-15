@@ -6,8 +6,6 @@ namespace Amoscato\Source\Stream;
 
 use Amoscato\Database\PDOFactory;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use PDO;
-use Traversable;
 use Webmozart\Assert\Assert;
 
 class StreamAggregator
@@ -20,7 +18,7 @@ class StreamAggregator
     /** @var StreamSourceInterface[] */
     private $streamSources;
 
-    public function __construct(PDOFactory $pdoFactory, Traversable $streamSources)
+    public function __construct(PDOFactory $pdoFactory, \Traversable $streamSources)
     {
         Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
 
@@ -45,7 +43,7 @@ class StreamAggregator
 
             $statement->execute();
 
-            $typeResults[$source->getType()] = $statement->fetchAll(PDO::FETCH_ASSOC);
+            $typeResults[$source->getType()] = $statement->fetchAll(\PDO::FETCH_ASSOC);
         }
 
         $result = [];

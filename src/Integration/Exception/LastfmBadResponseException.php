@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace Amoscato\Integration\Exception;
 
-use RuntimeException;
-
 /**
  * @see https://www.last.fm/api/errorcodes
  */
-class LastfmBadResponseException extends RuntimeException
+class LastfmBadResponseException extends \RuntimeException
 {
     public const CODE_INVALID_PARAMETERS = 6;
 

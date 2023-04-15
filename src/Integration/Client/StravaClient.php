@@ -16,9 +16,6 @@ class StravaClient
      */
     private $client;
 
-    /**
-     * @return StravaClient
-     */
     public static function create(string $baseUri, StravaAuthentication $authentication): self
     {
         $handlerStack = HandlerStack::create();

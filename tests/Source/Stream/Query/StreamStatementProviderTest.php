@@ -6,8 +6,6 @@ namespace Tests\Source\Stream\Query;
 
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
 use Mockery as m;
-use PDO;
-use PDOStatement;
 use PHPUnit\Framework\TestCase;
 
 class StreamStatementProviderTest extends TestCase
@@ -158,7 +156,7 @@ SQL;
             ->database
             ->shouldReceive('prepare')
             ->andReturn(m::mock(
-                PDOStatement::class,
+                \PDOStatement::class,
                 static function ($stmt) {
                     /* @var m\Mock $stmt */
 
@@ -170,7 +168,7 @@ SQL;
                     $stmt
                         ->shouldReceive('bindParam')
                         ->once()
-                        ->with(':offset', 10, PDO::PARAM_INT);
+                        ->with(':offset', 10, \PDO::PARAM_INT);
 
                     $stmt
                         ->shouldReceive('execute')
@@ -191,7 +189,7 @@ SQL;
             ->database
             ->shouldReceive('prepare')
             ->andReturn(m::mock(
-                PDOStatement::class,
+                \PDOStatement::class,
                 static function ($stmt) {
                     /* @var m\Mock $stmt */
 

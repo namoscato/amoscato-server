@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Traversable;
 use Webmozart\Assert\Assert;
 
 class LoadStreamItemsCommand extends Command
@@ -21,7 +20,7 @@ class LoadStreamItemsCommand extends Command
     /** @var StreamSourceInterface[] */
     private $streamSources = [];
 
-    public function __construct(Traversable $streamSources)
+    public function __construct(\Traversable $streamSources)
     {
         Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
 

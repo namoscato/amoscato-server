@@ -13,7 +13,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Traversable;
 use Webmozart\Assert\Assert;
 
 class TruncateStreamCommand extends Command
@@ -24,7 +23,7 @@ class TruncateStreamCommand extends Command
     /** @var StreamSourceInterface[] */
     private $streamSources;
 
-    public function __construct(PDOFactory $pdoFactory, Traversable $streamSources)
+    public function __construct(PDOFactory $pdoFactory, \Traversable $streamSources)
     {
         Assert::allIsInstanceOf($streamSources, StreamSourceInterface::class);
 

@@ -12,9 +12,6 @@ abstract class AbstractOutputDecorator implements OutputInterface
     /** @var OutputInterface */
     protected $output;
 
-    /**
-     * @return AbstractOutputDecorator
-     */
     public static function create(OutputInterface $output): self
     {
         if ($output instanceof static) {
