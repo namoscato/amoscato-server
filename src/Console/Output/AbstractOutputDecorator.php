@@ -120,7 +120,7 @@ abstract class AbstractOutputDecorator implements OutputInterface
     /**
      * {@inheritdoc}
      */
-    public function getFormatter(): ?OutputFormatterInterface
+    public function getFormatter(): OutputFormatterInterface
     {
         return $this->output->getFormatter();
     }

@@ -7,5 +7,7 @@
         "STRAVA",
         "SYMFONY",
         "UNTAPPD"
-    ]
+    ],
+    "editor.defaultFormatter": "junstyle.php-cs-fixer",
+    "php-cs-fixer.config": ".php-cs-fixer.dist.php"
 }
