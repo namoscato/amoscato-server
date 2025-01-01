@@ -16,7 +16,7 @@ class VimeoSource extends AbstractStreamSource
 {
     public function __construct(
         PDOFactory $databaseFactory,
-        VimeoClient $client
+        VimeoClient $client,
     ) {
         parent::__construct($databaseFactory, $client);
     }

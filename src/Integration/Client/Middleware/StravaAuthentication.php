@@ -52,7 +52,7 @@ class StravaAuthentication
         CacheInterface $cache,
         string $clientId,
         string $clientSecret,
-        string $refreshToken
+        string $refreshToken,
     ) {
         $this->client = $client;
         $this->cache = $cache;

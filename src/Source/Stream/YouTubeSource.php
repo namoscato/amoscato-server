@@ -28,7 +28,7 @@ class YouTubeSource extends AbstractStreamSource
         PDOFactory $databaseFactory,
         YouTubeClient $client,
         $playlistId,
-        $videoUri
+        $videoUri,
     ) {
         parent::__construct($databaseFactory, $client);
 

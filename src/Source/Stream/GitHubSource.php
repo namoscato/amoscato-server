@@ -26,7 +26,7 @@ class GitHubSource extends AbstractStreamSource
     public function __construct(
         PDOFactory $databaseFactory,
         GitHubClient $client,
-        $username
+        $username,
     ) {
         parent::__construct($databaseFactory, $client);
 

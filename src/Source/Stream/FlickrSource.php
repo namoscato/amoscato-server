@@ -28,7 +28,7 @@ class FlickrSource extends AbstractStreamSource
         PDOFactory $databaseFactory,
         FlickrClient $client,
         $userId,
-        $photoUri
+        $photoUri,
     ) {
         parent::__construct($databaseFactory, $client);
 

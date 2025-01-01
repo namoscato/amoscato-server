@@ -106,9 +106,9 @@ class LastfmClientTest extends MockeryTestCase
                 200,
                 [],
                 Utils::jsonEncode([
-                'recenttracks' => [
-                    'track' => ['data'],
-                ],
+                    'recenttracks' => [
+                        'track' => ['data'],
+                    ],
                 ]))
             );
 
@@ -128,8 +128,8 @@ class LastfmClientTest extends MockeryTestCase
                 200,
                 [],
                 Utils::jsonEncode([
-                'error' => 1,
-                'message' => 'foo',
+                    'error' => 1,
+                    'message' => 'foo',
                 ]))
             );
 
