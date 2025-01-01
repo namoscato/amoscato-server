@@ -159,7 +159,7 @@ class LastfmSource extends AbstractStreamSource
         return $this->getAlbumId($item, true);
     }
 
-    private function getAlbumUrl(object $item, string $musicbrainzId = null): ?string
+    private function getAlbumUrl(object $item, ?string $musicbrainzId = null): ?string
     {
         $albumId = $this->getAlbumId($item);
 
