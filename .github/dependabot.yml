@@ -1,10 +1,18 @@
 version: 2
 updates:
-  - package-ecosystem: composer
-    directory: "/"
-    schedule:
-      interval: monthly
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: monthly
+    -   package-ecosystem: composer
+        directory: "/"
+        schedule:
+            interval: monthly
+        groups:
+            league-flysystem:
+                patterns:
+                    - 'league/flysystem-*'
+            symfony:
+                patterns:
+                    - 'symfony/*'
+
+    -   package-ecosystem: "github-actions"
+        directory: "/"
+        schedule:
+            interval: monthly
