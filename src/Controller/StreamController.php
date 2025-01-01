@@ -7,13 +7,11 @@ namespace Amoscato\Controller;
 use Amoscato\Source\Stream\StreamAggregator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class StreamController extends AbstractController
 {
-    /**
-     * @Route("/stream")
-     */
+    #[Route('/stream', methods: ['GET'])]
     public function getStreamAction(StreamAggregator $streamAggregator): JsonResponse
     {
         return new JsonResponse(

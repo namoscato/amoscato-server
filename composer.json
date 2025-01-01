@@ -15,7 +15,6 @@
         "nesbot/carbon": "^2.64",
         "predis/predis": "^2.1",
         "psr/simple-cache": "^3.0",
-        "sensio/framework-extra-bundle": "^6.0",
         "symfony/apache-pack": "^1.0",
         "symfony/cache": "^6.2",
         "symfony/console": "^6.2",
