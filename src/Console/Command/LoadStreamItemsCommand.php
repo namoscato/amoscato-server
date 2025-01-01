@@ -52,8 +52,6 @@ class LoadStreamItemsCommand extends Command
     }
 
     /**
-     * {@inheritdoc}
-     *
      * @throws InvalidArgumentException
      */
     protected function execute(InputInterface $input, OutputInterface $output): int

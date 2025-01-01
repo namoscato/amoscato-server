@@ -55,8 +55,6 @@ class GitHubClient extends Client
     /**
      * @param string $uri
      * @param array $args optional
-     *
-     * @return mixed
      */
     private function get($uri, array $args = [])
     {

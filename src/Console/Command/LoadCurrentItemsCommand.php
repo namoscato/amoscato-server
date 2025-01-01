@@ -34,9 +34,6 @@ class LoadCurrentItemsCommand extends Command
         $this->currentSources = $currentSources;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -44,9 +41,6 @@ class LoadCurrentItemsCommand extends Command
             ->setDescription('Loads current source data');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = OutputDecorator::create($output);

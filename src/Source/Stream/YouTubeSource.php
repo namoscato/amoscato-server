@@ -36,25 +36,16 @@ class YouTubeSource extends AbstractStreamSource
         $this->videoUri = $videoUri;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'youtube';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 50;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): array
     {
         $pageToken = $iterator->current();
@@ -76,9 +67,6 @@ class YouTubeSource extends AbstractStreamSource
         return $response->items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function transform($item)
     {
         if (!isset($item->snippet->thumbnails)) {
@@ -97,9 +85,6 @@ class YouTubeSource extends AbstractStreamSource
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSourceId($item): string
     {
         return $item->snippet->resourceId->videoId;

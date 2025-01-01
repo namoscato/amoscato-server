@@ -21,25 +21,16 @@ class VimeoSource extends AbstractStreamSource
         parent::__construct($databaseFactory, $client);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'vimeo';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 50;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): array
     {
         $response = $this->client->getLikes(
@@ -56,9 +47,6 @@ class VimeoSource extends AbstractStreamSource
         return $response->data;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function transform($item): array
     {
         $image = $item->pictures->sizes[2];
@@ -73,9 +61,6 @@ class VimeoSource extends AbstractStreamSource
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSourceId($item): string
     {
         return substr($item->uri, 8); // Remove "/videos/" prefix

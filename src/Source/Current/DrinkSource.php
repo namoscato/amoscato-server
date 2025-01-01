@@ -25,17 +25,11 @@ class DrinkSource implements CurrentSourceInterface
         $this->username = $username;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'drink';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output): array
     {
         $response = $this

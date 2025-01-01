@@ -109,8 +109,6 @@ class PageIterator implements \Iterator
 
     /**
      * Sets the next page value.
-     *
-     * @param mixed $value
      */
     public function setNextPageValue($value): void
     {

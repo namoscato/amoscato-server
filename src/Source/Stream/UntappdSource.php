@@ -30,25 +30,16 @@ class UntappdSource extends AbstractStreamSource
         $this->username = $username;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'untappd';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 50;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): array
     {
         $response = $this->client->getUserBadges(
@@ -64,9 +55,6 @@ class UntappdSource extends AbstractStreamSource
         return $response->items;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function transform($item): array
     {
         return [
@@ -79,9 +67,6 @@ class UntappdSource extends AbstractStreamSource
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSourceId($item): string
     {
         return (string) $item->user_badge_id;

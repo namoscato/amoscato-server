@@ -28,9 +28,6 @@ class CacheStreamCommand extends Command
         $this->storage = $cacheStorage;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -45,9 +42,6 @@ class CacheStreamCommand extends Command
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $stream = $this->streamAggregator->aggregate((float) $input->getOption('size'));

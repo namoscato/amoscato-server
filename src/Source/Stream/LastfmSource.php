@@ -38,17 +38,11 @@ class LastfmSource extends AbstractStreamSource
         return 'lastfm';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 1000;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): array
     {
         return $this->client->getRecentTracks(
@@ -60,9 +54,6 @@ class LastfmSource extends AbstractStreamSource
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function transform($item)
     {
         $imageUrl = null;
@@ -85,9 +76,6 @@ class LastfmSource extends AbstractStreamSource
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output, int $limit = 1): bool
     {
         $output = OutputDecorator::create($output);
@@ -166,15 +154,12 @@ class LastfmSource extends AbstractStreamSource
         return hash('md5', $albumId);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSourceId($item): string
     {
         return $this->getAlbumId($item, true);
     }
 
-    private function getAlbumUrl(object $item, ?string $musicbrainzId = null): ?string
+    private function getAlbumUrl(object $item, string $musicbrainzId = null): ?string
     {
         $albumId = $this->getAlbumId($item);
 

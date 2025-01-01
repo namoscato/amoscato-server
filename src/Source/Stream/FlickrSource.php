@@ -36,25 +36,16 @@ class FlickrSource extends AbstractStreamSource
         $this->photoUri = $photoUri;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'flickr';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 500;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): array
     {
         return $this->client->getPublicPhotos(
@@ -67,9 +58,6 @@ class FlickrSource extends AbstractStreamSource
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function transform($item): array
     {
         return [
