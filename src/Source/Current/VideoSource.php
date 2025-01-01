@@ -39,17 +39,11 @@ class VideoSource implements CurrentSourceInterface
         $this->vimeoClient = $vimeoClient;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'video';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output): ?array
     {
         $youTubeResponse = $this->youTubeClient->getPlaylistItems($this->youTubePlaylistId, ['maxResults' => 1]);

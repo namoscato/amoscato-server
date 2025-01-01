@@ -33,25 +33,16 @@ class GitHubSource extends AbstractStreamSource
         $this->username = $username;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'github';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 30;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): array
     {
         $page = $iterator->current();
@@ -70,9 +61,6 @@ class GitHubSource extends AbstractStreamSource
         return $response;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function transform($item)
     {
         try {
@@ -95,9 +83,6 @@ class GitHubSource extends AbstractStreamSource
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output, int $limit = 1): bool
     {
         $output = OutputDecorator::create($output);
@@ -161,9 +146,6 @@ class GitHubSource extends AbstractStreamSource
         return $this->insertValues($output, $iterator->getCount(), $values);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getSourceId($item): string
     {
         return $item->sha;

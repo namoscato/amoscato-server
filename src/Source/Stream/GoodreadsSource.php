@@ -31,25 +31,16 @@ class GoodreadsSource extends AbstractStreamSource
         $this->userId = $userId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'goodreads';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function getMaxPerPage(): int
     {
         return 200;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function extract($perPage, PageIterator $iterator): iterable
     {
         return $this->client->getReadBooks(

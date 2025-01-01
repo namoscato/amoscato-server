@@ -25,17 +25,11 @@ class AthleticActivitySource implements CurrentSourceInterface
         $this->activityUri = $activityUri;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'athleticActivity';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output): array
     {
         $activity = $this->stravaClient->getActivities(['per_page' => 1])[0];

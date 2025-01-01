@@ -62,9 +62,6 @@ abstract class AbstractStreamSource extends AbstractSource implements StreamSour
         return $this->weight;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output, int $limit = 1): bool
     {
         $output = OutputDecorator::create($output);

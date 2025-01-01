@@ -25,17 +25,11 @@ class BookSource implements CurrentSourceInterface
         $this->userId = $userId;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'book';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output): ?array
     {
         $reviews = $this

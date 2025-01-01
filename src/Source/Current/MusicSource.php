@@ -25,17 +25,11 @@ class MusicSource implements CurrentSourceInterface
         $this->user = $user;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getType(): string
     {
         return 'music';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load(OutputInterface $output): ?array
     {
         $tracks = $this->client->getRecentTracks($this->user, ['limit' => 2]);
