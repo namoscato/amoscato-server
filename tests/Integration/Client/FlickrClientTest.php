@@ -6,6 +6,7 @@ namespace Tests\Integration\Client;
 
 use Amoscato\Integration\Client\FlickrClient;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Utils;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Psr\Http\Message\ResponseInterface;
@@ -46,7 +47,7 @@ class FlickrClientTest extends MockeryTestCase
                 m::mock(
                     ResponseInterface::class,
                     [
-                        'getBody' => '{"photos":{"photo":["public photos"]}}',
+                        'getBody' => Utils::streamFor('{"photos":{"photo":["public photos"]}}'),
                     ]
                 )
             );
