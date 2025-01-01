@@ -23,7 +23,7 @@ class UntappdSource extends AbstractStreamSource
     public function __construct(
         PDOFactory $databaseFactory,
         UntappdClient $client,
-        $username
+        $username,
     ) {
         parent::__construct($databaseFactory, $client);
 

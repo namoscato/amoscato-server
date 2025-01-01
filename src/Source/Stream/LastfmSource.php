@@ -26,7 +26,7 @@ class LastfmSource extends AbstractStreamSource
     public function __construct(
         PDOFactory $databaseFactory,
         LastfmClient $client,
-        string $user
+        string $user,
     ) {
         parent::__construct($databaseFactory, $client);
 
@@ -159,7 +159,7 @@ class LastfmSource extends AbstractStreamSource
         return $this->getAlbumId($item, true);
     }
 
-    private function getAlbumUrl(object $item, string $musicbrainzId = null): ?string
+    private function getAlbumUrl(object $item, ?string $musicbrainzId = null): ?string
     {
         $albumId = $this->getAlbumId($item);
 

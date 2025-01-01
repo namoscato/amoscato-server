@@ -24,7 +24,7 @@ class GoodreadsSource extends AbstractStreamSource
     public function __construct(
         PDOFactory $databaseFactory,
         GoodreadsClient $client,
-        $userId
+        $userId,
     ) {
         parent::__construct($databaseFactory, $client);
 

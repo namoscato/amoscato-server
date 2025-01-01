@@ -31,7 +31,7 @@ class VideoSource implements CurrentSourceInterface
         YouTubeClient $youTubeClient,
         $youTubePlaylistId,
         $youTubeVideoUri,
-        VimeoClient $vimeoClient
+        VimeoClient $vimeoClient,
     ) {
         $this->youTubeClient = $youTubeClient;
         $this->youTubePlaylistId = $youTubePlaylistId;
