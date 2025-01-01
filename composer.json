@@ -11,7 +11,7 @@
         "ext-iconv": "*",
         "guzzlehttp/guzzle": "^7.0",
         "league/flysystem-aws-s3-v3": "^3.29",
-        "league/flysystem-bundle": "^2.1",
+        "league/flysystem-bundle": "^3.3",
         "nesbot/carbon": "^2.64",
         "predis/predis": "^2.1",
         "psr/simple-cache": "^3.0",
