@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Amoscato\Integration\Client;
 
 use Amoscato\Integration\Exception\LastfmBadResponseException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Utils;
 
 class LastfmClient extends Client
@@ -33,17 +34,19 @@ class LastfmClient extends Client
      * @param string $artistName
      * @param string $albumName
      * @param array $args optional
-     *
-     * @return mixed
      */
     public function getAlbumInfoByName($artistName, $albumName, array $args = [])
     {
         $args['artist'] = $artistName;
         $args['album'] = $albumName;
 
-        $body = $this->get(self::METHOD_ALBUM_GET_INFO, $args);
+        try {
+            $body = $this->get(self::METHOD_ALBUM_GET_INFO, $args);
 
-        return $body->album ?? $body;
+            return $body->album ?? $body;
+        } catch (ClientException $e) {
+            return null; // gracefully handle 404s
+        }
     }
 
     /**
