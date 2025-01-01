@@ -3,9 +3,7 @@ updates:
   - package-ecosystem: composer
     directory: "/"
     schedule:
-      interval: weekly
-      day: saturday
-      timezone: America/New_York
+      interval: monthly
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
