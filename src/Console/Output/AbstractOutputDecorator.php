@@ -9,8 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractOutputDecorator implements OutputInterface
 {
-    /** @var OutputInterface */
-    protected $output;
+    protected OutputInterface $output;
 
     public static function create(OutputInterface $output): self
     {
@@ -26,17 +25,17 @@ abstract class AbstractOutputDecorator implements OutputInterface
         $this->output = $output;
     }
 
-    public function write($messages, $newline = false, $options = 0): void
+    public function write(string|iterable $messages, bool $newline = false, int $options = 0): void
     {
         $this->output->write($messages, $newline, $options);
     }
 
-    public function writeln($messages, $options = 0): void
+    public function writeln(string|iterable $messages, int $options = 0): void
     {
         $this->output->writeln($messages, $options);
     }
 
-    public function setVerbosity($level): void
+    public function setVerbosity(int $level): void
     {
         $this->output->setVerbosity($level);
     }
@@ -71,7 +70,7 @@ abstract class AbstractOutputDecorator implements OutputInterface
         return $this->output->isDebug();
     }
 
-    public function setDecorated($decorated): void
+    public function setDecorated(bool $decorated): void
     {
         $this->output->setDecorated($decorated);
     }

@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Amoscato\Console\Command;
 
+use Amoscato\Console\Error\ErrorOutput;
+use Amoscato\Console\Error\GitHubActionsErrorOutput;
 use Amoscato\Console\Output\OutputDecorator;
 use Amoscato\Source\SourceInterface;
 use Amoscato\Source\Stream\StreamSourceInterface;
+use GuzzleHttp\Exception\ServerException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
+use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,7 +22,7 @@ use Webmozart\Assert\Assert;
 class LoadStreamItemsCommand extends Command
 {
     /** @var StreamSourceInterface[] */
-    private $streamSources = [];
+    private array $streamSources = [];
 
     public function __construct(\Traversable $streamSources)
     {
@@ -48,6 +52,12 @@ class LoadStreamItemsCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Number of items to load',
                 100
+            )
+            ->addOption(
+                'github',
+                null,
+                InputOption::VALUE_NONE,
+                'Assume GitHub Actions execution context',
             );
     }
 
@@ -57,11 +67,13 @@ class LoadStreamItemsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output = OutputDecorator::create($output);
+        $errorOutput = $input->getOption('github') ? new GitHubActionsErrorOutput($output) : new ErrorOutput($output);
+
         $sources = $input->getArgument('sources');
 
         foreach ($sources as $type) { // Validate arguments
             if (!isset($this->streamSources[$type])) {
-                throw new InvalidArgumentException("Source type '{$type}' is undefined");
+                throw new InvalidArgumentException("Source type '$type' is undefined");
             }
         }
 
@@ -70,17 +82,29 @@ class LoadStreamItemsCommand extends Command
         }
 
         $limit = (int) $input->getOption('limit');
+        $fatalExceptionCount = 0;
 
         foreach ($sources as $type => $source) {
-            if (!$source instanceof StreamSourceInterface) {
-                $source = $this->streamSources[$source];
-                $type = $source->getType();
-            }
+            try {
+                if (!$source instanceof StreamSourceInterface) {
+                    $source = $this->streamSources[$source];
+                    $type = $source->getType();
+                }
 
-            $output->writeln("Extracting {$limit} {$type} source...");
-            $source->load($output, $limit);
+                $output->writeln("Extracting $limit $type source...");
+                $source->load($output, $limit);
+            } catch (ServerException $serverException) {
+                $errorOutput->writeln($serverException->getMessage());
+            } catch (\Throwable $throwable) {
+                $errorOutput->writeln($throwable->getMessage());
+                ++$fatalExceptionCount;
+            }
         }
 
-        return 0;
+        if ($fatalExceptionCount) {
+            throw new RuntimeException("$fatalExceptionCount stream loading errors");
+        }
+
+        return Command::SUCCESS;
     }
 }
