@@ -388,6 +388,7 @@ class GitHubSourceTest extends MockeryTestCase
             ->shouldReceive('getUserEvents')
             ->andReturnUsing(static function () use (&$count) {
                 ++$count;
+
                 return [
                     (object) [
                         'id' => (string) $count,
