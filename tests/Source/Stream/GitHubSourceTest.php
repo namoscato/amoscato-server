@@ -8,11 +8,8 @@ use Amoscato\Database\PDOFactory;
 use Amoscato\Integration\Client\GitHubClient;
 use Amoscato\Source\Stream\GitHubSource;
 use Amoscato\Source\Stream\Query\StreamStatementProvider;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Psr7\Response;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Psr\Http\Message\RequestInterface;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -103,35 +100,29 @@ class GitHubSourceTest extends MockeryTestCase
             ->andReturn(
                 [
                     (object) [
+                        'id' => '1',
                         'type' => 'PushEvent',
+                        'repo' => (object) [
+                            'name' => 'username/repo1',
+                        ],
                         'payload' => (object) [
-                            'commits' => [
-                                (object) [
-                                    'sha' => '4',
-                                    'url' => 'api.github.com/4',
-                                    'message' => 'message 4',
-                                ],
-                            ],
+                            'before' => 'before4',
+                            'head' => 'head4',
                         ],
                     ],
                     (object) [
+                        'id' => '2',
                         'type' => 'AnotherEvent',
                     ],
                     (object) [
+                        'id' => '3',
                         'type' => 'PushEvent',
+                        'repo' => (object) [
+                            'name' => 'username/repo2',
+                        ],
                         'payload' => (object) [
-                            'commits' => [
-                                (object) [
-                                    'sha' => '2',
-                                    'url' => 'api.github.com/2',
-                                    'message' => "message 2\nwith newlines",
-                                ],
-                                (object) [
-                                    'sha' => '3',
-                                    'url' => 'api.github.com/3',
-                                    'message' => 'message 3',
-                                ],
-                            ],
+                            'before' => 'before2',
+                            'head' => 'head2',
                         ],
                     ],
                 ]
@@ -146,25 +137,14 @@ class GitHubSourceTest extends MockeryTestCase
             ->andReturn(
                 [
                     (object) [
+                        'id' => '4',
                         'type' => 'PushEvent',
+                        'repo' => (object) [
+                            'name' => 'username/repo3',
+                        ],
                         'payload' => (object) [
-                            'commits' => [
-                                (object) [
-                                    'sha' => '0',
-                                    'url' => 'api.github.com/0',
-                                    'message' => 'message 0',
-                                ],
-                                (object) [
-                                    'sha' => '1',
-                                    'url' => 'api.github.com/1',
-                                    'message' => 'message 1',
-                                ],
-                                (object) [
-                                    'sha' => '2',
-                                    'url' => 'api.github.com/2',
-                                    'message' => "message 2\nwith newlines",
-                                ],
-                            ],
+                            'before' => 'before0',
+                            'head' => 'head0',
                         ],
                     ],
                 ]
@@ -173,75 +153,90 @@ class GitHubSourceTest extends MockeryTestCase
             ->andReturn([]);
 
         $this->client
-            ->shouldReceive('getCommit')
-            ->with('api.github.com/0')
-            ->andThrow(
-                new ClientException(
-                    'message',
-                    m::mock(RequestInterface::class),
-                    new Response()
-                )
-            );
-
-        $this->client
-            ->shouldReceive('getCommit')
-            ->with('api.github.com/1')
+            ->shouldReceive('compareCommits')
+            ->with('username', 'repo3', 'before0...head0')
             ->andReturn(
                 (object) [
-                    'author' => (object) [
-                        'login' => 'username',
-                    ],
-                    'commit' => (object) [
-                        'author' => (object) [
-                            'date' => '2016-05-17 21:00:00',
+                    'commits' => [
+                        (object) [
+                            'sha' => '1',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => 'message 1',
+                                'author' => (object) [
+                                    'date' => '2016-05-17 21:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/1',
                         ],
-                    ],
-                    'html_url' => 'github.com/1',
-                ]
-            );
-
-        $this->client
-            ->shouldReceive('getCommit')
-            ->with('api.github.com/2')
-            ->andReturn(
-                (object) [
-                    'author' => (object) [
-                        'login' => 'username',
-                    ],
-                    'commit' => (object) [
-                        'author' => (object) [
-                            'date' => '2016-05-17 22:00:00',
+                        (object) [
+                            'sha' => '2',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => "message 2\nwith newlines",
+                                'author' => (object) [
+                                    'date' => '2016-05-17 22:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/2',
                         ],
-                    ],
-                    'html_url' => 'github.com/2',
-                ]
-            );
-
-        $this->client
-            ->shouldReceive('getCommit')
-            ->with('api.github.com/3')
-            ->andReturn(
-                (object) [
-                    'author' => (object) [
-                        'login' => 'another user',
                     ],
                 ]
             );
 
         $this->client
-            ->shouldReceive('getCommit')
-            ->with('api.github.com/4')
+            ->shouldReceive('compareCommits')
+            ->with('username', 'repo2', 'before2...head2')
             ->andReturn(
                 (object) [
-                    'author' => (object) [
-                        'login' => 'username',
-                    ],
-                    'commit' => (object) [
-                        'author' => (object) [
-                            'date' => '2016-05-17 23:00:00',
+                    'commits' => [
+                        (object) [
+                            'sha' => '2',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => "message 2\nwith newlines",
+                                'author' => (object) [
+                                    'date' => '2016-05-17 22:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/2',
+                        ],
+                        (object) [
+                            'sha' => '3',
+                            'author' => (object) [
+                                'login' => 'another user',
+                            ],
                         ],
                     ],
-                    'html_url' => 'github.com/4',
+                ]
+            );
+
+        $this->client
+            ->shouldReceive('compareCommits')
+            ->with('username', 'repo1', 'before4...head4')
+            ->andReturn(
+                (object) [
+                    'commits' => [
+                        (object) [
+                            'sha' => '4',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => 'message 4',
+                                'author' => (object) [
+                                    'date' => '2016-05-17 23:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/4',
+                        ],
+                    ],
                 ]
             );
 
@@ -296,44 +291,65 @@ class GitHubSourceTest extends MockeryTestCase
             ->andReturn(
                 [
                     (object) [
+                        'id' => '1',
                         'type' => 'PushEvent',
+                        'repo' => (object) [
+                            'name' => 'username/repo',
+                        ],
                         'payload' => (object) [
-                            'commits' => [
-                                (object) [
-                                    'sha' => '99',
-                                    'url' => 'api.github.com/99',
-                                    'message' => 'message 99',
-                                ],
-                                (object) [
-                                    'sha' => '100',
-                                    'url' => 'api.github.com/100',
-                                    'message' => 'message 100',
-                                ],
-                                (object) [
-                                    'sha' => '101',
-                                    'url' => 'api.github.com/101',
-                                    'message' => 'message 101',
-                                ],
-                            ],
+                            'before' => 'before99',
+                            'head' => 'head101',
                         ],
                     ],
                 ]
             );
 
         $this->client
-            ->shouldReceive('getCommit')
-            ->with('api.github.com/101')
+            ->shouldReceive('compareCommits')
+            ->with('username', 'repo', 'before99...head101')
             ->andReturn(
                 (object) [
-                    'author' => (object) [
-                        'login' => 'username',
-                    ],
-                    'commit' => (object) [
-                        'author' => (object) [
-                            'date' => '2016-05-17 23:00:00',
+                    'commits' => [
+                        (object) [
+                            'sha' => '99',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => 'message 99',
+                                'author' => (object) [
+                                    'date' => '2016-05-17 21:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/99',
+                        ],
+                        (object) [
+                            'sha' => '100',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => 'message 100',
+                                'author' => (object) [
+                                    'date' => '2016-05-17 22:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/100',
+                        ],
+                        (object) [
+                            'sha' => '101',
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => 'message 101',
+                                'author' => (object) [
+                                    'date' => '2016-05-17 23:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/101',
                         ],
                     ],
-                    'html_url' => 'github.com/101',
                 ]
             );
 
@@ -371,37 +387,47 @@ class GitHubSourceTest extends MockeryTestCase
         $this->client
             ->shouldReceive('getUserEvents')
             ->andReturnUsing(static function () use (&$count) {
+                ++$count;
                 return [
                     (object) [
+                        'id' => (string) $count,
                         'type' => 'PushEvent',
+                        'repo' => (object) [
+                            'name' => 'username/repo',
+                        ],
                         'payload' => (object) [
-                            'commits' => [
-                                (object) [
-                                    'sha' => (string) ++$count,
-                                    'url' => "api.github.com/{$count}",
-                                    'message' => "message {$count}",
-                                ],
-                            ],
+                            'before' => "before{$count}",
+                            'head' => "head{$count}",
                         ],
                     ],
                 ];
             });
 
         $this->client
-            ->shouldReceive('getCommit')
-            ->andReturn(
-                (object) [
-                    'author' => (object) [
-                        'login' => 'username',
-                    ],
-                    'commit' => (object) [
-                        'author' => (object) [
-                            'date' => '2016-05-17 23:00:00',
+            ->shouldReceive('compareCommits')
+            ->andReturnUsing(static function ($owner, $repo, $basehead) {
+                // Extract count from basehead like "before1...head1"
+                preg_match('/before(\d+)/', $basehead, $matches);
+                $commitCount = $matches[1];
+
+                return (object) [
+                    'commits' => [
+                        (object) [
+                            'sha' => (string) $commitCount,
+                            'author' => (object) [
+                                'login' => 'username',
+                            ],
+                            'commit' => (object) [
+                                'message' => "message {$commitCount}",
+                                'author' => (object) [
+                                    'date' => '2016-05-17 23:00:00',
+                                ],
+                            ],
+                            'html_url' => 'github.com/x',
                         ],
                     ],
-                    'html_url' => 'github.com/x',
-                ]
-            );
+                ];
+            });
 
         $this->statementProvider
             ->shouldReceive('insertRows')
@@ -418,6 +444,6 @@ class GitHubSourceTest extends MockeryTestCase
                 })
             );
 
-        $this->source->load($this->output, 100);
+        $this->source->load($this->output, 10);
     }
 }
