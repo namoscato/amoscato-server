@@ -32,33 +32,55 @@ class GitHubClientTest extends MockeryTestCase
             ->shouldReceive('get')
             ->once()
             ->with(
-                'users/1/events',
+                'users/testuser/events',
                 [
                     'auth' => ['id', 'secret'],
                     'query' => [],
                 ]
             )
-            ->andReturn(new Response(200, [], Utils::jsonEncode(['data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['event1', 'event2'])));
 
-        self::assertEquals(['data'], $this->gitHubClient->getUserEvents(1));
+        self::assertEquals(['event1', 'event2'], $this->gitHubClient->getUserEvents('testuser'));
     }
 
-    public function testGetCommit(): void
+    public function testGetUserEventsWithArgs(): void
     {
         $this->client
             ->shouldReceive('get')
             ->once()
             ->with(
-                'github.com',
-                m::type('array')
+                'users/testuser/events',
+                [
+                    'auth' => ['id', 'secret'],
+                    'query' => ['page' => 2],
+                ]
             )
-            ->andReturn(new Response(200, [], Utils::jsonEncode(['key' => 'data'])));
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['event3'])));
+
+        self::assertEquals(['event3'], $this->gitHubClient->getUserEvents('testuser', ['page' => 2]));
+    }
+
+    public function testCompareCommits(): void
+    {
+        $this->client
+            ->shouldReceive('get')
+            ->once()
+            ->with(
+                'repos/owner/repo/compare/abc123...def456',
+                [
+                    'auth' => ['id', 'secret'],
+                    'query' => [],
+                ]
+            )
+            ->andReturn(new Response(200, [], Utils::jsonEncode(['commits' => ['commit1', 'commit2']])));
+
+        $result = $this->gitHubClient->compareCommits('owner', 'repo', 'abc123...def456');
 
         self::assertEquals(
             (object) [
-                'key' => 'data',
+                'commits' => ['commit1', 'commit2'],
             ],
-            $this->gitHubClient->getCommit('github.com')
+            $result
         );
     }
 }

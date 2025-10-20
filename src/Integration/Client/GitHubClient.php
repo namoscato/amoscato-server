@@ -10,7 +10,6 @@ use GuzzleHttp\Utils;
 class GitHubClient extends Client
 {
     public const EVENT_TYPE_PUSH = 'PushEvent';
-    public const MAX_EVENT_PAGES = 10;
 
     /** @var string */
     private $clientId;
@@ -27,7 +26,7 @@ class GitHubClient extends Client
     }
 
     /**
-     * @see https://developer.github.com/v3/activity/events/#list-events-performed-by-a-user
+     * @see https://docs.github.com/en/rest/activity/events#list-events-for-the-authenticated-user
      *
      * @param string $username
      * @param array $args optional
@@ -41,15 +40,17 @@ class GitHubClient extends Client
     }
 
     /**
-     * @see https://developer.github.com/v3/git/commits/#get-a-commit
+     * @see https://docs.github.com/en/rest/commits/commits#compare-two-commits
      *
-     * @param string $commitUrl
+     * @param string $owner
+     * @param string $repo
+     * @param string $basehead Two commit SHAs in the format "base...head"
      *
      * @return object
      */
-    public function getCommit($commitUrl)
+    public function compareCommits($owner, $repo, $basehead)
     {
-        return $this->get($commitUrl);
+        return $this->get("repos/{$owner}/{$repo}/compare/{$basehead}");
     }
 
     /**

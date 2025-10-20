@@ -40,7 +40,7 @@ class GitHubSource extends AbstractStreamSource
 
     protected function getMaxPerPage(): int
     {
-        return 30;
+        return 100;
     }
 
     protected function extract($perPage, PageIterator $iterator): array
@@ -54,26 +54,20 @@ class GitHubSource extends AbstractStreamSource
             ]
         );
 
-        if (GitHubClient::MAX_EVENT_PAGES === $page) {
-            $iterator->setIsValid(false);
-        }
-
         return $response;
     }
 
     protected function transform($item)
     {
         try {
-            $response = $this->client->getCommit($item->url);
-
-            if ($response->author->login !== $this->username) {
+            if ($item->author->login !== $this->username) {
                 return false;
             }
 
             return [
-                explode("\n", $item->message)[0],
-                $response->html_url,
-                Carbon::parse($response->commit->author->date)->toDateTimeString(),
+                explode("\n", $item->commit->message)[0],
+                $item->html_url,
+                Carbon::parse($item->commit->author->date)->toDateTimeString(),
                 null,
                 null,
                 null,
@@ -95,32 +89,46 @@ class GitHubSource extends AbstractStreamSource
         $latestSourceId = $this->getLatestSourceId();
 
         while ($iterator->valid()) {
+            $output->writeDebug("Fetching page {$iterator->current()}");
             $items = $this->extract($this->getPerPage($limit), $iterator);
 
             foreach ($items as $item) {
                 if (GitHubClient::EVENT_TYPE_PUSH !== $item->type) {
+                    $output->writeDebug("Item {$item->id}: Skipping non-push event");
                     continue;
                 }
 
-                $commitCount = count($item->payload->commits) - 1;
+                // Extract repo owner and name from repo URL
+                [$owner, $repo] = explode('/', $item->repo->name);
 
-                for ($i = $commitCount; $i >= 0; --$i) { // Iterate through push event commits in decreasing chronological order
-                    $hash = $this->getSourceId($item->payload->commits[$i]);
+                $basehead = "{$item->payload->before}...{$item->payload->head}";
+                $output->writeDebug("Item {$item->id}: Fetching commits {$basehead}");
+                $commits = $this->client->compareCommits($owner, $repo, $basehead)->commits;
+
+                if (empty($commits)) {
+                    $output->writeDebug("Item {$item->id}: No commits found");
+                    continue;
+                }
+
+                for ($i = count($commits) - 1; $i >= 0; --$i) { // Iterate through push event commits in reverse chronological order
+                    $hash = $this->getSourceId($commits[$i]);
 
                     if (isset($commitHashes[$hash])) { // Skip duplicate commits
+                        $output->writeDebug("Item {$item->id}: Skipping duplicate commit {$hash}");
                         continue;
                     }
 
                     $commitHashes[$hash] = true;
 
                     if ($latestSourceId === $hash) { // Break if item is already in database
-                        $output->writeDebug("Item {$latestSourceId} is already in the database");
+                        $output->writeDebug("Item {$item->id}: Commit {$hash} already in database");
                         break 3;
                     }
 
-                    $transformedCommit = $this->transform($item->payload->commits[$i]);
+                    $transformedCommit = $this->transform($commits[$i]);
 
                     if (false === $transformedCommit) { // Skip select items
+                        $output->writeDebug("Item {$item->id}: Skipping commit {$hash}");
                         continue;
                     }
 

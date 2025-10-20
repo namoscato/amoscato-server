@@ -24,6 +24,9 @@ class MockSource extends AbstractStreamSource
         return $this->mockExtract($perPage, $iterator->current());
     }
 
+    /**
+     * @return array|bool
+     */
     protected function transform($item)
     {
         return $this->mockTransform($item);
