@@ -18,9 +18,9 @@
         "symfony/apache-pack": "^1.0",
         "symfony/cache": "^7.2",
         "symfony/console": "^7.2",
-        "symfony/css-selector": "^7.2",
-        "symfony/dom-crawler": "^7.2",
-        "symfony/dotenv": "^7.2",
+        "symfony/css-selector": "^8.0",
+        "symfony/dom-crawler": "^8.0",
+        "symfony/dotenv": "^8.0",
         "symfony/flex": "^2.0",
         "symfony/framework-bundle": "^7.2",
         "symfony/runtime": "^7.2",
@@ -80,6 +80,6 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.39",
         "mockery/mockery": "^1.6",
-        "symfony/phpunit-bridge": "^7.2"
+        "symfony/phpunit-bridge": "^8.0"
     }
 }
