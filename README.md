@@ -10,7 +10,6 @@ Server-side processes behind [amoscato.com](https://amoscato.com/) built with [S
 
 Loads and caches current data from a set of sources:
 
--   `athleticActivity` - latest athletic activity from [Strava](https://www.strava.com/)
 -   `book` - currently reading book from [Goodreads](https://www.goodreads.com/)
 -   `drink` - latest checkin from [Untappd](https://untappd.com/)
 -   `music` - latest scrobble from [Last.fm](http://www.last.fm/)

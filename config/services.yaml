@@ -15,8 +15,6 @@ parameters:
   goodreads_user_id: 16453252
   lastfm_api_uri: http://ws.audioscrobbler.com/2.0/
   lastfm_user: namoscato
-  strava_activity_uri: https://www.strava.com/activities/
-  strava_api_uri: https://www.strava.com/
   untappd_api_uri: https://api.untappd.com/v4/
   untappd_username: namoscato
   vimeo_api_uri: https://api.vimeo.com/
@@ -66,10 +64,6 @@ services:
   #endregion
 
   #region Current Sources
-  Amoscato\Source\Current\AthleticActivitySource:
-    arguments:
-      $activityUri: '%strava_activity_uri%'
-
   Amoscato\Source\Current\BookSource:
     arguments:
       $userId: '%goodreads_user_id%'
@@ -143,17 +137,6 @@ services:
     arguments:
     - base_uri: '%lastfm_api_uri%'
 
-  integration.client.strava:
-    class: Amoscato\Client\Client
-    arguments:
-    - base_uri: '%strava_api_uri%'
-
-  Amoscato\Integration\Client\Middleware\StravaAuthentication:
-    $client: '@integration.client.strava'
-    $clientId: '%env(AMOSCATO_STRAVA_CLIENT_ID)%'
-    $clientSecret: '%env(AMOSCATO_STRAVA_CLIENT_SECRET)%'
-    $refreshToken: '%env(AMOSCATO_STRAVA_REFRESH_TOKEN)%'
-
   integration.client.untappd:
     class: Amoscato\Client\Client
     arguments:
@@ -191,11 +174,6 @@ services:
     arguments:
     - '@integration.client.lastfm'
     - '%env(AMOSCATO_LASTFM_API_KEY)%'
-
-  Amoscato\Integration\Client\StravaClient:
-    factory: Amoscato\Integration\Client\StravaClient::create
-    arguments:
-    - '%strava_api_uri%'
 
   Amoscato\Integration\Client\UntappdClient:
     arguments:
